@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
 
 const VALID_CREDENTIALS = {
-  email: 'armaan@missioncontrol.com',
+  email: 'armaan',
   password: 'test123'
 }
 
