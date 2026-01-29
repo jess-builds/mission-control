@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Plus, User, Bot } from 'lucide-react'
+import { Plus, User, Bot, RefreshCw } from 'lucide-react'
 import TaskDialog from '@/components/tasks/TaskDialog'
 
 interface Task {
@@ -32,6 +32,19 @@ export default function TasksPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [draggedTask, setDraggedTask] = useState<Task | null>(null)
+  const [syncing, setSyncing] = useState(false)
+
+  const syncJournalTodos = async () => {
+    setSyncing(true)
+    try {
+      await fetch('/api/tasks/sync-journal')
+      await fetchTasks()
+    } catch (error) {
+      console.error('Failed to sync:', error)
+    } finally {
+      setSyncing(false)
+    }
+  }
 
   const fetchTasks = async () => {
     try {
@@ -48,7 +61,16 @@ export default function TasksPage() {
   }
 
   useEffect(() => {
-    fetchTasks()
+    // Auto-sync journal todos on load, then fetch tasks
+    const init = async () => {
+      try {
+        await fetch('/api/tasks/sync-journal')
+      } catch (e) {
+        console.error('Sync failed:', e)
+      }
+      fetchTasks()
+    }
+    init()
   }, [])
 
   const handleDragStart = (e: React.DragEvent, task: Task) => {
@@ -115,13 +137,24 @@ export default function TasksPage() {
           <h1 className="text-2xl font-bold">Tasks</h1>
           <p className="text-muted-foreground">Drag and drop to update status</p>
         </div>
-        <Button 
-          onClick={openNewTask}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Task
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={syncJournalTodos}
+            disabled={syncing}
+            className="border-white/10"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+            {syncing ? 'Syncing...' : 'Sync Journal'}
+          </Button>
+          <Button 
+            onClick={openNewTask}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Task
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">

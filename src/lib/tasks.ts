@@ -148,3 +148,81 @@ export const STATUS_COLUMNS: { id: TaskStatus; label: string }[] = [
   { id: 'in-progress', label: 'In Progress' },
   { id: 'done', label: 'Done' }
 ]
+
+// Sync todos from journal entries
+export function syncJournalTodos(): { added: number; updated: number } {
+  const journalDir = '/home/ubuntu/clawd/memory'
+  let added = 0
+  let updated = 0
+  
+  if (!fs.existsSync(journalDir)) return { added, updated }
+  
+  const tasks = readTasks()
+  const files = fs.readdirSync(journalDir).filter(f => /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
+  
+  for (const file of files) {
+    const date = file.replace('.md', '')
+    const content = fs.readFileSync(path.join(journalDir, file), 'utf-8')
+    
+    // Find all todo items: - [ ] or - [x]
+    const todoRegex = /^- \[([ x])\] (.+)$/gm
+    let match
+    
+    while ((match = todoRegex.exec(content)) !== null) {
+      const isComplete = match[1] === 'x'
+      const todoText = match[2].trim()
+        .replace(/\*\*/g, '') // Remove bold markers
+        .replace(/\*([^*]+)\*$/, '($1)') // Convert trailing italic to parentheses (for tags like *Clover*)
+      
+      // Extract tag if present (text in parentheses at end)
+      const tagMatch = todoText.match(/\(([^)]+)\)$/)
+      const tag = tagMatch ? tagMatch[1] : null
+      const title = tagMatch ? todoText.replace(/\s*\([^)]+\)$/, '').trim() : todoText
+      
+      // Check if task already exists (by title match)
+      const existingTask = tasks.find(t => 
+        t.title.toLowerCase() === title.toLowerCase() ||
+        t.title.toLowerCase().includes(title.toLowerCase().slice(0, 30))
+      )
+      
+      if (existingTask) {
+        // Update status if changed
+        const newStatus = isComplete ? 'done' : existingTask.status
+        if (existingTask.status !== newStatus && isComplete) {
+          updateTask(existingTask.id, { status: 'done' })
+          updated++
+        }
+      } else {
+        // Create new task
+        const tags: string[] = []
+        if (tag) {
+          // Map common tag variations
+          const tagMap: Record<string, string> = {
+            'clover': 'Clover',
+            'scad': 'SCAD',
+            'debtless': 'Debtless',
+            'life lab': 'Life Lab',
+            'lifelab': 'Life Lab',
+            'content': 'Content',
+            'personal': 'Personal',
+            'mission control': 'Mission Control'
+          }
+          const normalizedTag = tagMap[tag.toLowerCase()] || tag
+          tags.push(normalizedTag)
+        }
+        
+        createTask(
+          title,
+          'armaan', // Default assignee
+          tags,
+          `From journal: ${date}`,
+          undefined,
+          isComplete ? 'done' : 'todo'
+        )
+        added++
+      }
+    }
+  }
+  
+  return { added, updated }
+}

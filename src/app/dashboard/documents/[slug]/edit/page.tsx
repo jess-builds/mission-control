@@ -143,7 +143,7 @@ export default function EditDocumentPage() {
               value={content}
               onChange={(e) => setContent(e.target.value)}
               placeholder="Write your document content here... (Markdown supported)"
-              className="w-full h-96 p-4 bg-background border border-input rounded-md text-sm font-mono resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+              className="w-full min-h-[600px] p-6 bg-black/20 border border-white/10 rounded-xl text-base font-mono leading-relaxed resize-y focus:outline-none focus:ring-2 focus:ring-[#4169E1]/50 focus:border-[#4169E1]/50"
             />
           </div>
         </CardContent>

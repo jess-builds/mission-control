@@ -49,6 +49,16 @@
       "dueDate": "2026-01-30",
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T07:13:30.892Z"
+    },
+    {
+      "id": "f6c913e4-6b6d-4605-95ba-c4c3c3cd6011",
+      "title": "Follow up with Vaishnavi on PDF progress ((Clover))",
+      "description": "From journal: 2026-01-29",
+      "status": "todo",
+      "assignee": "armaan",
+      "tags": [],
+      "createdAt": "2026-01-29T15:04:24.911Z",
+      "updatedAt": "2026-01-29T15:04:24.911Z"
     }
   ]
 }
