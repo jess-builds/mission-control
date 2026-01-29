@@ -3,6 +3,19 @@ import path from 'path'
 import matter from 'gray-matter'
 
 const DOCS_DIR = path.join(process.cwd(), 'data', 'documents')
+const WORKSPACE_DIR = '/home/ubuntu/clawd'
+const WORKSPACE_MEMORY_DIR = '/home/ubuntu/clawd/memory'
+
+// Files from workspace to include
+const WORKSPACE_FILES = [
+  'SOUL.md',
+  'MEMORY.md', 
+  'USER.md',
+  'AGENTS.md',
+  'TOOLS.md',
+  'IDENTITY.md',
+  'HEARTBEAT.md'
+]
 
 export interface Document {
   slug: string
@@ -11,6 +24,7 @@ export interface Document {
   tags: string[]
   createdAt: string
   updatedAt: string
+  source?: 'documents' | 'workspace' | 'workspace-memory'
 }
 
 export interface DocumentMeta {
@@ -19,6 +33,7 @@ export interface DocumentMeta {
   tags: string[]
   createdAt: string
   updatedAt: string
+  source?: 'documents' | 'workspace' | 'workspace-memory'
 }
 
 function ensureDir(dir: string) {
@@ -30,27 +45,115 @@ function ensureDir(dir: string) {
 export function getAllDocuments(): DocumentMeta[] {
   ensureDir(DOCS_DIR)
   
+  // Regular documents
   const files = fs.readdirSync(DOCS_DIR).filter(f => f.endsWith('.md'))
   
-  return files.map(file => {
+  const regularDocs = files.map(file => {
     const filePath = path.join(DOCS_DIR, file)
     const content = fs.readFileSync(filePath, 'utf-8')
     const { data } = matter(content)
     const slug = file.replace('.md', '')
+    const stats = fs.statSync(filePath)
     
     return {
       slug,
       title: data.title || slug,
       tags: data.tags || [],
       createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
-      updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0])
+      updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || stats.mtime.toISOString().split('T')[0]),
+      source: 'documents' as const
     }
-  }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+  })
+  
+  // Workspace files (Jess's brain)
+  const workspaceDocs = WORKSPACE_FILES.filter(file => {
+    const filePath = path.join(WORKSPACE_DIR, file)
+    return fs.existsSync(filePath)
+  }).map(file => {
+    const filePath = path.join(WORKSPACE_DIR, file)
+    const stats = fs.statSync(filePath)
+    const slug = `workspace-${file.replace('.md', '').toLowerCase()}`
+    
+    return {
+      slug,
+      title: `🧠 ${file.replace('.md', '')}`,
+      tags: ['Jess', 'Workspace'],
+      createdAt: stats.birthtime.toISOString().split('T')[0],
+      updatedAt: stats.mtime.toISOString().split('T')[0],
+      source: 'workspace' as const
+    }
+  })
+  
+  // Memory files (daily notes)
+  let memoryDocs: DocumentMeta[] = []
+  if (fs.existsSync(WORKSPACE_MEMORY_DIR)) {
+    const memoryFiles = fs.readdirSync(WORKSPACE_MEMORY_DIR).filter(f => f.endsWith('.md'))
+    memoryDocs = memoryFiles.map(file => {
+      const filePath = path.join(WORKSPACE_MEMORY_DIR, file)
+      const stats = fs.statSync(filePath)
+      const slug = `memory-${file.replace('.md', '')}`
+      
+      return {
+        slug,
+        title: `📝 ${file.replace('.md', '')}`,
+        tags: ['Jess', 'Memory', 'Daily'],
+        createdAt: stats.birthtime.toISOString().split('T')[0],
+        updatedAt: stats.mtime.toISOString().split('T')[0],
+        source: 'workspace-memory' as const
+      }
+    })
+  }
+  
+  return [...regularDocs, ...workspaceDocs, ...memoryDocs]
+    .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 }
 
 export function getDocument(slug: string): Document | null {
   ensureDir(DOCS_DIR)
   
+  // Check if it's a workspace file
+  if (slug.startsWith('workspace-')) {
+    const fileName = slug.replace('workspace-', '').toUpperCase() + '.md'
+    const filePath = path.join(WORKSPACE_DIR, fileName)
+    
+    if (!fs.existsSync(filePath)) return null
+    
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const stats = fs.statSync(filePath)
+    
+    return {
+      slug,
+      title: `🧠 ${fileName.replace('.md', '')}`,
+      content,
+      tags: ['Jess', 'Workspace'],
+      createdAt: stats.birthtime.toISOString().split('T')[0],
+      updatedAt: stats.mtime.toISOString().split('T')[0],
+      source: 'workspace'
+    }
+  }
+  
+  // Check if it's a memory file
+  if (slug.startsWith('memory-')) {
+    const fileName = slug.replace('memory-', '') + '.md'
+    const filePath = path.join(WORKSPACE_MEMORY_DIR, fileName)
+    
+    if (!fs.existsSync(filePath)) return null
+    
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const stats = fs.statSync(filePath)
+    
+    return {
+      slug,
+      title: `📝 ${fileName.replace('.md', '')}`,
+      content,
+      tags: ['Jess', 'Memory', 'Daily'],
+      createdAt: stats.birthtime.toISOString().split('T')[0],
+      updatedAt: stats.mtime.toISOString().split('T')[0],
+      source: 'workspace-memory'
+    }
+  }
+  
+  // Regular document
   const filePath = path.join(DOCS_DIR, `${slug}.md`)
   
   if (!fs.existsSync(filePath)) {
@@ -66,13 +169,31 @@ export function getDocument(slug: string): Document | null {
     content,
     tags: data.tags || [],
     createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
-    updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0])
+    updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0]),
+    source: 'documents'
   }
 }
 
 export function saveDocument(slug: string, title: string, content: string, tags: string[] = []): void {
   ensureDir(DOCS_DIR)
   
+  // Handle workspace files (write directly without frontmatter)
+  if (slug.startsWith('workspace-')) {
+    const fileName = slug.replace('workspace-', '').toUpperCase() + '.md'
+    const filePath = path.join(WORKSPACE_DIR, fileName)
+    fs.writeFileSync(filePath, content)
+    return
+  }
+  
+  // Handle memory files (write directly without frontmatter)
+  if (slug.startsWith('memory-')) {
+    const fileName = slug.replace('memory-', '') + '.md'
+    const filePath = path.join(WORKSPACE_MEMORY_DIR, fileName)
+    fs.writeFileSync(filePath, content)
+    return
+  }
+  
+  // Regular document with frontmatter
   const existing = getDocument(slug)
   const now = new Date().toISOString().split('T')[0]
   
