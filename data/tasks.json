@@ -29,13 +29,13 @@
       "title": "Drawing Project 1 - Charcoal Still Life",
       "description": "FOUN-220 assignment",
       "status": "todo",
-      "assignee": "armaan",
+      "assignee": "jess",
       "tags": [
         "SCAD"
       ],
       "dueDate": "2026-01-29",
       "createdAt": "2026-01-29T05:55:00Z",
-      "updatedAt": "2026-01-29T05:55:00Z"
+      "updatedAt": "2026-01-29T06:24:22.771Z"
     },
     {
       "id": "4",
@@ -48,7 +48,7 @@
       ],
       "dueDate": "2026-01-30",
       "createdAt": "2026-01-29T05:55:00Z",
-      "updatedAt": "2026-01-29T05:55:00Z"
+      "updatedAt": "2026-01-29T06:24:15.047Z"
     }
   ]
 }

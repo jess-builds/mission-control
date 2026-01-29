@@ -42,8 +42,8 @@ export function getAllDocuments(): DocumentMeta[] {
       slug,
       title: data.title || slug,
       tags: data.tags || [],
-      createdAt: data.createdAt || new Date().toISOString().split('T')[0],
-      updatedAt: data.updatedAt || new Date().toISOString().split('T')[0]
+      createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
+      updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0])
     }
   }).sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 }
@@ -65,8 +65,8 @@ export function getDocument(slug: string): Document | null {
     title: data.title || slug,
     content,
     tags: data.tags || [],
-    createdAt: data.createdAt || new Date().toISOString().split('T')[0],
-    updatedAt: data.updatedAt || new Date().toISOString().split('T')[0]
+    createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
+    updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0])
   }
 }
 

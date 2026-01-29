@@ -62,7 +62,7 @@ export default function NewDocumentPage() {
         <Button 
           onClick={handleSave} 
           disabled={!title.trim() || loading}
-          className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700"
+          className="bg-blue-600 hover:bg-blue-700"
         >
           <Save className="h-4 w-4 mr-2" />
           {loading ? 'Saving...' : 'Save Document'}

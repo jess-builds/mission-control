@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllDocuments, saveDocument } from '@/lib/documents'
+import { getAllDocuments, saveDocument, searchDocuments } from '@/lib/documents'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const searchQuery = request.nextUrl.searchParams.get('search')
+  
+  if (searchQuery) {
+    const documents = searchDocuments(searchQuery)
+    return NextResponse.json(documents)
+  }
+  
   const documents = getAllDocuments()
   return NextResponse.json(documents)
 }

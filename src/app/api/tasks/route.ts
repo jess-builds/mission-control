@@ -1,7 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getAllTasks, createTask } from '@/lib/tasks'
+import { getAllTasks, createTask, searchTasks } from '@/lib/tasks'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const searchQuery = request.nextUrl.searchParams.get('search')
+  
+  if (searchQuery) {
+    const tasks = searchTasks(searchQuery)
+    return NextResponse.json(tasks)
+  }
+  
   const tasks = getAllTasks()
   return NextResponse.json(tasks)
 }

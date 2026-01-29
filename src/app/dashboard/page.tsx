@@ -4,7 +4,8 @@ import { getAllDocuments } from '@/lib/documents'
 import { getAllTasks } from '@/lib/tasks'
 import { getRecentEntries, getTodayDate } from '@/lib/journal'
 import Link from 'next/link'
-import { FileText, CheckSquare, BookOpen, Clock } from 'lucide-react'
+import { FileText, CheckSquare, BookOpen, Clock, Activity, TrendingUp } from 'lucide-react'
+import ActivityTimeline from '@/components/dashboard/ActivityTimeline'
 
 export default function DashboardPage() {
   const documents = getAllDocuments()
@@ -216,6 +217,60 @@ export default function DashboardPage() {
             )}
           </CardContent>
         </Card>
+
+        {/* Activity Timeline */}
+        <Card className="bg-card border-border lg:col-span-2">
+          <CardHeader>
+            <CardTitle className="text-lg flex items-center gap-2">
+              <Activity className="h-5 w-5" />
+              Recent Activity
+            </CardTitle>
+            <CardDescription>What&apos;s been happening</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ActivityTimeline />
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Quick Stats Bar */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-card border border-border">
+          <div className="p-2 rounded-lg bg-blue-500/10">
+            <TrendingUp className="h-5 w-5 text-blue-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">{taskStats.done}</p>
+            <p className="text-xs text-muted-foreground">Tasks Done</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-card border border-border">
+          <div className="p-2 rounded-lg bg-amber-500/10">
+            <Clock className="h-5 w-5 text-amber-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">{taskStats.inProgress}</p>
+            <p className="text-xs text-muted-foreground">In Progress</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-card border border-border">
+          <div className="p-2 rounded-lg bg-purple-500/10">
+            <FileText className="h-5 w-5 text-purple-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">{documents.length}</p>
+            <p className="text-xs text-muted-foreground">Documents</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-3 p-4 rounded-lg bg-card border border-border">
+          <div className="p-2 rounded-lg bg-emerald-500/10">
+            <BookOpen className="h-5 w-5 text-emerald-500" />
+          </div>
+          <div>
+            <p className="text-2xl font-bold">{recentJournals.length}</p>
+            <p className="text-xs text-muted-foreground">Journal Entries</p>
+          </div>
+        </div>
       </div>
     </div>
   )

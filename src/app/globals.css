@@ -82,37 +82,38 @@
 }
 
 .dark {
-  --background: oklch(0.129 0.042 264.695);
-  --foreground: oklch(0.984 0.003 247.858);
-  --card: oklch(0.208 0.042 265.755);
-  --card-foreground: oklch(0.984 0.003 247.858);
-  --popover: oklch(0.208 0.042 265.755);
-  --popover-foreground: oklch(0.984 0.003 247.858);
-  --primary: oklch(0.929 0.013 255.508);
-  --primary-foreground: oklch(0.208 0.042 265.755);
-  --secondary: oklch(0.279 0.041 260.031);
-  --secondary-foreground: oklch(0.984 0.003 247.858);
-  --muted: oklch(0.279 0.041 260.031);
-  --muted-foreground: oklch(0.704 0.04 256.788);
-  --accent: oklch(0.279 0.041 260.031);
-  --accent-foreground: oklch(0.984 0.003 247.858);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.551 0.027 264.364);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.208 0.042 265.755);
-  --sidebar-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-accent: oklch(0.279 0.041 260.031);
-  --sidebar-accent-foreground: oklch(0.984 0.003 247.858);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.551 0.027 264.364);
+  /* Premium dark theme - Linear inspired */
+  --background: #0a0a0b;
+  --foreground: #fafafa;
+  --card: #111113;
+  --card-foreground: #fafafa;
+  --popover: #111113;
+  --popover-foreground: #fafafa;
+  --primary: #fafafa;
+  --primary-foreground: #0a0a0b;
+  --secondary: #1a1a1d;
+  --secondary-foreground: #fafafa;
+  --muted: #1a1a1d;
+  --muted-foreground: #71717a;
+  --accent: #1a1a1d;
+  --accent-foreground: #fafafa;
+  --destructive: #ef4444;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: #3b82f6;
+  --chart-1: #3b82f6;
+  --chart-2: #10b981;
+  --chart-3: #f59e0b;
+  --chart-4: #8b5cf6;
+  --chart-5: #ef4444;
+  --sidebar: #0a0a0b;
+  --sidebar-foreground: #fafafa;
+  --sidebar-primary: #3b82f6;
+  --sidebar-primary-foreground: #fafafa;
+  --sidebar-accent: #1a1a1d;
+  --sidebar-accent-foreground: #fafafa;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: #3b82f6;
 }
 
 @layer base {
@@ -120,6 +121,226 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
+}
+
+/* Premium refinements */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+/* ========================================
+   ROYAL PREMIUM DESIGN SYSTEM
+   ======================================== */
+
+/* Royal Color Accents */
+:root {
+  --royal-blue: #4169E1;
+  --royal-blue-light: #5b7fe8;
+  --royal-blue-dark: #2850c8;
+  --royal-green: #228B22;
+  --royal-green-light: #2ea82e;
+  --royal-green-dark: #1a6b1a;
+  --gold: #d4af37;
+  --gold-light: #e5c76a;
+}
+
+/* Subtle animated background gradient */
+.dark body {
+  background: 
+    radial-gradient(ellipse at top left, rgba(65, 105, 225, 0.03) 0%, transparent 50%),
+    radial-gradient(ellipse at bottom right, rgba(34, 139, 34, 0.03) 0%, transparent 50%),
+    #0a0a0b;
+}
+
+/* Premium card styling */
+[data-slot="card"] {
+  background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.01) 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.3),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-slot="card"]:hover {
+  border-color: rgba(65, 105, 225, 0.2);
+  box-shadow: 
+    0 10px 15px -3px rgba(0, 0, 0, 0.4),
+    0 4px 6px -2px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(65, 105, 225, 0.1),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+  transform: translateY(-2px);
+}
+
+/* Royal blue accent for primary actions */
+.bg-blue-600 {
+  background: linear-gradient(135deg, var(--royal-blue) 0%, var(--royal-blue-dark) 100%);
+  box-shadow: 0 4px 14px rgba(65, 105, 225, 0.35);
+}
+
+.bg-blue-600:hover {
+  background: linear-gradient(135deg, var(--royal-blue-light) 0%, var(--royal-blue) 100%);
+  box-shadow: 0 6px 20px rgba(65, 105, 225, 0.45);
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0.08) 100%);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(65,105,225,0.4) 0%, rgba(65,105,225,0.2) 100%);
+}
+
+/* Luxurious text styling */
+h1, h2, h3 {
+  letter-spacing: -0.02em;
+  font-weight: 600;
+}
+
+h1 {
+  background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.8) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Smooth entrance animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Page content animation */
+main > div {
+  animation: fadeInUp 0.4s ease-out;
+}
+
+/* Stat cards staggered animation */
+.grid > [data-slot="card"]:nth-child(1) { animation: scaleIn 0.3s ease-out 0.05s both; }
+.grid > [data-slot="card"]:nth-child(2) { animation: scaleIn 0.3s ease-out 0.1s both; }
+.grid > [data-slot="card"]:nth-child(3) { animation: scaleIn 0.3s ease-out 0.15s both; }
+.grid > [data-slot="card"]:nth-child(4) { animation: scaleIn 0.3s ease-out 0.2s both; }
+.grid > [data-slot="card"]:nth-child(5) { animation: scaleIn 0.3s ease-out 0.25s both; }
+.grid > [data-slot="card"]:nth-child(6) { animation: scaleIn 0.3s ease-out 0.3s both; }
+
+/* Premium input focus states */
+input:focus, textarea:focus, select:focus {
+  border-color: var(--royal-blue) !important;
+  box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.15), 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* Sidebar active item glow */
+nav a[class*="bg-accent"] {
+  position: relative;
+}
+
+nav a[class*="bg-accent"]::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3px;
+  height: 60%;
+  background: linear-gradient(180deg, var(--royal-blue) 0%, var(--royal-green) 100%);
+  border-radius: 0 2px 2px 0;
+}
+
+/* Status indicator pulse */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* Badge premium styling */
+[data-slot="badge"] {
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Button hover glow effect */
+button:not([disabled]):hover {
+  transition: all 0.2s ease;
+}
+
+/* Modal backdrop blur */
+[data-state="open"][role="dialog"] {
+  animation: scaleIn 0.2s ease-out;
+}
+
+/* Premium divider */
+hr, [data-slot="separator"] {
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  border: none;
+  height: 1px;
+}
+
+/* Link hover effect */
+a {
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+/* Focus visible for accessibility */
+:focus-visible {
+  outline: 2px solid var(--royal-blue);
+  outline-offset: 2px;
+}
+
+/* Kanban column styling */
+.space-y-2.min-h-\\[200px\\] {
+  background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+  border: 1px dashed rgba(255,255,255,0.08);
+  border-radius: 8px;
+}
+
+/* Task card drag state */
+[draggable="true"] {
+  cursor: grab;
+}
+
+[draggable="true"]:active {
+  cursor: grabbing;
+  opacity: 0.8;
 }

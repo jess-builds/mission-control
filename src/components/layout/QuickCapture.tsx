@@ -27,15 +27,52 @@ export default function QuickCapture() {
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => {
+      // ⌘+K - Quick capture
       if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
         setOpen((open) => !open)
+      }
+      // ⌘+/ - Search
+      if (e.key === '/' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/dashboard/search')
+      }
+      // ⌘+N - New document
+      if (e.key === 'n' && (e.metaKey || e.ctrlKey) && !e.shiftKey) {
+        e.preventDefault()
+        router.push('/dashboard/documents/new')
+      }
+      // ⌘+J - Today's journal
+      if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        const today = new Date().toISOString().split('T')[0]
+        router.push(`/dashboard/journal/${today}`)
+      }
+      // ⌘+1 - Dashboard
+      if (e.key === '1' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/dashboard')
+      }
+      // ⌘+2 - Documents
+      if (e.key === '2' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/dashboard/documents')
+      }
+      // ⌘+3 - Tasks
+      if (e.key === '3' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/dashboard/tasks')
+      }
+      // ⌘+4 - Journal
+      if (e.key === '4' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault()
+        router.push('/dashboard/journal')
       }
     }
 
     document.addEventListener('keydown', down)
     return () => document.removeEventListener('keydown', down)
-  }, [])
+  }, [router])
 
   const runCommand = (command: () => void) => {
     setOpen(false)

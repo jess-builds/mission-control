@@ -93,3 +93,20 @@ export function getTodayDate(): string {
 export function getRecentEntries(limit: number = 7): JournalMeta[] {
   return getAllJournalEntries().slice(0, limit)
 }
+
+export function searchJournalEntries(query: string): JournalMeta[] {
+  const entries = getAllJournalEntries()
+  const lowerQuery = query.toLowerCase()
+  
+  return entries.filter(entry => {
+    const summaryMatch = entry.summary.toLowerCase().includes(lowerQuery)
+    const topicMatch = entry.topics.some(t => t.toLowerCase().includes(lowerQuery))
+    const dateMatch = entry.date.includes(query)
+    
+    // Also search content
+    const fullEntry = getJournalEntry(entry.date)
+    const contentMatch = fullEntry?.content.toLowerCase().includes(lowerQuery) || false
+    
+    return summaryMatch || topicMatch || dateMatch || contentMatch
+  })
+}

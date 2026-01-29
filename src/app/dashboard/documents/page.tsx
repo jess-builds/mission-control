@@ -16,7 +16,7 @@ export default function DocumentsPage() {
           <p className="text-muted-foreground">Your knowledge base</p>
         </div>
         <Link href="/dashboard/documents/new">
-          <Button className="bg-gradient-to-r from-blue-600 to-emerald-600 hover:from-blue-700 hover:to-emerald-700">
+          <Button className="bg-blue-600 hover:bg-blue-700">
             <Plus className="h-4 w-4 mr-2" />
             New Document
           </Button>

@@ -216,7 +216,7 @@ export default function TaskDialog({ open, onOpenChange, task, onSaved }: Props)
             <Button 
               onClick={handleSave}
               disabled={!title.trim() || saving}
-              className="bg-gradient-to-r from-blue-600 to-emerald-600"
+              className="bg-blue-600 hover:bg-blue-700"
             >
               {saving ? 'Saving...' : 'Save'}
             </Button>
