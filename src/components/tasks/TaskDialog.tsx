@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { X, Trash2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface Task {
   id: string
@@ -75,7 +76,10 @@ export default function TaskDialog({ open, onOpenChange, task, onSaved }: Props)
   }
 
   const handleSave = async () => {
-    if (!title.trim()) return
+    if (!title.trim()) {
+      toast.error('Please enter a task title')
+      return
+    }
     
     setSaving(true)
     try {
@@ -95,9 +99,13 @@ export default function TaskDialog({ open, onOpenChange, task, onSaved }: Props)
         })
       })
       
+      toast.success(task ? 'Task updated' : 'Task created', {
+        description: title,
+      })
       onSaved()
     } catch (error) {
       console.error('Failed to save task:', error)
+      toast.error('Failed to save task')
     } finally {
       setSaving(false)
     }
@@ -109,9 +117,11 @@ export default function TaskDialog({ open, onOpenChange, task, onSaved }: Props)
     setDeleting(true)
     try {
       await fetch(`/api/tasks/${task.id}`, { method: 'DELETE' })
+      toast.success('Task deleted')
       onSaved()
     } catch (error) {
       console.error('Failed to delete task:', error)
+      toast.error('Failed to delete task')
     } finally {
       setDeleting(false)
     }

@@ -28,7 +28,8 @@ async function testApp() {
     // Test 1: Login page loads
     console.log('📋 Test 1: Login page');
     await page.goto(BASE_URL);
-    const loginTitle = await page.textContent('h2, [data-slot="card-title"]');
+    await page.waitForTimeout(500);
+    const loginTitle = await page.textContent('h1');
     if (loginTitle?.includes('Mission Control')) {
       passed.push('✅ Login page loads correctly');
     } else {

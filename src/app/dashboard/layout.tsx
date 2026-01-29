@@ -4,6 +4,7 @@ import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import { ThemeProvider } from '@/components/theme-provider'
 import QuickCapture from '@/components/layout/QuickCapture'
+import { Toaster } from '@/components/ui/sonner'
 
 export default async function DashboardLayout({
   children,
@@ -27,6 +28,16 @@ export default async function DashboardLayout({
           </main>
         </div>
         <QuickCapture />
+        <Toaster 
+          position="bottom-right"
+          toastOptions={{
+            style: {
+              background: '#111113',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: '#fff',
+            },
+          }}
+        />
       </div>
     </ThemeProvider>
   )
