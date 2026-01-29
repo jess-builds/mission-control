@@ -6,7 +6,9 @@
       "description": "Go through the full spec and provide feedback",
       "status": "done",
       "assignee": "armaan",
-      "tags": ["Mission Control"],
+      "tags": [
+        "Mission Control"
+      ],
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T05:55:00Z"
     },
@@ -16,7 +18,9 @@
       "description": "Create the Next.js app with all core features",
       "status": "in-progress",
       "assignee": "jess",
-      "tags": ["Mission Control"],
+      "tags": [
+        "Mission Control"
+      ],
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T05:55:00Z"
     },
@@ -26,7 +30,9 @@
       "description": "FOUN-220 assignment",
       "status": "todo",
       "assignee": "armaan",
-      "tags": ["SCAD"],
+      "tags": [
+        "SCAD"
+      ],
       "dueDate": "2026-01-29",
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T05:55:00Z"
@@ -37,7 +43,9 @@
       "description": "Create learning tool with 10+ words",
       "status": "backlog",
       "assignee": "armaan",
-      "tags": ["SCAD"],
+      "tags": [
+        "SCAD"
+      ],
       "dueDate": "2026-01-30",
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T05:55:00Z"
