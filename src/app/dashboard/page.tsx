@@ -4,14 +4,26 @@ import { getAllDocuments } from '@/lib/documents'
 import { getAllTasks } from '@/lib/tasks'
 import { getRecentEntries, getTodayDate } from '@/lib/journal'
 import Link from 'next/link'
-import { FileText, CheckSquare, BookOpen, Clock, Activity, TrendingUp } from 'lucide-react'
+import { FileText, CheckSquare, BookOpen, Clock, Activity, TrendingUp, Sparkles, Zap } from 'lucide-react'
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline'
+
+function getGreeting(): string {
+  const hour = new Date().getUTCHours()
+  // Adjust for EST (UTC-5)
+  const estHour = (hour - 5 + 24) % 24
+  
+  if (estHour >= 5 && estHour < 12) return 'Good morning'
+  if (estHour >= 12 && estHour < 17) return 'Good afternoon'
+  if (estHour >= 17 && estHour < 21) return 'Good evening'
+  return 'Burning the midnight oil'
+}
 
 export default function DashboardPage() {
   const documents = getAllDocuments()
   const tasks = getAllTasks()
   const recentJournals = getRecentEntries(5)
   const today = getTodayDate()
+  const greeting = getGreeting()
 
   const taskStats = {
     backlog: tasks.filter(t => t.status === 'backlog').length,
@@ -22,68 +34,102 @@ export default function DashboardPage() {
 
   const myTasks = tasks.filter(t => t.assignee === 'armaan' && t.status !== 'done')
   const jessTasks = tasks.filter(t => t.assignee === 'jess' && t.status !== 'done')
+  
+  const totalActive = taskStats.todo + taskStats.inProgress
+  const completionRate = tasks.length > 0 ? Math.round((taskStats.done / tasks.length) * 100) : 0
 
   return (
-    <div className="space-y-6">
-      {/* Welcome */}
-      <div>
-        <h1 className="text-3xl font-bold text-foreground">Welcome back, Armaan</h1>
-        <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening in your 2nd brain.</p>
+    <div className="space-y-8">
+      {/* Welcome Section */}
+      <div className="relative">
+        <div className="absolute -inset-x-6 -inset-y-4 bg-gradient-to-r from-[#4169E1]/5 via-transparent to-[#228B22]/5 rounded-2xl -z-10" />
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-[#4169E1] mb-1 flex items-center gap-1.5">
+              <Sparkles className="h-3.5 w-3.5" />
+              {greeting}
+            </p>
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">
+              Welcome back, Armaan
+            </h1>
+            <p className="text-muted-foreground mt-1">Here&apos;s what&apos;s happening in your 2nd brain.</p>
+          </div>
+          {/* Quick stats pill */}
+          <div className="hidden md:flex items-center gap-4 px-4 py-2 bg-white/5 rounded-full border border-white/10">
+            <div className="flex items-center gap-2">
+              <Zap className="h-4 w-4 text-amber-500" />
+              <span className="text-sm font-medium">{totalActive} active</span>
+            </div>
+            <div className="w-px h-4 bg-white/10" />
+            <div className="flex items-center gap-2">
+              <TrendingUp className="h-4 w-4 text-[#228B22]" />
+              <span className="text-sm font-medium">{completionRate}% done</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Documents
-            </CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{documents.length}</div>
-          </CardContent>
-        </Card>
+        {/* Documents Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-purple-500/10 to-transparent border border-white/5 p-5 transition-all hover:border-purple-500/20">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-purple-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-purple-500/20 transition-colors" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Documents</span>
+              <div className="p-1.5 rounded-lg bg-purple-500/10">
+                <FileText className="h-4 w-4 text-purple-400" />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-white">{documents.length}</div>
+            <p className="text-xs text-white/40 mt-1">knowledge base</p>
+          </div>
+        </div>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Active Tasks
-            </CardTitle>
-            <CheckSquare className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{taskStats.todo + taskStats.inProgress}</div>
-            <p className="text-xs text-muted-foreground mt-1">
-              {taskStats.done} completed
-            </p>
-          </CardContent>
-        </Card>
+        {/* Active Tasks Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-[#4169E1]/10 to-transparent border border-white/5 p-5 transition-all hover:border-[#4169E1]/20">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[#4169E1]/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[#4169E1]/20 transition-colors" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Active Tasks</span>
+              <div className="p-1.5 rounded-lg bg-[#4169E1]/10">
+                <CheckSquare className="h-4 w-4 text-[#4169E1]" />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-white">{taskStats.todo + taskStats.inProgress}</div>
+            <p className="text-xs text-white/40 mt-1">{taskStats.done} completed</p>
+          </div>
+        </div>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Journal Entries
-            </CardTitle>
-            <BookOpen className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{recentJournals.length}</div>
-          </CardContent>
-        </Card>
+        {/* Journal Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-amber-500/10 to-transparent border border-white/5 p-5 transition-all hover:border-amber-500/20">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-amber-500/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-amber-500/20 transition-colors" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Journal</span>
+              <div className="p-1.5 rounded-lg bg-amber-500/10">
+                <BookOpen className="h-4 w-4 text-amber-400" />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-white">{recentJournals.length}</div>
+            <p className="text-xs text-white/40 mt-1">entries</p>
+          </div>
+        </div>
 
-        <Card className="bg-card border-border">
-          <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Backlog
-            </CardTitle>
-            <Clock className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{taskStats.backlog}</div>
-            <p className="text-xs text-muted-foreground mt-1">tasks waiting</p>
-          </CardContent>
-        </Card>
+        {/* Backlog Card */}
+        <div className="group relative overflow-hidden rounded-xl bg-gradient-to-br from-[#228B22]/10 to-transparent border border-white/5 p-5 transition-all hover:border-[#228B22]/20">
+          <div className="absolute top-0 right-0 w-20 h-20 bg-[#228B22]/10 rounded-full blur-2xl -translate-y-1/2 translate-x-1/2 group-hover:bg-[#228B22]/20 transition-colors" />
+          <div className="relative">
+            <div className="flex items-center justify-between mb-3">
+              <span className="text-xs font-medium text-white/50 uppercase tracking-wider">Backlog</span>
+              <div className="p-1.5 rounded-lg bg-[#228B22]/10">
+                <Clock className="h-4 w-4 text-[#228B22]" />
+              </div>
+            </div>
+            <div className="text-3xl font-bold text-white">{taskStats.backlog}</div>
+            <p className="text-xs text-white/40 mt-1">tasks waiting</p>
+          </div>
+        </div>
       </div>
 
       {/* Main Grid */}
