@@ -40,7 +40,15 @@ export interface TaskAssignedPayload {
   timestamp: string
 }
 
-export type NotificationPayload = ProjectNotePayload | TaskNotePayload | TaskAssignedPayload
+export interface LectureTranscribedPayload {
+  type: 'lecture_transcribed'
+  courseId: string
+  recordingId: string
+  transcript: string
+  timestamp: string
+}
+
+export type NotificationPayload = ProjectNotePayload | TaskNotePayload | TaskAssignedPayload | LectureTranscribedPayload
 
 function escapeMessage(text: string): string {
   // Escape for shell command
@@ -85,6 +93,14 @@ ${payload.note.content}`
       parts.push(`**Status:** ${task.status}`)
       
       return parts.join('\n')
+
+    case 'lecture_transcribed':
+      return `🎓 **Lecture Transcribed**
+
+Course: ${payload.courseId}
+Recording: ${payload.recordingId}
+
+Please extract tasks and generate a summary from the transcript.`
 
     default:
       return `🔔 Notification: ${JSON.stringify(payload)}`

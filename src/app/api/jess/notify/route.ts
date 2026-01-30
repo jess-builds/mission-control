@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
     
     // Validate payload type
-    const validTypes = ['project_note', 'task_note', 'task_assigned']
+    const validTypes = ['project_note', 'task_note', 'task_assigned', 'lecture_transcribed']
     if (!validTypes.includes(payload.type)) {
       return NextResponse.json(
         { error: `Invalid type. Must be one of: ${validTypes.join(', ')}` },
