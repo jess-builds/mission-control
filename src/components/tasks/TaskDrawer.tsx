@@ -19,6 +19,9 @@ import {
   ChevronDown
 } from 'lucide-react'
 import { toast } from 'sonner'
+import ReferenceDocuments from './ReferenceDocuments'
+import OutputDocuments from './OutputDocuments'
+import DocumentViewer from './DocumentViewer'
 
 interface Task {
   id: string

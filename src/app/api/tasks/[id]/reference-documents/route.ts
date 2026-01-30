@@ -1,69 +1,58 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { 
-  getReferenceDocuments, 
-  createReferenceDocument,
-  ReferenceUploader
-} from '@/lib/reference-documents'
+import { getTask, addReferenceDocument } from '@/lib/tasks'
 
 interface Props {
   params: Promise<{ id: string }>
 }
 
+// GET /api/tasks/[id]/reference-documents - Get all reference documents for a task
 export async function GET(request: NextRequest, { params }: Props) {
   const { id } = await params
-  const documents = getReferenceDocuments(id)
+  const task = getTask(id)
   
-  if (documents === null) {
+  if (!task) {
     return NextResponse.json({ error: 'Task not found' }, { status: 404 })
   }
   
-  return NextResponse.json({ documents })
+  return NextResponse.json({ documents: task.referenceDocuments || [] })
 }
 
+// POST /api/tasks/[id]/reference-documents - Upload a reference document
 export async function POST(request: NextRequest, { params }: Props) {
   try {
     const { id } = await params
+    const { title, content, contentType } = await request.json()
     
-    // Parse multipart form data
-    const formData = await request.formData()
-    const file = formData.get('file') as File | null
-    const uploadedBy = formData.get('uploadedBy') as string | null
-    
-    if (!file) {
-      return NextResponse.json(
-        { error: 'file is required' }, 
-        { status: 400 }
-      )
+    if (!title || typeof title !== 'string' || !title.trim()) {
+      return NextResponse.json({ error: 'Title is required' }, { status: 400 })
     }
     
-    if (!uploadedBy) {
-      return NextResponse.json(
-        { error: 'uploadedBy is required' }, 
-        { status: 400 }
-      )
+    if (!content || typeof content !== 'string') {
+      return NextResponse.json({ error: 'Content is required' }, { status: 400 })
     }
     
-    // Validate uploadedBy
-    if (uploadedBy !== 'jess' && uploadedBy !== 'armaan') {
-      return NextResponse.json(
-        { error: 'uploadedBy must be "jess" or "armaan"' }, 
-        { status: 400 }
-      )
-    }
-    
-    const document = await createReferenceDocument(
-      id,
-      file,
-      uploadedBy as ReferenceUploader
-    )
-    
-    if (!document) {
+    const task = getTask(id)
+    if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 })
     }
     
-    return NextResponse.json({ success: true, document }, { status: 201 })
+    const updatedTask = addReferenceDocument(
+      id,
+      title.trim(),
+      content,
+      'armaan' // Default uploader
+    )
+    
+    if (!updatedTask) {
+      return NextResponse.json({ error: 'Failed to add reference document' }, { status: 500 })
+    }
+    
+    // Get the newly added document (last one in the array)
+    const newDoc = updatedTask.referenceDocuments[updatedTask.referenceDocuments.length - 1]
+    
+    return NextResponse.json({ success: true, document: newDoc })
   } catch (error) {
-    console.error('Error uploading reference document:', error)
+    console.error('Failed to add reference document:', error)
     return NextResponse.json({ error: 'Server error' }, { status: 500 })
   }
 }
