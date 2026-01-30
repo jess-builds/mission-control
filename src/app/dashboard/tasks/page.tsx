@@ -5,7 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, User, Bot, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
-import TaskDialog from '@/components/tasks/TaskDialog'
+import TaskDrawer from '@/components/tasks/TaskDrawer'
 
 interface Task {
   id: string
@@ -280,9 +280,9 @@ export default function TasksPage() {
         })}
       </div>
 
-      <TaskDialog
+      <TaskDrawer
         open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        onClose={() => setDialogOpen(false)}
         task={editingTask}
         onSaved={handleTaskSaved}
       />
