@@ -7,12 +7,19 @@ import { Input } from '@/components/ui/input'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import dynamic from 'next/dynamic'
+import type { Editor } from '@tiptap/react'
 
 // Dynamically import editor to avoid SSR issues
 const WysiwygEditor = dynamic(() => import('@/components/documents/WysiwygEditor'), {
   ssr: false,
   loading: () => <div className="p-6 text-white/40">Loading editor...</div>
 })
+
+// Dynamically import toolbar
+const EditorToolbar = dynamic(
+  () => import('@/components/documents/WysiwygEditor').then(mod => mod.EditorToolbar),
+  { ssr: false }
+)
 
 interface DocumentMeta {
   slug: string
@@ -36,6 +43,7 @@ export default function DocumentsPage() {
   const [isEditing, setIsEditing] = useState(false)
   const [editContent, setEditContent] = useState('')
   const [saving, setSaving] = useState(false)
+  const [editor, setEditor] = useState<Editor | null>(null)
 
   // Fetch documents list
   useEffect(() => {
@@ -271,36 +279,29 @@ export default function DocumentsPage() {
                   ))}
                 </div>
               )}
+              
+              {/* Toolbar - shown when editing */}
+              {isEditing && (
+                <div className="mt-4 pt-4 border-t border-white/5">
+                  <EditorToolbar editor={editor} />
+                </div>
+              )}
             </div>
 
             {/* Document Content */}
             <div className="flex-1 overflow-auto">
               {isEditing ? (
-                <WysiwygEditor
-                  content={editContent}
-                  onChange={setEditContent}
-                  placeholder="Start writing..."
-                />
+                <div className="p-8">
+                  <WysiwygEditor
+                    content={editContent}
+                    onChange={setEditContent}
+                    placeholder="Start writing..."
+                    onEditorReady={setEditor}
+                  />
+                </div>
               ) : (
-                <div className="p-8 md:p-10">
-                  <div className="prose prose-invert prose-lg max-w-none
-                    prose-headings:font-semibold prose-headings:text-white prose-headings:mt-10 prose-headings:mb-4
-                    prose-h1:text-3xl prose-h1:mt-8 prose-h1:mb-6
-                    prose-h2:text-2xl prose-h2:mt-10 prose-h2:mb-4 prose-h2:pt-6 prose-h2:border-t prose-h2:border-white/5
-                    prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3
-                    prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-2
-                    prose-p:text-white/70 prose-p:leading-loose prose-p:mb-5
-                    prose-a:text-[#4169E1] prose-a:no-underline hover:prose-a:underline
-                    prose-strong:text-white prose-strong:font-semibold
-                    prose-em:text-white/80
-                    prose-code:text-[#228B22] prose-code:bg-[#228B22]/10 prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-code:font-mono prose-code:text-sm
-                    prose-pre:bg-black/40 prose-pre:border prose-pre:border-white/10 prose-pre:rounded-xl prose-pre:p-5 prose-pre:my-6
-                    prose-ul:text-white/70 prose-ul:my-5 prose-ul:space-y-2
-                    prose-ol:text-white/70 prose-ol:my-5 prose-ol:space-y-2
-                    prose-li:marker:text-[#4169E1] prose-li:leading-relaxed prose-li:pl-2
-                    prose-blockquote:border-l-4 prose-blockquote:border-l-[#4169E1] prose-blockquote:text-white/60 prose-blockquote:bg-white/[0.02] prose-blockquote:py-3 prose-blockquote:px-6 prose-blockquote:rounded-r-xl prose-blockquote:my-6 prose-blockquote:italic
-                    prose-hr:border-white/10 prose-hr:my-10
-                  ">
+                <div className="p-8">
+                  <div className="prose prose-invert prose-lg max-w-none prose-headings:font-semibold prose-headings:text-white prose-h1:text-3xl prose-h1:mt-6 prose-h1:mb-4 prose-h2:text-2xl prose-h2:mt-6 prose-h2:mb-3 prose-h3:text-xl prose-h3:mt-5 prose-h3:mb-2 prose-p:text-white/70 prose-p:leading-relaxed prose-p:my-3 prose-strong:text-white prose-em:text-white/80 prose-ul:text-white/70 prose-ul:my-3 prose-ol:text-white/70 prose-ol:my-3 prose-li:my-1 prose-blockquote:border-l-4 prose-blockquote:text-white/60 prose-blockquote:my-4 prose-hr:border-white/10 prose-hr:my-6">
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>{selectedDoc.content}</ReactMarkdown>
                   </div>
                 </div>
