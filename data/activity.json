@@ -1,6 +1,17 @@
 {
   "activities": [
     {
+      "id": "1769743076382-o5sknvgjz",
+      "type": "project_note",
+      "title": "Note for debtless",
+      "description": "add a task to work on and complete onboarding v1",
+      "timestamp": "2026-01-30T03:17:56.382Z",
+      "actor": "armaan",
+      "metadata": {
+        "projectId": "debtless"
+      }
+    },
+    {
       "id": "1769742463899-htks3cp8l",
       "type": "project_note",
       "title": "Note for debtless",

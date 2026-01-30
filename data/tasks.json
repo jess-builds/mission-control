@@ -215,10 +215,36 @@
           "author": "armaan",
           "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
           "timestamp": "2026-01-30T03:10:09.527Z"
+        },
+        {
+          "id": "note-b734f9b3-ee5d-4e55-92ae-5efaa6748dd9",
+          "author": "armaan",
+          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
+          "timestamp": "2026-01-30T03:14:42.313Z"
         }
       ],
       "createdAt": "2026-01-29T15:04:24.911Z",
-      "updatedAt": "2026-01-30T03:10:49.600Z"
+      "updatedAt": "2026-01-30T03:16:18.570Z"
+    },
+    {
+      "id": "e355e0f5-c777-4841-ab35-e71deb875aad",
+      "title": "Complete Debtless onboarding v1",
+      "description": "Work on and complete the first version of the onboarding flow for Debtless iOS app",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "Debtless"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-30T03:18:06.685Z",
+      "updatedAt": "2026-01-30T03:19:11.337Z"
     }
   ]
 }

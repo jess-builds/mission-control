@@ -1,6 +1,14 @@
 {
   "notes": [
     {
+      "id": "1769743076378-03vksiyif",
+      "projectId": "debtless",
+      "message": "add a task to work on and complete onboarding v1",
+      "timestamp": "2026-01-30T03:17:56.378Z",
+      "type": "delegation",
+      "status": "pending"
+    },
+    {
       "id": "1769742463899-ze2qxo5p3",
       "projectId": "debtless",
       "message": "add a task to work on and complete onboarding v1",

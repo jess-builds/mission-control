@@ -115,11 +115,23 @@ export async function POST(request: NextRequest) {
       type: 'project_note',
       project: projectNames[projectId] || projectId,
       content: message,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      noteId: newNote.id
     }
     
     // Fire and forget - don't block the response
-    notifyJess(notificationPayload).catch(err => {
+    // Also mark as acknowledged once notification is sent successfully
+    notifyJess(notificationPayload).then(result => {
+      if (result.success) {
+        // Mark note as acknowledged
+        const currentNotes = readNotes()
+        const idx = currentNotes.findIndex(n => n.id === newNote.id)
+        if (idx !== -1) {
+          currentNotes[idx].status = 'acknowledged'
+          writeNotes(currentNotes)
+        }
+      }
+    }).catch(err => {
       console.error('Failed to notify Jess about project note:', err)
     })
     
@@ -149,5 +161,36 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Failed to add project note:', error)
     return NextResponse.json({ error: 'Failed to add note' }, { status: 500 })
+  }
+}
+
+// PUT - Update a note's status
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { noteId, status } = body
+    
+    if (!noteId || !status) {
+      return NextResponse.json({ error: 'noteId and status required' }, { status: 400 })
+    }
+    
+    if (!['pending', 'acknowledged', 'completed'].includes(status)) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    }
+    
+    const notes = readNotes()
+    const noteIndex = notes.findIndex(n => n.id === noteId)
+    
+    if (noteIndex === -1) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+    }
+    
+    notes[noteIndex].status = status
+    writeNotes(notes)
+    
+    return NextResponse.json({ success: true, note: notes[noteIndex] })
+  } catch (error) {
+    console.error('Failed to update note:', error)
+    return NextResponse.json({ error: 'Failed to update note' }, { status: 500 })
   }
 }

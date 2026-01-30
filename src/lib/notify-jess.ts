@@ -9,6 +9,7 @@ export interface ProjectNotePayload {
   project: string
   content: string
   timestamp: string
+  noteId?: string
 }
 
 export interface TaskNotePayload {
