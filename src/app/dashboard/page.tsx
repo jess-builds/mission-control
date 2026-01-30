@@ -133,7 +133,7 @@ export default function DashboardPage() {
 
       {/* Right Sidebar - Activity Timeline */}
       <div className="hidden xl:block w-72 shrink-0">
-        <div className="sticky top-6">
+        <div className="sticky top-6 max-h-[calc(100vh-3rem)]">
           <ActivityTimeline />
         </div>
       </div>
