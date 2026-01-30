@@ -119,7 +119,7 @@
 
 @layer base {
   * {
-    @apply border-border outline-ring/50;
+    @apply border-border;
   }
   body {
     @apply bg-background text-foreground antialiased;
@@ -266,6 +266,13 @@ main > div {
 input:focus, textarea:focus, select:focus {
   border-color: var(--royal-blue) !important;
   box-shadow: 0 0 0 3px rgba(65, 105, 225, 0.15), 0 1px 2px rgba(0,0,0,0.1) !important;
+}
+
+/* Remove focus outlines from idea bank inputs */
+.idea-input-clean:focus,
+.idea-input-clean:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Remove focus ring from command search */

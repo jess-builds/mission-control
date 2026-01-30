@@ -245,6 +245,24 @@
       "notes": [],
       "createdAt": "2026-01-30T03:18:06.685Z",
       "updatedAt": "2026-01-30T03:19:11.337Z"
+    },
+    {
+      "id": "9c1e4a57-a73e-4843-b0a4-5c0241ce0910",
+      "title": "Build Idea Bank Page",
+      "description": "Create a page to store ideas from journals with thumbnails, full details, implementation plans, and UX walkthroughs",
+      "status": "done",
+      "priority": "high",
+      "assignee": "jess",
+      "tags": [],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": "Completed - Idea Bank page built with thumbnail grid, detail views, full CRUD API",
+      "createdAt": "2026-01-30T23:09:45.387Z",
+      "updatedAt": "2026-01-30T23:13:14.782Z"
     }
   ]
 }

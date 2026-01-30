@@ -10,7 +10,8 @@ import {
   BookOpen,
   Timer,
   Command,
-  Mic
+  Mic,
+  Lightbulb
 } from 'lucide-react'
 
 const navigation = [
@@ -18,8 +19,9 @@ const navigation = [
   { name: 'Documents', href: '/dashboard/documents', icon: FileText, shortcut: '2' },
   { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, shortcut: '3' },
   { name: 'Journal', href: '/dashboard/journal', icon: BookOpen, shortcut: '4' },
-  { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '5' },
-  { name: 'Lectures', href: '/dashboard/lectures', icon: Mic, shortcut: '6' },
+  { name: 'Idea Bank', href: '/dashboard/ideas', icon: Lightbulb, shortcut: '5' },
+  { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '6' },
+  { name: 'Lectures', href: '/dashboard/lectures', icon: Mic, shortcut: '7' },
 ]
 
 export default function Sidebar() {

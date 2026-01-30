@@ -67,6 +67,47 @@ async function getContextData(context: ChatContext) {
           }
         }
         break;
+
+      case 'all':
+        // Gather summary from all courses and recordings
+        const coursesPath = path.join(DATA_DIR, 'courses.json');
+        if (existsSync(coursesPath)) {
+          const courses = JSON.parse(await readFile(coursesPath, 'utf-8'));
+          contextParts.push(`Courses: ${courses.map((c: any) => `${c.name} (${c.code})`).join(', ')}`);
+          
+          let totalRecordings = 0;
+          const recordingSummaries: string[] = [];
+          
+          for (const course of courses) {
+            const courseRecordingsDir = path.join(DATA_DIR, course.id, 'recordings');
+            if (existsSync(courseRecordingsDir)) {
+              const files = await readdir(courseRecordingsDir);
+              const jsonFiles = files.filter(f => f.endsWith('.json'));
+              totalRecordings += jsonFiles.length;
+              
+              if (jsonFiles.length > 0) {
+                // Get brief info from each recording
+                const recordings: string[] = [];
+                for (const file of jsonFiles.slice(0, 5)) {
+                  const recordingPath = path.join(courseRecordingsDir, file);
+                  try {
+                    const recording = JSON.parse(await readFile(recordingPath, 'utf-8'));
+                    recordings.push(`- ${recording.date}: ${recording.notes?.substring(0, 100) || 'No notes'}...`);
+                  } catch {}
+                }
+                if (recordings.length > 0) {
+                  recordingSummaries.push(`\n${course.name} (${jsonFiles.length} recordings):\n${recordings.join('\n')}`);
+                }
+              }
+            }
+          }
+          
+          contextParts.push(`Total recordings: ${totalRecordings}`);
+          if (recordingSummaries.length > 0) {
+            contextParts.push(recordingSummaries.join('\n'));
+          }
+        }
+        break;
     }
   } catch (error) {
     console.error('Error getting context data:', error);
@@ -80,7 +121,7 @@ function mentionsJess(message: string): boolean {
   return /@jess/i.test(message);
 }
 
-// Route through Clawdbot (Opus with tools)
+// Route through Clawdbot via sessions_send (fires to main Telegram session)
 async function routeThroughClawdbot(message: string, contextData: string): Promise<string> {
   let fullMessage = message;
   if (contextData) {
@@ -89,26 +130,32 @@ async function routeThroughClawdbot(message: string, contextData: string): Promi
     fullMessage = `[Mission Control - Lecture Chat]\n\nArmaan's request: ${message}`;
   }
   
-  const response = await fetch(`${CLAWDBOT_URL}/v1/chat/completions`, {
+  // Use /tools/invoke with sessions_send to inject into main Telegram session
+  // This is fire-and-forget - Jess will respond on Telegram, not here
+  const response = await fetch(`${CLAWDBOT_URL}/tools/invoke`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${CLAWDBOT_TOKEN}`,
-      'x-clawdbot-agent-id': 'main'
     },
     body: JSON.stringify({
-      model: 'clawdbot:main',
-      messages: [{ role: 'user', content: fullMessage }],
-      user: 'mission-control-lectures'
+      tool: 'sessions_send',
+      args: {
+        sessionKey: 'agent:main:main',
+        message: fullMessage,
+        timeoutSeconds: 0  // fire and forget
+      }
     })
   });
   
   if (!response.ok) {
+    const errorText = await response.text();
+    console.error('Clawdbot tools/invoke error:', response.status, errorText);
     throw new Error(`Clawdbot API error: ${response.status}`);
   }
   
-  const data = await response.json();
-  return data.choices?.[0]?.message?.content || "I couldn't process that. Try again?";
+  // Don't wait for Jess's actual response - she'll reply on Telegram
+  return "✓ Sent to Jess — check Telegram for my response.";
 }
 
 // Use GPT-4o-mini directly (cheaper, no tools)
