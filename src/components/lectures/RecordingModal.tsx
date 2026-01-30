@@ -18,7 +18,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { toast } from "sonner";
 
 interface Course {
@@ -34,8 +33,6 @@ interface RecordingModalProps {
   onRecordingComplete?: (recordingId: string, courseId: string) => void;
 }
 
-const CHUNK_INTERVAL_MS = 15000;
-
 export default function RecordingModal({
   open,
   onOpenChange,
@@ -46,17 +43,11 @@ export default function RecordingModal({
   const [isRecording, setIsRecording] = useState(false);
   const [recordingTime, setRecordingTime] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
-  const [liveTranscript, setLiveTranscript] = useState<string>("");
-  const [isTranscribing, setIsTranscribing] = useState(false);
-  const [chunkCount, setChunkCount] = useState(0);
   
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
-  const allChunksRef = useRef<Blob[]>([]);
-  const lastTranscribedLengthRef = useRef(0); // Track how much we've transcribed
+  const chunksRef = useRef<Blob[]>([]);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
-  const chunkTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const transcriptScrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!open) {
@@ -78,20 +69,10 @@ export default function RecordingModal({
     };
   }, [isRecording]);
 
-  useEffect(() => {
-    if (transcriptScrollRef.current) {
-      transcriptScrollRef.current.scrollTop = transcriptScrollRef.current.scrollHeight;
-    }
-  }, [liveTranscript]);
-
   const cleanup = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
-    }
-    if (chunkTimerRef.current) {
-      clearInterval(chunkTimerRef.current);
-      chunkTimerRef.current = null;
     }
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
@@ -100,12 +81,8 @@ export default function RecordingModal({
     setSelectedCourse("");
     setRecordingTime(0);
     setIsUploading(false);
-    setLiveTranscript("");
-    setIsTranscribing(false);
     setIsRecording(false);
-    setChunkCount(0);
-    allChunksRef.current = [];
-    lastTranscribedLengthRef.current = 0;
+    chunksRef.current = [];
   };
 
   const formatTime = (seconds: number) => {
@@ -117,51 +94,6 @@ export default function RecordingModal({
       return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
     }
     return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const transcribeAccumulatedAudio = async () => {
-    const chunks = [...allChunksRef.current];
-    
-    if (chunks.length === 0) {
-      console.log('[Transcribe] No chunks yet');
-      return;
-    }
-    
-    // Create full blob with all audio (includes WebM header from first chunk)
-    const fullBlob = new Blob(chunks, { type: 'audio/webm' });
-    
-    // Skip if we've already transcribed this
-    if (fullBlob.size <= lastTranscribedLengthRef.current) {
-      console.log('[Transcribe] No new audio since last transcription');
-      return;
-    }
-    
-    console.log(`[Transcribe] Full audio: ${fullBlob.size} bytes (was ${lastTranscribedLengthRef.current})`);
-    setIsTranscribing(true);
-    setChunkCount(c => c + 1);
-
-    try {
-      const formData = new FormData();
-      formData.append('audio', fullBlob, 'recording.webm');
-
-      const response = await fetch('/api/lectures/transcribe-chunk', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const data = await response.json();
-      console.log('[Transcribe] Response:', data);
-      
-      if (response.ok && data.transcript && data.transcript.trim()) {
-        // Replace entire transcript with new one (since we send full audio each time)
-        setLiveTranscript(data.transcript.trim());
-        lastTranscribedLengthRef.current = fullBlob.size;
-      }
-    } catch (error) {
-      console.error('[Transcribe] Error:', error);
-    } finally {
-      setIsTranscribing(false);
-    }
   };
 
   const startRecording = async () => {
@@ -188,6 +120,7 @@ export default function RecordingModal({
         return;
       }
 
+      // Stop video tracks - we only need audio
       stream.getVideoTracks().forEach(track => track.stop());
 
       const audioStream = new MediaStream(audioTracks);
@@ -199,32 +132,27 @@ export default function RecordingModal({
       });
       
       mediaRecorderRef.current = mediaRecorder;
-      allChunksRef.current = [];
-      lastTranscribedLengthRef.current = 0;
+      chunksRef.current = [];
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          allChunksRef.current.push(event.data);
+          chunksRef.current.push(event.data);
         }
       };
 
       mediaRecorder.onstop = handleRecordingStop;
 
+      // Handle tab being closed/stopped
       audioTracks[0].addEventListener('ended', () => {
         toast.info("Tab sharing stopped");
         stopRecording();
       });
 
-      mediaRecorder.start(1000);
+      // Record in 10-second chunks for reliable data capture
+      mediaRecorder.start(10000);
       setIsRecording(true);
       
-      // Start transcription interval - sends FULL audio each time
-      chunkTimerRef.current = setInterval(() => {
-        console.log('[Timer] Transcription interval triggered');
-        transcribeAccumulatedAudio();
-      }, CHUNK_INTERVAL_MS);
-      
-      toast.success("Recording started! Transcription updates every 15 seconds.");
+      toast.success("Recording started!");
     } catch (error) {
       console.error("Error starting recording:", error);
       if (error instanceof Error && error.name === 'NotAllowedError') {
@@ -236,11 +164,6 @@ export default function RecordingModal({
   };
 
   const stopRecording = () => {
-    if (chunkTimerRef.current) {
-      clearInterval(chunkTimerRef.current);
-      chunkTimerRef.current = null;
-    }
-
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
     }
@@ -254,7 +177,7 @@ export default function RecordingModal({
   };
 
   const handleRecordingStop = async () => {
-    if (allChunksRef.current.length === 0) {
+    if (chunksRef.current.length === 0) {
       toast.error("No recording data captured");
       return;
     }
@@ -262,13 +185,16 @@ export default function RecordingModal({
     setIsUploading(true);
 
     try {
-      const blob = new Blob(allChunksRef.current, { type: 'audio/webm' });
+      const blob = new Blob(chunksRef.current, { type: 'audio/webm' });
+      const fileSizeMB = (blob.size / (1024 * 1024)).toFixed(2);
+      
+      console.log(`[Upload] Recording size: ${fileSizeMB} MB`);
       
       const formData = new FormData();
       formData.append('audio', blob, `lecture_${Date.now()}.webm`);
       formData.append('courseId', selectedCourse);
       formData.append('date', new Date().toISOString().split('T')[0]);
-      formData.append('liveTranscript', liveTranscript);
+      formData.append('duration', String(recordingTime));
 
       const uploadResponse = await fetch('/api/lectures/recordings/upload', {
         method: 'POST',
@@ -281,14 +207,21 @@ export default function RecordingModal({
       }
 
       const { recordingId } = await uploadResponse.json();
-      toast.success("Recording uploaded!");
+      toast.success("Recording uploaded! Starting transcription...");
 
+      // Trigger async transcription (chunked server-side)
       fetch(`/api/lectures/recordings/${recordingId}/transcribe`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ courseId: selectedCourse }),
       }).then(res => {
-        if (res.ok) toast.success("Full transcription started!");
+        if (res.ok) {
+          toast.success("Transcription complete!");
+        } else {
+          toast.error("Transcription failed - check logs");
+        }
+      }).catch(() => {
+        toast.error("Transcription request failed");
       });
 
       if (onRecordingComplete) {
@@ -306,12 +239,12 @@ export default function RecordingModal({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={`${isRecording ? 'sm:max-w-2xl' : 'sm:max-w-md'}`}>
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Record Lecture</DialogTitle>
           <DialogDescription>
             {isRecording 
-              ? "Recording with live Whisper transcription" 
+              ? "Recording in progress..." 
               : "Select your course and share the Zoom tab to record audio"
             }
           </DialogDescription>
@@ -344,7 +277,8 @@ export default function RecordingModal({
                     <ul className="text-muted-foreground space-y-1 ml-4 list-disc">
                       <li>Share the Zoom tab with audio enabled</li>
                       <li>You can mute the tab after sharing</li>
-                      <li>Transcription updates every ~15 seconds</li>
+                      <li>Supports recordings up to 3+ hours</li>
+                      <li>Transcription happens after recording</li>
                     </ul>
                   </div>
                 </div>
@@ -373,7 +307,7 @@ export default function RecordingModal({
                   </div>
                   <div>
                     <p className="font-mono font-bold text-lg">{formatTime(recordingTime)}</p>
-                    <p className="text-xs text-muted-foreground">Recording...</p>
+                    <p className="text-xs text-muted-foreground">Recording audio...</p>
                   </div>
                 </div>
                 <Button 
@@ -387,31 +321,12 @@ export default function RecordingModal({
                 </Button>
               </div>
 
-              <Card className="p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-medium">Live Transcription</p>
-                    {isTranscribing && (
-                      <Loader2 className="h-3 w-3 animate-spin text-blue-500" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <span>Update #{chunkCount}</span>
-                    <span>•</span>
-                    <span>{liveTranscript.split(' ').filter(w => w).length} words</span>
-                  </div>
-                </div>
-                <ScrollArea className="h-48 w-full rounded border p-3 bg-muted/30">
-                  <div ref={transcriptScrollRef} className="text-sm">
-                    {liveTranscript ? (
-                      <span>{liveTranscript}</span>
-                    ) : (
-                      <span className="text-muted-foreground italic">
-                        First transcription will appear after ~15 seconds...
-                      </span>
-                    )}
-                  </div>
-                </ScrollArea>
+              <Card className="p-4 bg-muted/30">
+                <p className="text-sm text-muted-foreground text-center">
+                  Recording will be transcribed after you stop.
+                  <br />
+                  <span className="text-xs">Supports lectures up to 3+ hours.</span>
+                </p>
               </Card>
             </div>
           )}
@@ -422,7 +337,7 @@ export default function RecordingModal({
               <div className="space-y-2">
                 <p className="font-medium">Uploading recording...</p>
                 <p className="text-sm text-muted-foreground">
-                  This may take a few moments
+                  This may take a moment for longer recordings
                 </p>
               </div>
             </div>
