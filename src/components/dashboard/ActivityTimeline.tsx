@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FileText, Check, Pill, MessageCircle, Loader2, Activity, Zap, Timer, Layout } from 'lucide-react'
+import { FileText, Check, Pill, MessageCircle, Loader2, Activity, Zap, Timer, Layout, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface ActivityItem {
   id: string
@@ -98,6 +98,19 @@ function groupByDate(activities: ActivityItem[]) {
 export default function ActivityTimeline() {
   const [activities, setActivities] = useState<ActivityItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+
+  const toggleExpanded = (id: string) => {
+    setExpandedItems(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   useEffect(() => {
     fetchActivities()
@@ -184,9 +197,24 @@ export default function ActivityTimeline() {
                       </div>
                       
                       {activity.description && (
-                        <p className="text-[11px] text-white/30 mt-1 line-clamp-1">
-                          {activity.description}
-                        </p>
+                        <div className="mt-1 flex items-start gap-1">
+                          <button
+                            onClick={() => toggleExpanded(activity.id)}
+                            className="text-white/40 hover:text-white/60 transition-colors shrink-0 mt-0.5"
+                          >
+                            {expandedItems.has(activity.id) ? (
+                              <ChevronUp className="h-3 w-3" />
+                            ) : (
+                              <ChevronDown className="h-3 w-3" />
+                            )}
+                          </button>
+                          <p 
+                            className={`text-[11px] text-white/30 cursor-pointer ${expandedItems.has(activity.id) ? '' : 'line-clamp-1'}`}
+                            onClick={() => toggleExpanded(activity.id)}
+                          >
+                            {activity.description}
+                          </p>
+                        </div>
                       )}
                       
                       <span className={`inline-block text-[10px] mt-1.5 ${
