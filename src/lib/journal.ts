@@ -1,8 +1,8 @@
 import fs from 'fs'
 import path from 'path'
-import matter from 'gray-matter'
 
-const JOURNAL_DIR = path.join(process.cwd(), 'data', 'journal')
+// Use Jess's daily notes as the journal
+const JOURNAL_DIR = '/home/ubuntu/clawd/memory'
 
 export interface JournalEntry {
   date: string
@@ -27,21 +27,50 @@ function dateToFilename(date: string): string {
   return `${date}.md`
 }
 
+// Extract summary from content (first non-heading, non-empty line)
+function extractSummary(content: string): string {
+  const lines = content.split('\n')
+  for (const line of lines) {
+    const trimmed = line.trim()
+    // Skip empty lines and headings
+    if (!trimmed || trimmed.startsWith('#')) continue
+    // Return first content line, truncated
+    return trimmed.slice(0, 100) + (trimmed.length > 100 ? '...' : '')
+  }
+  return 'Daily notes'
+}
+
+// Extract topics from H2 headings
+function extractTopics(content: string): string[] {
+  const topics: string[] = []
+  const lines = content.split('\n')
+  for (const line of lines) {
+    const match = line.match(/^## (.+)$/)
+    if (match) {
+      // Clean up emojis and special chars for cleaner tags
+      const topic = match[1].replace(/[🎉🔥⚠️✅❌📋🧠📝💬😊🔄]/g, '').trim()
+      if (topic && !topics.includes(topic)) {
+        topics.push(topic)
+      }
+    }
+  }
+  return topics.slice(0, 5) // Max 5 topics
+}
+
 export function getAllJournalEntries(): JournalMeta[] {
   ensureDir()
   
-  const files = fs.readdirSync(JOURNAL_DIR).filter(f => f.endsWith('.md'))
+  const files = fs.readdirSync(JOURNAL_DIR).filter(f => f.endsWith('.md') && /^\d{4}-\d{2}-\d{2}\.md$/.test(f))
   
   return files.map(file => {
     const filePath = path.join(JOURNAL_DIR, file)
     const content = fs.readFileSync(filePath, 'utf-8')
-    const { data } = matter(content)
     const date = file.replace('.md', '')
     
     return {
       date,
-      summary: data.summary || '',
-      topics: data.topics || []
+      summary: extractSummary(content),
+      topics: extractTopics(content)
     }
   }).sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 }
@@ -55,13 +84,12 @@ export function getJournalEntry(date: string): JournalEntry | null {
     return null
   }
   
-  const fileContent = fs.readFileSync(filePath, 'utf-8')
-  const { data, content } = matter(fileContent)
+  const content = fs.readFileSync(filePath, 'utf-8')
   
   return {
     date,
-    summary: data.summary || '',
-    topics: data.topics || [],
+    summary: extractSummary(content),
+    topics: extractTopics(content),
     content
   }
 }
@@ -74,16 +102,9 @@ export function saveJournalEntry(
 ): void {
   ensureDir()
   
-  const frontmatter = {
-    date,
-    summary,
-    topics
-  }
-  
-  const fileContent = matter.stringify(content, frontmatter)
+  // Write directly as markdown (no frontmatter for Jess's notes)
   const filePath = path.join(JOURNAL_DIR, dateToFilename(date))
-  
-  fs.writeFileSync(filePath, fileContent)
+  fs.writeFileSync(filePath, content)
 }
 
 export function getTodayDate(): string {

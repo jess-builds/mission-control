@@ -84,27 +84,9 @@ export function getAllDocuments(): DocumentMeta[] {
     }
   })
   
-  // Memory files (daily notes)
-  let memoryDocs: DocumentMeta[] = []
-  if (fs.existsSync(WORKSPACE_MEMORY_DIR)) {
-    const memoryFiles = fs.readdirSync(WORKSPACE_MEMORY_DIR).filter(f => f.endsWith('.md'))
-    memoryDocs = memoryFiles.map(file => {
-      const filePath = path.join(WORKSPACE_MEMORY_DIR, file)
-      const stats = fs.statSync(filePath)
-      const slug = `memory-${file.replace('.md', '')}`
-      
-      return {
-        slug,
-        title: `📝 ${file.replace('.md', '')}`,
-        tags: ['Jess', 'Memory', 'Daily'],
-        createdAt: stats.birthtime.toISOString().split('T')[0],
-        updatedAt: stats.mtime.toISOString().split('T')[0],
-        source: 'workspace-memory' as const
-      }
-    })
-  }
+  // Memory files now live in Journal section, not Documents
   
-  return [...regularDocs, ...workspaceDocs, ...memoryDocs]
+  return [...regularDocs, ...workspaceDocs]
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 }
 

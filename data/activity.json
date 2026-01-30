@@ -1,0 +1,117 @@
+{
+  "activities": [
+    {
+      "id": "1769743319970-j993o8hxm",
+      "type": "project_note",
+      "title": "Note for debtless",
+      "description": "testing, do nothing",
+      "timestamp": "2026-01-30T03:21:59.970Z",
+      "actor": "armaan",
+      "metadata": {
+        "projectId": "debtless"
+      }
+    },
+    {
+      "id": "1769743076382-o5sknvgjz",
+      "type": "project_note",
+      "title": "Note for debtless",
+      "description": "add a task to work on and complete onboarding v1",
+      "timestamp": "2026-01-30T03:17:56.382Z",
+      "actor": "armaan",
+      "metadata": {
+        "projectId": "debtless"
+      }
+    },
+    {
+      "id": "1769742463899-htks3cp8l",
+      "type": "project_note",
+      "title": "Note for debtless",
+      "description": "add a task to work on and complete onboarding v1",
+      "timestamp": "2026-01-30T03:07:43.899Z",
+      "actor": "armaan",
+      "metadata": {
+        "projectId": "debtless"
+      }
+    },
+    {
+      "id": "1706574000001",
+      "type": "dashboard_action",
+      "title": "Dashboard overhaul completed",
+      "description": "Removed weather widget, focus timer, daily habits, and stat tiles",
+      "timestamp": "2026-01-30T01:30:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000002",
+      "type": "micro_task",
+      "title": "Activity Timeline redesigned",
+      "description": "Premium 2026 aesthetic with gradient icons and grouped dates",
+      "timestamp": "2026-01-30T01:29:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000003",
+      "type": "micro_task",
+      "title": "Quick Links icons scaled up",
+      "description": "Icons enlarged and centered in container",
+      "timestamp": "2026-01-30T01:25:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000004",
+      "type": "micro_task",
+      "title": "Timer edit modal added",
+      "description": "Click time blocks to edit name, project, start/end times, and duration",
+      "timestamp": "2026-01-30T01:20:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000005",
+      "type": "micro_task",
+      "title": "Search focus ring removed",
+      "description": "Fixed blue outline appearing on command search input",
+      "timestamp": "2026-01-30T01:17:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000006",
+      "type": "dashboard_action",
+      "title": "Command search unified",
+      "description": "Single Cmd+K search for everything",
+      "timestamp": "2026-01-30T00:41:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000007",
+      "type": "timer_started",
+      "title": "Timer feature built",
+      "description": "Weekly calendar view with time tracking",
+      "timestamp": "2026-01-30T00:40:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000008",
+      "type": "document_updated",
+      "title": "WYSIWYG editor fixed",
+      "description": "View and edit modes now have identical spacing",
+      "timestamp": "2026-01-30T00:22:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000009",
+      "type": "task_completed",
+      "title": "Email setup complete",
+      "description": "jessclawd@gmail.com connected with app password",
+      "timestamp": "2026-01-30T00:21:00.000Z",
+      "actor": "jess"
+    },
+    {
+      "id": "1706574000010",
+      "type": "medication_taken",
+      "title": "Medication confirmed",
+      "description": "Daily thyroid medication logged",
+      "timestamp": "2026-01-29T17:37:00.000Z",
+      "actor": "armaan"
+    }
+  ]
+}

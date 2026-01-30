@@ -5,10 +5,18 @@
       "title": "Review Mission Control spec",
       "description": "Go through the full spec and provide feedback",
       "status": "done",
+      "priority": "normal",
       "assignee": "armaan",
       "tags": [
         "Mission Control"
       ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T05:55:00Z"
     },
@@ -17,10 +25,18 @@
       "title": "Build Mission Control MVP",
       "description": "Create the Next.js app with all core features",
       "status": "in-progress",
+      "priority": "high",
       "assignee": "jess",
       "tags": [
         "Mission Control"
       ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T07:13:35.134Z"
     },
@@ -29,26 +45,206 @@
       "title": "Drawing Project 1 - Charcoal Still Life",
       "description": "FOUN-220 assignment",
       "status": "todo",
+      "priority": "normal",
       "assignee": "armaan",
       "tags": [
-        "SCAD"
+        "SCAD",
+        "FOUN-220"
       ],
       "dueDate": "2026-01-29",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
       "createdAt": "2026-01-29T05:55:00Z",
       "updatedAt": "2026-01-29T07:14:06.700Z"
     },
     {
       "id": "4",
-      "title": "Language Badge - Giriyama",
-      "description": "Create learning tool with 10+ words",
-      "status": "backlog",
+      "title": "Heritage Badge",
+      "description": "ANTH-106: Food/heritage assignment. 10% of grade. ✓",
+      "status": "done",
+      "priority": "normal",
       "assignee": "armaan",
       "tags": [
-        "SCAD"
+        "SCAD",
+        "ANTH-106"
+      ],
+      "dueDate": "2026-01-16",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-29T23:20:00Z",
+      "updatedAt": "2026-01-29T23:21:00Z"
+    },
+    {
+      "id": "5",
+      "title": "Language Badge - Giriyama",
+      "description": "ANTH-106: Create learning tool with 10+ words. Professor thought it was dope ✓",
+      "status": "done",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
       ],
       "dueDate": "2026-01-30",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
       "createdAt": "2026-01-29T05:55:00Z",
-      "updatedAt": "2026-01-29T07:13:30.892Z"
+      "updatedAt": "2026-01-29T23:18:00Z"
+    },
+    {
+      "id": "6",
+      "title": "Interview Badge",
+      "description": "ANTH-106: Use Otter.ai to interview someone 30+ min using Blackboard questions. For final project research. 10% of grade.",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
+      "dueDate": "2026-02-13",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-29T23:20:00Z",
+      "updatedAt": "2026-01-29T23:20:00Z"
+    },
+    {
+      "id": "7",
+      "title": "Design Badge - Rough Draft",
+      "description": "ANTH-106: Sustainability design proposal for a city of choice. Research global solutions, interview 2 people impacted, create 3 design sketches. 15% of grade.",
+      "status": "backlog",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
+      "dueDate": "2026-02-27",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-29T23:20:00Z",
+      "updatedAt": "2026-01-29T23:20:00Z"
+    },
+    {
+      "id": "8",
+      "title": "Design Badge - Final + Presentation",
+      "description": "ANTH-106: Final sustainability design proposal with live or pre-recorded presentation (5 min minimum). 35% of grade.",
+      "status": "backlog",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
+      "dueDate": "2026-03-12",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-29T23:20:00Z",
+      "updatedAt": "2026-01-29T23:20:00Z"
+    },
+    {
+      "id": "9",
+      "title": "Ethnographic Journal - Weekly Posts",
+      "description": "ANTH-106: Initial post due Wed 11:59pm EST, two responses to classmates due Fri 11:59pm EST. 20% of grade. Ongoing throughout quarter.",
+      "status": "in-progress",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-29T23:20:00Z",
+      "updatedAt": "2026-01-29T23:20:00Z"
+    },
+    {
+      "id": "f6c913e4-6b6d-4605-95ba-c4c3c3cd6011",
+      "title": "Follow up with Vaishnavi on PDF progress",
+      "description": "From journal: 2026-01-29",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "Clover"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-071ab127-23d1-4e8e-9ee5-769d846bf527",
+          "author": "armaan",
+          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
+          "timestamp": "2026-01-30T03:10:09.527Z"
+        },
+        {
+          "id": "note-b734f9b3-ee5d-4e55-92ae-5efaa6748dd9",
+          "author": "armaan",
+          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
+          "timestamp": "2026-01-30T03:14:42.313Z"
+        }
+      ],
+      "createdAt": "2026-01-29T15:04:24.911Z",
+      "updatedAt": "2026-01-30T03:16:18.570Z"
+    },
+    {
+      "id": "e355e0f5-c777-4841-ab35-e71deb875aad",
+      "title": "Complete Debtless onboarding v1",
+      "description": "Work on and complete the first version of the onboarding flow for Debtless iOS app",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "Debtless"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-30T03:18:06.685Z",
+      "updatedAt": "2026-01-30T03:19:11.337Z"
     }
   ]
 }

@@ -3,7 +3,7 @@ import { isAuthenticated } from '@/lib/auth'
 import Sidebar from '@/components/layout/Sidebar'
 import Header from '@/components/layout/Header'
 import { ThemeProvider } from '@/components/theme-provider'
-import QuickCapture from '@/components/layout/QuickCapture'
+import CommandSearch from '@/components/layout/CommandSearch'
 import { Toaster } from '@/components/ui/sonner'
 
 export default async function DashboardLayout({
@@ -27,7 +27,7 @@ export default async function DashboardLayout({
             {children}
           </main>
         </div>
-        <QuickCapture />
+        <CommandSearch />
         <Toaster 
           position="bottom-right"
           toastOptions={{

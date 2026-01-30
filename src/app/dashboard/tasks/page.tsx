@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
-import { Plus, User, Bot } from 'lucide-react'
-import TaskDialog from '@/components/tasks/TaskDialog'
+import { Plus, User, Bot, RefreshCw, ChevronDown, ChevronUp } from 'lucide-react'
+import TaskDrawer from '@/components/tasks/TaskDrawer'
 
 interface Task {
   id: string
@@ -32,6 +32,33 @@ export default function TasksPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editingTask, setEditingTask] = useState<Task | null>(null)
   const [draggedTask, setDraggedTask] = useState<Task | null>(null)
+  const [syncing, setSyncing] = useState(false)
+  const [expandedTasks, setExpandedTasks] = useState<Set<string>>(new Set())
+
+  const toggleExpanded = (taskId: string, e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent opening edit dialog
+    setExpandedTasks(prev => {
+      const next = new Set(prev)
+      if (next.has(taskId)) {
+        next.delete(taskId)
+      } else {
+        next.add(taskId)
+      }
+      return next
+    })
+  }
+
+  const syncJournalTodos = async () => {
+    setSyncing(true)
+    try {
+      await fetch('/api/tasks/sync-journal')
+      await fetchTasks()
+    } catch (error) {
+      console.error('Failed to sync:', error)
+    } finally {
+      setSyncing(false)
+    }
+  }
 
   const fetchTasks = async () => {
     try {
@@ -48,7 +75,16 @@ export default function TasksPage() {
   }
 
   useEffect(() => {
-    fetchTasks()
+    // Auto-sync journal todos on load, then fetch tasks
+    const init = async () => {
+      try {
+        await fetch('/api/tasks/sync-journal')
+      } catch (e) {
+        console.error('Sync failed:', e)
+      }
+      fetchTasks()
+    }
+    init()
   }, [])
 
   const handleDragStart = (e: React.DragEvent, task: Task) => {
@@ -115,13 +151,24 @@ export default function TasksPage() {
           <h1 className="text-2xl font-bold">Tasks</h1>
           <p className="text-muted-foreground">Drag and drop to update status</p>
         </div>
-        <Button 
-          onClick={openNewTask}
-          className="bg-blue-600 hover:bg-blue-700"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Task
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={syncJournalTodos}
+            disabled={syncing}
+            className="border-white/10"
+          >
+            <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? 'animate-spin' : ''}`} />
+            {syncing ? 'Syncing...' : 'Sync Journal'}
+          </Button>
+          <Button 
+            onClick={openNewTask}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <Plus className="h-4 w-4 mr-2" />
+            New Task
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
@@ -146,51 +193,80 @@ export default function TasksPage() {
 
               {/* Column Drop Zone */}
               <div className={`space-y-2.5 min-h-[250px] p-2.5 rounded-xl bg-gradient-to-b ${column.gradient} border border-white/5 transition-colors`}>
-                {columnTasks.map((task) => (
-                  <div
-                    key={task.id}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, task)}
-                    onClick={() => openEditTask(task)}
-                    className="group relative bg-[#111113] hover:bg-[#151517] border border-white/5 hover:border-white/10 rounded-lg p-3 cursor-grab active:cursor-grabbing transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5"
-                  >
-                    {/* Task Content */}
-                    <div className="flex items-start justify-between gap-2 mb-2">
-                      <h4 className="text-sm font-medium line-clamp-2 text-white/90">{task.title}</h4>
-                      <div className={`p-1 rounded-md ${task.assignee === 'armaan' ? 'bg-[#4169E1]/10' : 'bg-[#228B22]/10'}`}>
-                        {task.assignee === 'armaan' ? (
-                          <User className="h-3.5 w-3.5 text-[#4169E1]" />
-                        ) : (
-                          <Bot className="h-3.5 w-3.5 text-[#228B22]" />
-                        )}
+                {columnTasks.map((task) => {
+                  const isExpanded = expandedTasks.has(task.id)
+                  const hasDescription = task.description && task.description.trim().length > 0
+                  
+                  return (
+                    <div
+                      key={task.id}
+                      draggable
+                      onDragStart={(e) => handleDragStart(e, task)}
+                      onClick={() => openEditTask(task)}
+                      className="group relative bg-[#111113] hover:bg-[#151517] border border-white/5 hover:border-white/10 rounded-lg p-3 cursor-grab active:cursor-grabbing transition-all duration-200 hover:shadow-lg hover:shadow-black/20 hover:-translate-y-0.5"
+                    >
+                      {/* Task Content */}
+                      <div className="flex items-start justify-between gap-2 mb-2">
+                        <h4 className="text-sm font-medium line-clamp-2 text-white/90">{task.title}</h4>
+                        <div className={`p-1 rounded-md ${task.assignee === 'armaan' ? 'bg-[#4169E1]/10' : 'bg-[#228B22]/10'}`}>
+                          {task.assignee === 'armaan' ? (
+                            <User className="h-3.5 w-3.5 text-[#4169E1]" />
+                          ) : (
+                            <Bot className="h-3.5 w-3.5 text-[#228B22]" />
+                          )}
+                        </div>
                       </div>
+                      
+                      {/* Collapsible Description */}
+                      {hasDescription && (
+                        <div className="mb-2">
+                          <button
+                            onClick={(e) => toggleExpanded(task.id, e)}
+                            className="flex items-center gap-1 text-[11px] text-white/50 hover:text-white/70 transition-colors w-full text-left"
+                          >
+                            {isExpanded ? (
+                              <ChevronUp className="h-3 w-3 flex-shrink-0" />
+                            ) : (
+                              <ChevronDown className="h-3 w-3 flex-shrink-0" />
+                            )}
+                            <span className="font-medium">
+                              {isExpanded ? 'Hide details' : 'Show details'}
+                            </span>
+                          </button>
+                          {isExpanded && (
+                            <p className="text-[11px] text-white/60 mt-1.5 pl-4 leading-relaxed whitespace-pre-wrap">
+                              {task.description}
+                            </p>
+                          )}
+                        </div>
+                      )}
+                      
+                      {task.dueDate && (
+                        <p className="text-[11px] text-white/40 mb-2 font-medium">
+                          Due {task.dueDate}
+                        </p>
+                      )}
+                      
+                      {task.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {task.tags.slice(0, 2).map((tag) => (
+                            <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 text-white/50 font-medium">
+                              {tag}
+                            </span>
+                          ))}
+                          {task.tags.length > 2 && (
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 text-white/40">
+                              +{task.tags.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Subtle left accent */}
+                      <div className={`absolute left-0 top-2 bottom-2 w-0.5 rounded-full ${column.color} opacity-0 group-hover:opacity-100 transition-opacity`} />
                     </div>
-                    
-                    {task.dueDate && (
-                      <p className="text-[11px] text-white/40 mb-2 font-medium">
-                        Due {task.dueDate}
-                      </p>
-                    )}
-                    
-                    {task.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {task.tags.slice(0, 2).map((tag) => (
-                          <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 text-white/50 font-medium">
-                            {tag}
-                          </span>
-                        ))}
-                        {task.tags.length > 2 && (
-                          <span className="text-[10px] px-1.5 py-0.5 rounded-md bg-white/5 text-white/40">
-                            +{task.tags.length - 2}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    
-                    {/* Subtle left accent */}
-                    <div className={`absolute left-0 top-2 bottom-2 w-0.5 rounded-full ${column.color} opacity-0 group-hover:opacity-100 transition-opacity`} />
-                  </div>
-                ))}
+                  )
+                })}
                 
                 {/* Empty state */}
                 {columnTasks.length === 0 && (
@@ -204,9 +280,9 @@ export default function TasksPage() {
         })}
       </div>
 
-      <TaskDialog
+      <TaskDrawer
         open={dialogOpen}
-        onOpenChange={setDialogOpen}
+        onClose={() => setDialogOpen(false)}
         task={editingTask}
         onSaved={handleTaskSaved}
       />

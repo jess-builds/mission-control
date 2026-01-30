@@ -1,8 +1,9 @@
 ---
 title: Welcome to Mission Control
-tags: [getting-started]
-createdAt: 2026-01-29
-updatedAt: 2026-01-29
+tags:
+  - getting-started
+createdAt: '2026-01-29'
+updatedAt: '2026-01-30'
 ---
 
 # Welcome to Mission Control
