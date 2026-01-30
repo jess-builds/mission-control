@@ -209,9 +209,16 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": [],
+      "notes": [
+        {
+          "id": "note-071ab127-23d1-4e8e-9ee5-769d846bf527",
+          "author": "armaan",
+          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
+          "timestamp": "2026-01-30T03:10:09.527Z"
+        }
+      ],
       "createdAt": "2026-01-29T15:04:24.911Z",
-      "updatedAt": "2026-01-30T03:05:04.058Z"
+      "updatedAt": "2026-01-30T03:10:49.600Z"
     }
   ]
 }

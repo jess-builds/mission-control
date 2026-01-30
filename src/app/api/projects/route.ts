@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 import { getAllTasks } from '@/lib/tasks'
+import { notifyJess, type ProjectNotePayload } from '@/lib/notify-jess'
 
 const NOTES_FILE = path.join(process.cwd(), 'data', 'project-notes.json')
 
@@ -100,6 +101,27 @@ export async function POST(request: NextRequest) {
     
     notes.unshift(newNote)
     writeNotes(notes)
+    
+    // Notify Jess about the project note
+    const projectNames: Record<string, string> = {
+      'debtless': 'Debtless',
+      'life-lab': 'Life Lab',
+      'clover': 'Clover',
+      'content': 'Content',
+      'mission-control': 'Mission Control'
+    }
+    
+    const notificationPayload: ProjectNotePayload = {
+      type: 'project_note',
+      project: projectNames[projectId] || projectId,
+      content: message,
+      timestamp: new Date().toISOString()
+    }
+    
+    // Fire and forget - don't block the response
+    notifyJess(notificationPayload).catch(err => {
+      console.error('Failed to notify Jess about project note:', err)
+    })
     
     // Also log to activity feed
     try {
