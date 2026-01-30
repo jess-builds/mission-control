@@ -1,0 +1,22 @@
+[
+  {
+    "id": "anth-106",
+    "name": "ANTH 106",
+    "fullName": "Language, Culture, and Society",
+    "professor": "Elias Capello",
+    "schedule": "Tue/Thu 2:00-4:30 PM EST",
+    "color": "#3B82F6",
+    "zoomUrl": "https://scad.zoom.us/j/94999067119?pwd=tWaTN5l2jj5E7gk4BV6y5YIFhI5NCS.1",
+    "recordings": []
+  },
+  {
+    "id": "foun-220",
+    "name": "FOUN 220",
+    "fullName": "Drawing: Light and Shadow",
+    "professor": "Brett Osborn",
+    "schedule": "Tue/Thu 5:00-7:30 PM EST",
+    "color": "#10B981",
+    "zoomUrl": "https://scad.zoom.us/j/93368368811",
+    "recordings": []
+  }
+]

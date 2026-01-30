@@ -2,14 +2,25 @@ import { NextRequest, NextResponse } from 'next/server';
 import { readFile, writeFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
-import OpenAI from 'openai';
 
 const DATA_DIR = path.join(process.cwd(), 'data', 'lectures');
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || '',
-});
+// Find recording by ID across all courses
+async function findRecording(recordingId: string): Promise<{ path: string; data: any; courseId: string } | null> {
+  const coursesFile = path.join(DATA_DIR, 'courses.json');
+  if (!existsSync(coursesFile)) return null;
+  
+  const courses = JSON.parse(await readFile(coursesFile, 'utf-8'));
+  
+  for (const course of courses) {
+    const recordingPath = path.join(DATA_DIR, course.id, 'recordings', `${recordingId}.json`);
+    if (existsSync(recordingPath)) {
+      const data = JSON.parse(await readFile(recordingPath, 'utf-8'));
+      return { path: recordingPath, data, courseId: course.id };
+    }
+  }
+  return null;
+}
 
 export async function POST(
   request: NextRequest,
@@ -18,35 +29,42 @@ export async function POST(
   const { id: recordingId } = await params;
   
   try {
-    // Parse courseId from request body
-    const { courseId } = await request.json();
+    // Find the recording
+    const recording = await findRecording(recordingId);
     
-    if (!courseId) {
-      return NextResponse.json({ error: 'courseId is required' }, { status: 400 });
-    }
-    
-    // Load recording metadata
-    const metadataPath = path.join(DATA_DIR, courseId, 'recordings', `${recordingId}.json`);
-    if (!existsSync(metadataPath)) {
+    if (!recording) {
       return NextResponse.json({ error: 'Recording not found' }, { status: 404 });
     }
     
-    const metadataData = await readFile(metadataPath, 'utf-8');
-    const metadata = JSON.parse(metadataData);
+    const { data: metadata, path: metadataPath } = recording;
     
     if (!metadata.transcript) {
-      return NextResponse.json({ error: 'Recording not transcribed yet' }, { status: 400 });
+      return NextResponse.json({ 
+        message: 'Recording not transcribed yet',
+        tasks: [],
+        extractedTasks: []
+      });
     }
     
-    // Load course info to get course name
-    const coursePath = path.join(DATA_DIR, 'courses.json');
-    const coursesData = await readFile(coursePath, 'utf-8');
-    const courses = JSON.parse(coursesData);
-    const course = courses.find((c: any) => c.id === courseId);
-    
-    if (!course) {
-      return NextResponse.json({ error: 'Course not found' }, { status: 404 });
+    // Check if OpenAI is configured
+    if (!process.env.OPENAI_API_KEY) {
+      // Fail gracefully - no tasks extracted
+      metadata.extractedTasks = [];
+      metadata.tasksExtractedAt = new Date().toISOString();
+      metadata.taskExtractionNote = 'No tasks could be extracted (API not configured)';
+      
+      await writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+      
+      return NextResponse.json({
+        message: 'No tasks extracted (API not configured)',
+        tasks: [],
+        extractedTasks: []
+      });
     }
+    
+    // Dynamic import OpenAI only if needed
+    const OpenAI = (await import('openai')).default;
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
     
     // Extract tasks using GPT-4
     const response = await openai.chat.completions.create({
@@ -54,31 +72,22 @@ export async function POST(
       messages: [
         {
           role: 'system',
-          content: `You are an expert at extracting actionable tasks, assignments, and deadlines from lecture transcripts.
+          content: `You are an expert at extracting actionable tasks from lecture transcripts.
           
-Extract all:
+Extract:
 - Homework assignments
-- Project deadlines
+- Project deadlines  
 - Upcoming quizzes/exams
 - Required readings
-- Any other actionable items mentioned by the professor
+- Any other actionable items
 
-For each task, provide:
-- title: Brief descriptive title
-- description: More detailed description if available
-- dueDate: Due date in YYYY-MM-DD format (if mentioned)
-- type: assignment|exam|quiz|reading|project|other
-- priority: high|normal|low (based on importance/urgency)
+Return JSON: { "tasks": [{ "task": "description", "dueDate": "YYYY-MM-DD or null", "priority": "high|normal|low" }] }
 
-Return as JSON array.`
+If no tasks found, return: { "tasks": [] }`
         },
         {
           role: 'user',
-          content: `Course: ${course.name} (${course.code})
-Recording Date: ${metadata.recordingDate}
-
-Transcript:
-${metadata.transcript}`
+          content: `Transcript:\n${metadata.transcript}`
         }
       ],
       temperature: 0.3,
@@ -88,49 +97,30 @@ ${metadata.transcript}`
     const extractedData = JSON.parse(response.choices[0].message.content || '{"tasks": []}');
     const tasks = extractedData.tasks || [];
     
-    // Store extracted tasks in metadata
+    // Store extracted tasks
     metadata.extractedTasks = tasks;
     metadata.tasksExtractedAt = new Date().toISOString();
     
-    // Save updated metadata
-    await writeFile(metadataPath, JSON.stringify(metadata, null, 2));
-    
-    // Create actual tasks in the system for high priority items
-    if (tasks.length > 0) {
-      const highPriorityTasks = tasks.filter((t: any) => t.priority === 'high' || t.dueDate);
-      
-      for (const task of highPriorityTasks) {
-        try {
-          await fetch('http://localhost:3001/api/tasks', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              title: `[${course.code}] ${task.title}`,
-              description: task.description || '',
-              status: 'todo',
-              priority: task.priority || 'normal',
-              assignee: 'armaan',
-              tags: ['SCAD', course.code],
-              dueDate: task.dueDate,
-              referenceDocuments: [`lecture:${recordingId}`]
-            })
-          });
-        } catch (error) {
-          console.error('Error creating task:', error);
-        }
-      }
+    if (tasks.length === 0) {
+      metadata.taskExtractionNote = 'No tasks found in this recording';
     }
     
+    await writeFile(metadataPath, JSON.stringify(metadata, null, 2));
+    
     return NextResponse.json({
-      message: 'Tasks extracted successfully',
+      message: tasks.length > 0 ? 'Tasks extracted successfully' : 'No tasks found',
       tasks,
-      metadata
+      extractedTasks: tasks
     });
   } catch (error) {
     console.error('Error extracting tasks:', error);
-    return NextResponse.json({ 
-      error: 'Failed to extract tasks',
-      details: String(error) 
-    }, { status: 500 });
+    
+    // Fail gracefully
+    return NextResponse.json({
+      message: 'Could not extract tasks',
+      tasks: [],
+      extractedTasks: [],
+      note: 'Task extraction encountered an error. You can manually add tasks via chat.'
+    });
   }
 }

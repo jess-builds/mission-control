@@ -1,0 +1,15 @@
+{
+  "id": "2026-01-30_d7ec4633",
+  "courseId": "anth-106",
+  "date": "2026-01-30",
+  "duration": null,
+  "audioPath": "/data/lectures/anth-106/recordings/2026-01-30_d7ec4633.webm",
+  "transcript": null,
+  "summary": null,
+  "extractedTasks": [],
+  "createdAt": "2026-01-30T18:01:08.737Z",
+  "status": "transcription_failed",
+  "fileName": "lecture_1769796068635.webm",
+  "fileSize": 9675,
+  "error": "Error: 400 Invalid file format. Supported formats: ['flac', 'm4a', 'mp3', 'mp4', 'mpeg', 'mpga', 'oga', 'ogg', 'wav', 'webm']"
+}

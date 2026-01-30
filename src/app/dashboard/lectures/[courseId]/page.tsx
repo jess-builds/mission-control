@@ -9,6 +9,7 @@ import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import RecordingModal from "@/components/lectures/RecordingModal";
+import LectureChat from "@/components/lectures/LectureChat";
 
 interface Recording {
   id: string;
@@ -86,7 +87,7 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
     const statusConfig = {
       uploaded: { label: "Uploaded", variant: "secondary" as const },
       transcribing: { label: "Transcribing...", variant: "default" as const },
-      transcribed: { label: "Transcribed", variant: "success" as const },
+      transcribed: { label: "Transcribed", variant: "secondary" as const },
       transcription_failed: { label: "Failed", variant: "destructive" as const },
     };
 
@@ -175,7 +176,7 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
           {recordings.map((recording) => (
             <Link
               key={recording.id}
-              href={`/dashboard/lectures/${params.courseId}/${recording.date}`}
+              href={`/dashboard/lectures/${params.courseId}/${recording.id}`}
             >
               <Card className="p-6 hover:shadow-lg transition-shadow cursor-pointer">
                 <div className="flex items-center justify-between">
@@ -224,6 +225,15 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
           ))}
         </div>
       )}
+
+      {/* Chat section for this course */}
+      <div className="mt-8">
+        <LectureChat
+          courseId={params.courseId}
+          title={`Ask about ${course?.name || 'this course'}`}
+          placeholder={`Ask questions about ${course?.name || 'this course'} lectures...`}
+        />
+      </div>
 
       {course && (
         <RecordingModal

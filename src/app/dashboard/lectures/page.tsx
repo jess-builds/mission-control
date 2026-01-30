@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import RecordingModal from "@/components/lectures/RecordingModal";
+import LectureChat from "@/components/lectures/LectureChat";
 
 interface Course {
   id: string;
@@ -237,6 +238,14 @@ export default function LecturesPage() {
           ))}
         </div>
       )}
+
+      {/* Chat section - always visible */}
+      <div className="mt-8">
+        <LectureChat
+          title="Ask about all your lectures"
+          placeholder="Ask a question about any of your lectures, request summaries, or get help with course material..."
+        />
+      </div>
 
       <RecordingModal
         open={isRecording}
