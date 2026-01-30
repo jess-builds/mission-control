@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
@@ -98,6 +98,30 @@ const PRIORITIES = [
 
 export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
   const drawerRef = useRef<HTMLDivElement>(null)
+  
+  // Animation state - keeps component mounted during exit animation
+  const [isVisible, setIsVisible] = useState(false)
+  const [isAnimating, setIsAnimating] = useState(false)
+  
+  // Handle open/close with animation
+  useEffect(() => {
+    if (open) {
+      setIsVisible(true)
+      // Small delay to ensure mount before animation starts
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setIsAnimating(true)
+        })
+      })
+    } else {
+      setIsAnimating(false)
+      // Wait for exit animation to complete before unmounting
+      const timer = setTimeout(() => {
+        setIsVisible(false)
+      }, 300) // Match duration-300
+      return () => clearTimeout(timer)
+    }
+  }, [open])
   
   // Form state
   const [title, setTitle] = useState('')
@@ -270,21 +294,24 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
     setNewNote('')
   }
 
-  if (!open) return null
+  if (!isVisible) return null
 
   return (
     <>
       {/* Overlay/Backdrop */}
       <div 
-        className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300"
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-40 transition-opacity duration-300 ${
+          isAnimating ? 'opacity-100' : 'opacity-0'
+        }`}
+        onClick={onClose}
         aria-hidden="true"
       />
       
       {/* Drawer */}
       <div
         ref={drawerRef}
-        className={`fixed right-0 top-0 h-full w-full sm:w-[500px] lg:w-[40%] bg-[#0a0a0b] border-l border-white/10 z-50 overflow-hidden flex flex-col transform transition-transform duration-300 ease-out ${
-          open ? 'translate-x-0' : 'translate-x-full'
+        className={`fixed right-0 top-0 h-full w-full sm:w-[500px] lg:w-[40%] bg-[#0a0a0b] border-l border-white/10 z-50 overflow-hidden flex flex-col transition-transform duration-300 ease-out ${
+          isAnimating ? 'translate-x-0' : 'translate-x-full'
         }`}
         style={{ boxShadow: '-10px 0 40px rgba(0,0,0,0.5)' }}
       >

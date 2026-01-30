@@ -7,7 +7,9 @@
       "status": "done",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["Mission Control"],
+      "tags": [
+        "Mission Control"
+      ],
       "parentTask": null,
       "blocked": null,
       "recurring": null,
@@ -25,7 +27,9 @@
       "status": "in-progress",
       "priority": "high",
       "assignee": "jess",
-      "tags": ["Mission Control"],
+      "tags": [
+        "Mission Control"
+      ],
       "parentTask": null,
       "blocked": null,
       "recurring": null,
@@ -43,7 +47,10 @@
       "status": "todo",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "FOUN-220"],
+      "tags": [
+        "SCAD",
+        "FOUN-220"
+      ],
       "dueDate": "2026-01-29",
       "parentTask": null,
       "blocked": null,
@@ -62,7 +69,10 @@
       "status": "done",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "dueDate": "2026-01-16",
       "parentTask": null,
       "blocked": null,
@@ -81,7 +91,10 @@
       "status": "done",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "dueDate": "2026-01-30",
       "parentTask": null,
       "blocked": null,
@@ -100,7 +113,10 @@
       "status": "todo",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "dueDate": "2026-02-13",
       "parentTask": null,
       "blocked": null,
@@ -119,7 +135,10 @@
       "status": "backlog",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "dueDate": "2026-02-27",
       "parentTask": null,
       "blocked": null,
@@ -138,7 +157,10 @@
       "status": "backlog",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "dueDate": "2026-03-12",
       "parentTask": null,
       "blocked": null,
@@ -157,7 +179,10 @@
       "status": "in-progress",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["SCAD", "ANTH-106"],
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
       "parentTask": null,
       "blocked": null,
       "recurring": null,
@@ -172,10 +197,12 @@
       "id": "f6c913e4-6b6d-4605-95ba-c4c3c3cd6011",
       "title": "Follow up with Vaishnavi on PDF progress",
       "description": "From journal: 2026-01-29",
-      "status": "in-progress",
+      "status": "todo",
       "priority": "normal",
       "assignee": "armaan",
-      "tags": ["Clover"],
+      "tags": [
+        "Clover"
+      ],
       "parentTask": null,
       "blocked": null,
       "recurring": null,
@@ -184,7 +211,7 @@
       "referenceDocuments": [],
       "notes": [],
       "createdAt": "2026-01-29T15:04:24.911Z",
-      "updatedAt": "2026-01-30T02:36:27.808Z"
+      "updatedAt": "2026-01-30T03:05:04.058Z"
     }
   ]
 }
