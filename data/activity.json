@@ -1,6 +1,17 @@
 {
   "activities": [
     {
+      "id": "1769742463899-htks3cp8l",
+      "type": "project_note",
+      "title": "Note for debtless",
+      "description": "add a task to work on and complete onboarding v1",
+      "timestamp": "2026-01-30T03:07:43.899Z",
+      "actor": "armaan",
+      "metadata": {
+        "projectId": "debtless"
+      }
+    },
+    {
       "id": "1706574000001",
       "type": "dashboard_action",
       "title": "Dashboard overhaul completed",

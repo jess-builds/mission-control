@@ -22,6 +22,7 @@ import { toast } from 'sonner'
 import ReferenceDocuments from './ReferenceDocuments'
 import OutputDocuments from './OutputDocuments'
 import DocumentViewer from './DocumentViewer'
+import NotesSection from './NotesSection'
 
 interface TaskNote {
   id: string
@@ -137,7 +138,6 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
   // UI state
   const [saving, setSaving] = useState(false)
   const [deleting, setDeleting] = useState(false)
-  const [newNote, setNewNote] = useState('')
   const [isEditingTitle, setIsEditingTitle] = useState(false)
   const [viewingDocument, setViewingDocument] = useState<ViewableDocument | null>(null)
   const [taskData, setTaskData] = useState<Task | null>(null)
@@ -282,16 +282,6 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
     } finally {
       setDeleting(false)
     }
-  }
-
-  const handleSendNote = async () => {
-    if (!newNote.trim() || !task) return
-    
-    // TODO: Implement note sending via API
-    toast.info('Note feature coming soon', {
-      description: 'Notes will be sent to Jess for processing'
-    })
-    setNewNote('')
   }
 
   if (!isVisible) return null
@@ -536,25 +526,7 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
                 <MessageSquare className="h-4 w-4" />
                 Notes
               </label>
-              <NotesSection notes={task?.notes || []} />
-              
-              {/* Note Input */}
-              <div className="mt-4 flex gap-2">
-                <Input
-                  value={newNote}
-                  onChange={(e) => setNewNote(e.target.value)}
-                  placeholder="Leave a note for Jess..."
-                  className="flex-1 bg-[#111113] border-white/10 focus:border-[#4169E1]"
-                  onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSendNote()}
-                />
-                <Button
-                  onClick={handleSendNote}
-                  disabled={!newNote.trim()}
-                  className="bg-[#4169E1] hover:bg-[#4169E1]/80"
-                >
-                  <Send className="h-4 w-4" />
-                </Button>
-              </div>
+              {task?.id && <NotesSection taskId={task.id} />}
             </div>
           </div>
         </div>
@@ -595,42 +567,5 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
         )}
       </div>
     </>
-  )
-}
-
-// Notes section component
-function NotesSection({ notes }: { notes: Task['notes'] }) {
-  if (!notes || notes.length === 0) {
-    return (
-      <div className="text-sm text-white/40 py-3 px-4 bg-[#111113] rounded-lg border border-white/5">
-        No notes yet
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-3 max-h-64 overflow-y-auto">
-      {notes.map((note) => (
-        <div 
-          key={note.id}
-          className="p-3 bg-[#111113] rounded-lg border border-white/5"
-        >
-          <div className="flex items-center gap-2 mb-2">
-            <div className={`p-1 rounded-md ${note.author === 'armaan' ? 'bg-[#4169E1]/10' : 'bg-[#228B22]/10'}`}>
-              {note.author === 'armaan' ? (
-                <User className="h-3 w-3 text-[#4169E1]" />
-              ) : (
-                <Bot className="h-3 w-3 text-[#228B22]" />
-              )}
-            </div>
-            <span className="text-xs font-medium text-white/60 capitalize">{note.author}</span>
-            <span className="text-xs text-white/40">
-              {new Date(note.timestamp).toLocaleDateString()}
-            </span>
-          </div>
-          <p className="text-sm text-white/80">{note.content}</p>
-        </div>
-      ))}
-    </div>
   )
 }
