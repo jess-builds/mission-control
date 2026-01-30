@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTask, updateTask } from '@/lib/tasks'
+import fs from 'fs'
+import { getTask, deleteReferenceDocumentById } from '@/lib/tasks'
 
 interface Props {
   params: Promise<{ id: string; docId: string }>
@@ -20,45 +21,27 @@ export async function GET(request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: 'Document not found' }, { status: 404 })
   }
   
-  return NextResponse.json({ document: doc })
-}
-
-// PUT /api/tasks/[id]/reference-documents/[docId] - Update a reference document
-export async function PUT(request: NextRequest, { params }: Props) {
-  try {
-    const { id, docId } = await params
-    const { title, content } = await request.json()
-    
-    const task = getTask(id)
-    if (!task) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 })
+  // Check if user wants to download the file
+  const download = request.nextUrl.searchParams.get('download') === 'true'
+  
+  if (download) {
+    // Return the actual file
+    if (!fs.existsSync(doc.filePath)) {
+      return NextResponse.json({ error: 'File not found on disk' }, { status: 404 })
     }
     
-    const docIndex = task.referenceDocuments?.findIndex(d => d.id === docId) ?? -1
+    const fileBuffer = fs.readFileSync(doc.filePath)
     
-    if (docIndex === -1) {
-      return NextResponse.json({ error: 'Document not found' }, { status: 404 })
-    }
-    
-    // Update the document
-    const updatedDocs = [...(task.referenceDocuments || [])]
-    updatedDocs[docIndex] = {
-      ...updatedDocs[docIndex],
-      title: title?.trim() || updatedDocs[docIndex].title,
-      content: content ?? updatedDocs[docIndex].content
-    }
-    
-    const updatedTask = updateTask(id, { referenceDocuments: updatedDocs })
-    
-    if (!updatedTask) {
-      return NextResponse.json({ error: 'Failed to update document' }, { status: 500 })
-    }
-    
-    return NextResponse.json({ success: true, document: updatedDocs[docIndex] })
-  } catch (error) {
-    console.error('Failed to update reference document:', error)
-    return NextResponse.json({ error: 'Server error' }, { status: 500 })
+    return new NextResponse(fileBuffer, {
+      headers: {
+        'Content-Type': doc.mimeType,
+        'Content-Disposition': `attachment; filename="${doc.title}"`,
+      },
+    })
   }
+  
+  // Otherwise return document metadata
+  return NextResponse.json({ document: doc })
 }
 
 // DELETE /api/tasks/[id]/reference-documents/[docId] - Delete a reference document
@@ -66,24 +49,15 @@ export async function DELETE(request: NextRequest, { params }: Props) {
   try {
     const { id, docId } = await params
     
-    const task = getTask(id)
-    if (!task) {
-      return NextResponse.json({ error: 'Task not found' }, { status: 404 })
-    }
+    const result = deleteReferenceDocumentById(id, docId)
     
-    const docIndex = task.referenceDocuments?.findIndex(d => d.id === docId) ?? -1
-    
-    if (docIndex === -1) {
+    if (!result.success) {
       return NextResponse.json({ error: 'Document not found' }, { status: 404 })
     }
     
-    // Remove the document
-    const updatedDocs = task.referenceDocuments?.filter(d => d.id !== docId) || []
-    
-    const updatedTask = updateTask(id, { referenceDocuments: updatedDocs })
-    
-    if (!updatedTask) {
-      return NextResponse.json({ error: 'Failed to delete document' }, { status: 500 })
+    // Delete the file from disk
+    if (result.filePath && fs.existsSync(result.filePath)) {
+      fs.unlinkSync(result.filePath)
     }
     
     return NextResponse.json({ success: true })

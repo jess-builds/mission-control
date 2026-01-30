@@ -22,7 +22,7 @@ const EditorToolbar = dynamic(
   { ssr: false }
 )
 
-interface Document {
+interface TaskDoc {
   id: string
   title: string
   type: 'output' | 'handoff' | 'reference'
@@ -36,12 +36,12 @@ interface Document {
 
 interface DocumentViewerProps {
   taskId: string
-  document: Document
+  document: TaskDoc
   onBack: () => void
   onSaved?: () => void
 }
 
-function getDocumentIcon(type: Document['type']) {
+function getDocumentIcon(type: TaskDoc['type']) {
   switch (type) {
     case 'handoff':
       return <ClipboardCheck className="h-5 w-5 text-amber-400" />
@@ -53,8 +53,8 @@ function getDocumentIcon(type: Document['type']) {
   }
 }
 
-function getTypeBadge(type: Document['type']) {
-  const styles = {
+function getTypeBadge(type: TaskDoc['type']) {
+  const styles: Record<string, string> = {
     handoff: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
     output: 'bg-[#228B22]/10 text-[#228B22] border-[#228B22]/20',
     reference: 'bg-[#4169E1]/10 text-[#4169E1] border-[#4169E1]/20'
@@ -79,22 +79,22 @@ function formatDate(dateStr?: string) {
 
 export default function DocumentViewer({ 
   taskId, 
-  document, 
+  document: doc, 
   onBack, 
   onSaved 
 }: DocumentViewerProps) {
   const [isEditing, setIsEditing] = useState(false)
-  const [editTitle, setEditTitle] = useState(document.title)
-  const [editContent, setEditContent] = useState(document.content)
+  const [editTitle, setEditTitle] = useState(doc.title)
+  const [editContent, setEditContent] = useState(doc.content)
   const [saving, setSaving] = useState(false)
   const [editor, setEditor] = useState<Editor | null>(null)
 
   // Reset edit state when document changes
   useEffect(() => {
-    setEditTitle(document.title)
-    setEditContent(document.content)
+    setEditTitle(doc.title)
+    setEditContent(doc.content)
     setIsEditing(false)
-  }, [document.id])
+  }, [doc.id])
 
   const handleSave = async () => {
     if (!editTitle.trim()) {
@@ -106,9 +106,9 @@ export default function DocumentViewer({
     
     try {
       // Determine the API endpoint based on document type
-      const endpoint = document.type === 'reference'
-        ? `/api/tasks/${taskId}/reference-documents/${document.id}`
-        : `/api/tasks/${taskId}/documents/${document.id}`
+      const endpoint = doc.type === 'reference'
+        ? `/api/tasks/${taskId}/reference-documents/${doc.id}`
+        : `/api/tasks/${taskId}/documents/${doc.id}`
       
       const res = await fetch(endpoint, {
         method: 'PUT',
@@ -135,20 +135,20 @@ export default function DocumentViewer({
   }
 
   const handleCancel = () => {
-    setEditTitle(document.title)
-    setEditContent(document.content)
+    setEditTitle(doc.title)
+    setEditContent(doc.content)
     setIsEditing(false)
   }
 
   // Check if document is an image (base64 data URL)
-  const isImage = document.content.startsWith('data:image/')
+  const isImage = doc.content.startsWith('data:image/')
   // Check if it's a PDF
-  const isPdf = document.content.startsWith('data:application/pdf')
+  const isPdf = doc.content.startsWith('data:application/pdf')
   // Check if content is viewable as markdown
-  const isMarkdown = !isImage && !isPdf && !document.content.startsWith('data:')
+  const isMarkdown = !isImage && !isPdf && !doc.content.startsWith('data:')
 
   // Reference documents are read-only
-  const canEdit = document.type !== 'reference' && isMarkdown
+  const canEdit = doc.type !== 'reference' && isMarkdown
 
   return (
     <div className="h-full flex flex-col">
@@ -214,13 +214,13 @@ export default function DocumentViewer({
       <div className="p-4 border-b border-white/5 bg-gradient-to-b from-white/[0.02] to-transparent">
         <div className="flex items-start gap-3">
           <div className={`p-2.5 rounded-xl ${
-            document.type === 'handoff' 
+            doc.type === 'handoff' 
               ? 'bg-amber-500/10 border border-amber-500/20' 
-              : document.type === 'output'
+              : doc.type === 'output'
               ? 'bg-[#228B22]/10 border border-[#228B22]/20'
               : 'bg-[#4169E1]/10 border border-[#4169E1]/20'
           }`}>
-            {getDocumentIcon(document.type)}
+            {getDocumentIcon(doc.type)}
           </div>
           
           <div className="flex-1 min-w-0">
@@ -233,21 +233,21 @@ export default function DocumentViewer({
               />
             ) : (
               <h2 className="text-lg font-semibold text-white mb-1 truncate">
-                {document.title}
+                {doc.title}
               </h2>
             )}
             
             <div className="flex items-center gap-3 text-xs text-white/40">
-              {getTypeBadge(document.type)}
+              {getTypeBadge(doc.type)}
               <span>
-                {document.type === 'reference' 
-                  ? `Uploaded by ${document.uploadedBy || 'unknown'}` 
-                  : `Created by ${document.createdBy || 'unknown'}`
+                {doc.type === 'reference' 
+                  ? `Uploaded by ${doc.uploadedBy || 'unknown'}` 
+                  : `Created by ${doc.createdBy || 'unknown'}`
                 }
               </span>
               <span>·</span>
               <span>
-                {formatDate(document.type === 'reference' ? document.uploadedAt : document.createdAt)}
+                {formatDate(doc.type === 'reference' ? doc.uploadedAt : doc.createdAt)}
               </span>
             </div>
           </div>
@@ -266,8 +266,8 @@ export default function DocumentViewer({
         {isImage ? (
           <div className="p-6 flex items-center justify-center">
             <img 
-              src={document.content} 
-              alt={document.title}
+              src={doc.content} 
+              alt={doc.title}
               className="max-w-full max-h-[70vh] object-contain rounded-lg border border-white/10"
             />
           </div>
@@ -279,9 +279,9 @@ export default function DocumentViewer({
               <Button
                 variant="outline"
                 onClick={() => {
-                  const link = document.createElement('a')
-                  link.href = document.content
-                  link.download = document.title
+                  const link = globalThis.document.createElement('a')
+                  link.href = doc.content
+                  link.download = doc.title
                   link.click()
                 }}
               >
@@ -318,7 +318,7 @@ export default function DocumentViewer({
               prose-hr:border-white/10 prose-hr:my-6
             ">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {document.content}
+                {doc.content}
               </ReactMarkdown>
             </div>
           </div>

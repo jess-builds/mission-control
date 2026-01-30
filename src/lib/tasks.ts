@@ -43,7 +43,8 @@ export interface TaskReferenceDocument {
   id: string
   title: string
   type: 'reference'
-  content: string
+  filePath: string
+  mimeType: string
   uploadedBy: string
   uploadedAt: string
 }
@@ -336,7 +337,8 @@ export function addTaskDocument(
 export function addReferenceDocument(
   id: string,
   title: string,
-  content: string,
+  filePath: string,
+  mimeType: string,
   uploadedBy: string
 ): Task | null {
   const tasks = readTasks()
@@ -348,7 +350,8 @@ export function addReferenceDocument(
     id: uuidv4(),
     title,
     type: 'reference',
-    content,
+    filePath,
+    mimeType,
     uploadedBy,
     uploadedAt: new Date().toISOString()
   }
@@ -363,6 +366,25 @@ export function addReferenceDocument(
   
   writeTasks(tasks)
   return tasks[index]
+}
+
+export function deleteReferenceDocumentById(taskId: string, docId: string): { success: boolean; filePath?: string } {
+  const tasks = readTasks()
+  const index = tasks.findIndex(t => t.id === taskId)
+  
+  if (index === -1) return { success: false }
+  
+  const docs = tasks[index].referenceDocuments || []
+  const docIndex = docs.findIndex(d => d.id === docId)
+  
+  if (docIndex === -1) return { success: false }
+  
+  const filePath = docs[docIndex].filePath
+  tasks[index].referenceDocuments = docs.filter(d => d.id !== docId)
+  tasks[index].updatedAt = new Date().toISOString()
+  
+  writeTasks(tasks)
+  return { success: true, filePath }
 }
 
 export const AVAILABLE_TAGS = [

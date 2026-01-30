@@ -23,6 +23,32 @@ import ReferenceDocuments from './ReferenceDocuments'
 import OutputDocuments from './OutputDocuments'
 import DocumentViewer from './DocumentViewer'
 
+interface TaskNote {
+  id: string
+  author: string
+  content: string
+  timestamp: string
+}
+
+interface TaskDocument {
+  id: string
+  title: string
+  type: 'output' | 'handoff'
+  content: string
+  createdBy: string
+  createdAt: string
+  updatedAt: string
+}
+
+interface TaskReferenceDocument {
+  id: string
+  title: string
+  type: 'reference'
+  content: string
+  uploadedBy: string
+  uploadedAt: string
+}
+
 interface Task {
   id: string
   title: string
@@ -38,24 +64,15 @@ interface Task {
     blockedBy: string
   } | null
   completionCriteria?: string
-  notes?: Array<{
-    id: string
-    author: string
-    content: string
-    timestamp: string
-  }>
-  documents?: Array<{
-    id: string
-    title: string
-    type: 'output' | 'handoff'
-  }>
-  referenceDocuments?: Array<{
-    id: string
-    title: string
-  }>
+  notes?: TaskNote[]
+  documents?: TaskDocument[]
+  referenceDocuments?: TaskReferenceDocument[]
   createdAt: string
   updatedAt: string
 }
+
+// Combined document type for viewer
+type ViewableDocument = (TaskDocument | TaskReferenceDocument) & { type: 'output' | 'handoff' | 'reference' }
 
 interface Props {
   open: boolean
@@ -98,6 +115,22 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
   const [deleting, setDeleting] = useState(false)
   const [newNote, setNewNote] = useState('')
   const [isEditingTitle, setIsEditingTitle] = useState(false)
+  const [viewingDocument, setViewingDocument] = useState<ViewableDocument | null>(null)
+  const [taskData, setTaskData] = useState<Task | null>(null)
+
+  // Fetch full task data
+  const refreshTaskData = async () => {
+    if (!task?.id) return
+    try {
+      const res = await fetch(`/api/tasks/${task.id}`)
+      if (res.ok) {
+        const data = await res.json()
+        setTaskData(data)
+      }
+    } catch (error) {
+      console.error('Failed to fetch task data:', error)
+    }
+  }
 
   // Reset form when task changes
   useEffect(() => {
@@ -111,6 +144,10 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
       setPriority(task.priority || 'normal')
       setCompletionCriteria(task.completionCriteria || '')
       setBlocked(task.blocked || null)
+      setViewingDocument(null)
+      setTaskData(task)
+      // Fetch full task data with document content
+      refreshTaskData()
     } else {
       setTitle('')
       setDescription('')
@@ -121,6 +158,8 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
       setPriority('normal')
       setCompletionCriteria('')
       setBlocked(null)
+      setViewingDocument(null)
+      setTaskData(null)
     }
   }, [task, open])
 
@@ -249,42 +288,55 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
         }`}
         style={{ boxShadow: '-10px 0 40px rgba(0,0,0,0.5)' }}
       >
-        {/* Header */}
-        <div className="flex-shrink-0 border-b border-white/10 px-6 py-4">
-          <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
-              {isEditingTitle ? (
-                <Input
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  onBlur={() => setIsEditingTitle(false)}
-                  onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
-                  className="text-xl font-semibold bg-transparent border-white/20 focus:border-[#4169E1]"
-                  autoFocus
-                  placeholder="Task title..."
-                />
-              ) : (
-                <h2 
-                  className="text-xl font-semibold text-white cursor-text truncate hover:text-white/80 transition-colors"
-                  onClick={() => setIsEditingTitle(true)}
+        {/* Document Viewer Mode */}
+        {viewingDocument && taskData ? (
+          <DocumentViewer
+            taskId={taskData.id}
+            document={viewingDocument}
+            onBack={() => setViewingDocument(null)}
+            onSaved={() => {
+              refreshTaskData()
+              setViewingDocument(null)
+            }}
+          />
+        ) : (
+          <>
+            {/* Header */}
+            <div className="flex-shrink-0 border-b border-white/10 px-6 py-4">
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  {isEditingTitle ? (
+                    <Input
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      onBlur={() => setIsEditingTitle(false)}
+                      onKeyDown={(e) => e.key === 'Enter' && setIsEditingTitle(false)}
+                      className="text-xl font-semibold bg-transparent border-white/20 focus:border-[#4169E1]"
+                      autoFocus
+                      placeholder="Task title..."
+                    />
+                  ) : (
+                    <h2 
+                      className="text-xl font-semibold text-white cursor-text truncate hover:text-white/80 transition-colors"
+                      onClick={() => setIsEditingTitle(true)}
+                    >
+                      {title || 'Untitled Task'}
+                    </h2>
+                  )}
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={onClose}
+                  className="flex-shrink-0 text-white/60 hover:text-white hover:bg-white/10"
                 >
-                  {title || 'Untitled Task'}
-                </h2>
-              )}
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
             </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="flex-shrink-0 text-white/60 hover:text-white hover:bg-white/10"
-            >
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
-        </div>
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
+            {/* Scrollable Content */}
+            <div className="flex-1 overflow-y-auto">
           <div className="px-6 py-5 space-y-6">
             
             {/* Blocked Banner */}
@@ -431,48 +483,22 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
             <div className="border-t border-white/10" />
 
             {/* Reference Documents */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-medium mb-3 text-white/80">
-                <FileText className="h-4 w-4" />
-                Reference Documents
-              </label>
-              <DocumentsList 
-                documents={task?.referenceDocuments || []} 
-                type="reference"
+            {taskData && (
+              <ReferenceDocuments
+                taskId={taskData.id}
+                documents={taskData.referenceDocuments || []}
+                onDocumentsChange={refreshTaskData}
+                onViewDocument={(doc) => setViewingDocument(doc)}
               />
-              <Button
-                variant="outline"
-                size="sm"
-                className="mt-3 border-white/20 text-white/60 hover:text-white hover:border-white/40"
-              >
-                <Upload className="h-4 w-4 mr-2" />
-                Upload Reference Doc
-              </Button>
-            </div>
+            )}
 
-            {/* Output Documents */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-medium mb-3 text-white/80">
-                <FileText className="h-4 w-4" />
-                Output Documents
-              </label>
-              <DocumentsList 
-                documents={task?.documents?.filter(d => d.type === 'output') || []} 
-                type="output"
+            {/* Output Documents & Handoff Notes */}
+            {taskData && (
+              <OutputDocuments
+                documents={taskData.documents || []}
+                onViewDocument={(doc) => setViewingDocument(doc)}
               />
-            </div>
-
-            {/* Handoff Notes */}
-            <div>
-              <label className="flex items-center gap-2 text-sm font-medium mb-3 text-white/80">
-                <FileText className="h-4 w-4" />
-                Handoff Notes
-              </label>
-              <DocumentsList 
-                documents={task?.documents?.filter(d => d.type === 'handoff') || []} 
-                type="handoff"
-              />
-            </div>
+            )}
 
             {/* Divider */}
             <div className="border-t border-white/10" />
@@ -506,75 +532,46 @@ export default function TaskDrawer({ open, onClose, task, onSaved }: Props) {
           </div>
         </div>
 
-        {/* Footer Actions */}
-        <div className="flex-shrink-0 border-t border-white/10 px-6 py-4 bg-[#0a0a0b]">
-          <div className="flex items-center justify-between">
-            {task && (
-              <Button 
-                variant="ghost" 
-                onClick={handleDelete}
-                disabled={deleting}
-                className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                {deleting ? 'Deleting...' : 'Delete'}
-              </Button>
-            )}
-            <div className="flex gap-2 ml-auto">
-              <Button 
-                variant="outline" 
-                onClick={onClose}
-                className="border-white/20"
-              >
-                Cancel
-              </Button>
-              <Button 
-                onClick={handleSave}
-                disabled={!title.trim() || saving}
-                className="bg-[#4169E1] hover:bg-[#4169E1]/80"
-              >
-                {saving ? 'Saving...' : 'Save'}
-              </Button>
+            {/* Footer Actions */}
+            <div className="flex-shrink-0 border-t border-white/10 px-6 py-4 bg-[#0a0a0b]">
+              <div className="flex items-center justify-between">
+                {task && (
+                  <Button 
+                    variant="ghost" 
+                    onClick={handleDelete}
+                    disabled={deleting}
+                    className="text-red-500 hover:text-red-400 hover:bg-red-500/10"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    {deleting ? 'Deleting...' : 'Delete'}
+                  </Button>
+                )}
+                <div className="flex gap-2 ml-auto">
+                  <Button 
+                    variant="outline" 
+                    onClick={onClose}
+                    className="border-white/20"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    onClick={handleSave}
+                    disabled={!title.trim() || saving}
+                    className="bg-[#4169E1] hover:bg-[#4169E1]/80"
+                  >
+                    {saving ? 'Saving...' : 'Save'}
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
+          </>
+        )}
       </div>
     </>
   )
 }
 
-// Placeholder component for documents list
-function DocumentsList({ 
-  documents, 
-  type 
-}: { 
-  documents: Array<{ id: string; title: string }>
-  type: 'reference' | 'output' | 'handoff' 
-}) {
-  if (documents.length === 0) {
-    return (
-      <div className="text-sm text-white/40 py-3 px-4 bg-[#111113] rounded-lg border border-white/5">
-        No {type === 'reference' ? 'reference' : type === 'output' ? 'output' : 'handoff'} documents yet
-      </div>
-    )
-  }
-
-  return (
-    <div className="space-y-2">
-      {documents.map((doc) => (
-        <div 
-          key={doc.id}
-          className="flex items-center gap-3 p-3 bg-[#111113] rounded-lg border border-white/5 hover:border-white/10 cursor-pointer transition-colors"
-        >
-          <FileText className="h-4 w-4 text-white/40" />
-          <span className="text-sm text-white/80">{doc.title}</span>
-        </div>
-      ))}
-    </div>
-  )
-}
-
-// Placeholder component for notes section
+// Notes section component
 function NotesSection({ notes }: { notes: Task['notes'] }) {
   if (!notes || notes.length === 0) {
     return (
