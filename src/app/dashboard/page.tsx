@@ -10,6 +10,9 @@ import SchoolDeadlines from '@/components/dashboard/SchoolDeadlines'
 import QuickLinks from '@/components/dashboard/QuickLinks'
 import ProjectCards from '@/components/dashboard/ProjectCards'
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline'
+import WeatherWidget from '@/components/dashboard/WeatherWidget'
+import HabitsTracker from '@/components/dashboard/HabitsTracker'
+import FocusTimer from '@/components/dashboard/FocusTimer'
 
 function getGreeting(): string {
   const hour = new Date().getUTCHours()
@@ -131,9 +134,19 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Right Sidebar - Activity Timeline */}
+      {/* Right Sidebar - Activity Timeline + More */}
       <div className="hidden xl:block w-72 shrink-0">
-        <div className="sticky top-6">
+        <div className="sticky top-6 space-y-6">
+          {/* Weather Widget */}
+          <WeatherWidget />
+          
+          {/* Focus Timer */}
+          <FocusTimer />
+          
+          {/* Habits Tracker */}
+          <HabitsTracker />
+          
+          {/* Activity Timeline */}
           <ActivityTimeline />
         </div>
       </div>
