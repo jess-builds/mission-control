@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
+import RecordingModal from "@/components/lectures/RecordingModal";
 
 interface Recording {
   id: string;
@@ -42,6 +43,7 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
   const [course, setCourse] = useState<Course | null>(null);
   const [recordings, setRecordings] = useState<Recording[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isRecording, setIsRecording] = useState(false);
 
   useEffect(() => {
     if (params.courseId) {
@@ -96,9 +98,10 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
     return <Badge variant={config.variant}>{config.label}</Badge>;
   };
 
-  const startRecording = () => {
-    // TODO: Implement recording modal
-    toast.info("Recording feature coming soon!");
+  const handleRecordingComplete = (recordingId: string, courseId: string) => {
+    // Refresh recordings
+    fetchCourseData();
+    toast.success("Recording saved! Transcription in progress.");
   };
 
   if (isLoading) {
@@ -149,7 +152,7 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
             </div>
           </div>
         </div>
-        <Button onClick={startRecording} className="gap-2">
+        <Button onClick={() => setIsRecording(true)} className="gap-2">
           <Mic className="h-4 w-4" />
           Start Recording
         </Button>
@@ -162,7 +165,7 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
           <p className="text-muted-foreground mb-4">
             Start recording your first lecture for this course
           </p>
-          <Button onClick={startRecording} className="gap-2">
+          <Button onClick={() => setIsRecording(true)} className="gap-2">
             <Mic className="h-4 w-4" />
             Start Recording
           </Button>
@@ -220,6 +223,15 @@ export default function CoursePage({ params: promiseParams }: PageProps) {
             </Link>
           ))}
         </div>
+      )}
+
+      {course && (
+        <RecordingModal
+          open={isRecording}
+          onOpenChange={setIsRecording}
+          courses={[course]}
+          onRecordingComplete={handleRecordingComplete}
+        />
       )}
     </div>
   );

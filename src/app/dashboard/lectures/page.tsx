@@ -16,6 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import RecordingModal from "@/components/lectures/RecordingModal";
 
 interface Course {
   id: string;
@@ -36,6 +37,7 @@ export default function LecturesPage() {
   const [courses, setCourses] = useState<Course[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isAddingCourse, setIsAddingCourse] = useState(false);
+  const [isRecording, setIsRecording] = useState(false);
   const [newCourse, setNewCourse] = useState({
     name: "",
     code: "",
@@ -90,9 +92,10 @@ export default function LecturesPage() {
     }
   };
 
-  const startRecording = () => {
-    // TODO: Implement recording flow
-    toast.info("Recording feature coming soon!");
+  const handleRecordingComplete = (recordingId: string, courseId: string) => {
+    // Refresh courses to update recording count
+    fetchCourses();
+    toast.success("Recording saved! Transcription in progress.");
   };
 
   return (
@@ -105,7 +108,7 @@ export default function LecturesPage() {
           </p>
         </div>
         <div className="flex gap-2">
-          <Button onClick={startRecording} className="gap-2">
+          <Button onClick={() => setIsRecording(true)} className="gap-2">
             <Mic className="h-4 w-4" />
             Start Recording
           </Button>
@@ -234,6 +237,13 @@ export default function LecturesPage() {
           ))}
         </div>
       )}
+
+      <RecordingModal
+        open={isRecording}
+        onOpenChange={setIsRecording}
+        courses={courses}
+        onRecordingComplete={handleRecordingComplete}
+      />
     </div>
   );
 }
