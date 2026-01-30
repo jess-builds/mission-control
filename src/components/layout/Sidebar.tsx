@@ -8,7 +8,7 @@ import {
   FileText,
   CheckSquare,
   BookOpen,
-  Search,
+  Timer,
   Command
 } from 'lucide-react'
 
@@ -17,7 +17,7 @@ const navigation = [
   { name: 'Documents', href: '/dashboard/documents', icon: FileText, shortcut: '2' },
   { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, shortcut: '3' },
   { name: 'Journal', href: '/dashboard/journal', icon: BookOpen, shortcut: '4' },
-  { name: 'Search', href: '/dashboard/search', icon: Search, shortcut: '/' },
+  { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '5' },
 ]
 
 export default function Sidebar() {
@@ -27,8 +27,8 @@ export default function Sidebar() {
     <div className="w-60 bg-sidebar border-r border-border flex flex-col">
       {/* Logo */}
       <div className="h-14 flex items-center px-4 border-b border-border">
-        <div className="h-7 w-7 rounded-md bg-blue-600 flex items-center justify-center mr-2.5">
-          <span className="text-xs font-bold text-white">M</span>
+        <div className="h-7 w-7 rounded-md bg-gradient-to-br from-[#4169E1] to-[#228B22] flex items-center justify-center mr-2.5">
+          <Command className="h-4 w-4 text-white" />
         </div>
         <span className="text-sm font-semibold text-foreground">Mission Control</span>
       </div>

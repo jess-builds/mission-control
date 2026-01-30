@@ -11,7 +11,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Sun, Moon, Search, Command, LogOut, Keyboard, User } from 'lucide-react'
+import { Sun, Moon, Search, Command, LogOut, Keyboard } from 'lucide-react'
 import { useEffect, useState } from 'react'
 
 export default function Header() {
@@ -37,7 +37,7 @@ export default function Header() {
     return () => document.removeEventListener('keydown', handleShortcuts)
   }, [])
 
-  const openQuickCapture = () => {
+  const openSearch = () => {
     const event = new KeyboardEvent('keydown', {
       key: 'k',
       metaKey: true,
@@ -56,12 +56,12 @@ export default function Header() {
       <header className="h-14 border-b border-border bg-background/80 backdrop-blur-sm flex items-center justify-between px-6">
         {/* Search */}
         <button
-          onClick={openQuickCapture}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted border border-border text-muted-foreground hover:text-foreground hover:border-ring/50 transition-colors"
+          onClick={openSearch}
+          className="flex items-center gap-2.5 px-3.5 py-2 rounded-xl bg-white/[0.03] border border-white/[0.08] text-white/50 hover:text-white/80 hover:bg-white/[0.06] hover:border-white/[0.12] transition-all duration-200"
         >
           <Search className="h-4 w-4" />
-          <span className="text-sm hidden sm:inline">Search or create...</span>
-          <kbd className="hidden md:flex items-center gap-0.5 px-1.5 py-0.5 rounded bg-background border border-border text-xs font-mono">
+          <span className="text-sm hidden sm:inline">Search everything...</span>
+          <kbd className="hidden md:flex items-center gap-0.5 px-2 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] text-[11px] font-mono text-white/40">
             <Command className="h-3 w-3" />K
           </kbd>
         </button>

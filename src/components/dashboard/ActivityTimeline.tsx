@@ -1,82 +1,59 @@
 'use client'
 
-import { FileText, CheckSquare, BookOpen, Clock, Plus, Edit, Check } from 'lucide-react'
+import { useState, useEffect } from 'react'
+import { FileText, Check, Pill, MessageCircle, Loader2, Activity, Zap, Timer, Layout } from 'lucide-react'
 
-interface Activity {
+interface ActivityItem {
   id: string
-  type: 'task_created' | 'task_completed' | 'task_updated' | 'document_created' | 'document_updated' | 'journal_created'
+  type: 'task_created' | 'task_completed' | 'task_updated' | 'medication_taken' | 'document_created' | 'document_updated' | 'journal_created' | 'project_note' | 'timer_started' | 'timer_stopped' | 'search' | 'setting_changed' | 'dashboard_action' | 'micro_task'
   title: string
   description?: string
   timestamp: string
-  actor: 'armaan' | 'jess'
+  actor: 'armaan' | 'jess' | 'system'
+  metadata?: Record<string, unknown>
 }
 
-// This would normally come from an API, but for now we'll generate from existing data
-function getRecentActivities(): Activity[] {
-  const now = new Date()
-  const activities: Activity[] = [
-    {
-      id: '1',
-      type: 'task_created',
-      title: 'Mission Control MVP',
-      description: 'Added to In Progress',
-      timestamp: new Date(now.getTime() - 1000 * 60 * 30).toISOString(),
-      actor: 'jess'
-    },
-    {
-      id: '2',
-      type: 'document_created',
-      title: 'Welcome to Mission Control',
-      timestamp: new Date(now.getTime() - 1000 * 60 * 45).toISOString(),
-      actor: 'jess'
-    },
-    {
-      id: '3',
-      type: 'journal_created',
-      title: 'Today\'s Entry',
-      description: 'First night building Mission Control',
-      timestamp: new Date(now.getTime() - 1000 * 60 * 60).toISOString(),
-      actor: 'jess'
-    },
-    {
-      id: '4',
-      type: 'task_completed',
-      title: 'Review Mission Control spec',
-      timestamp: new Date(now.getTime() - 1000 * 60 * 90).toISOString(),
-      actor: 'armaan'
-    }
-  ]
-  return activities
-}
-
-function getActivityIcon(type: Activity['type']) {
+function getActivityIcon(type: ActivityItem['type']) {
+  const className = "h-3 w-3"
   switch (type) {
-    case 'task_created':
-      return <Plus className="h-3 w-3" />
     case 'task_completed':
-      return <Check className="h-3 w-3" />
-    case 'task_updated':
-      return <Edit className="h-3 w-3" />
+      return <Check className={className} />
+    case 'medication_taken':
+      return <Pill className={className} />
     case 'document_created':
     case 'document_updated':
-      return <FileText className="h-3 w-3" />
-    case 'journal_created':
-      return <BookOpen className="h-3 w-3" />
+      return <FileText className={className} />
+    case 'project_note':
+      return <MessageCircle className={className} />
+    case 'timer_started':
+    case 'timer_stopped':
+      return <Timer className={className} />
+    case 'dashboard_action':
+      return <Layout className={className} />
+    case 'micro_task':
+      return <Zap className={className} />
+    default:
+      return <Activity className={className} />
   }
 }
 
-function getActivityColor(type: Activity['type']) {
+function getActivityColor(type: ActivityItem['type']) {
   switch (type) {
     case 'task_completed':
       return 'bg-emerald-500'
-    case 'task_created':
-    case 'task_updated':
-      return 'bg-blue-500'
+    case 'medication_taken':
+      return 'bg-green-500'
     case 'document_created':
     case 'document_updated':
-      return 'bg-purple-500'
-    case 'journal_created':
-      return 'bg-amber-500'
+      return 'bg-violet-500'
+    case 'timer_started':
+    case 'timer_stopped':
+      return 'bg-rose-500'
+    case 'dashboard_action':
+    case 'micro_task':
+      return 'bg-[#4169E1]'
+    default:
+      return 'bg-white/40'
   }
 }
 
@@ -87,47 +64,146 @@ function formatTimestamp(timestamp: string) {
   const diffMins = Math.floor(diffMs / (1000 * 60))
   const diffHours = Math.floor(diffMs / (1000 * 60 * 60))
   
-  if (diffMins < 1) return 'Just now'
-  if (diffMins < 60) return `${diffMins}m ago`
-  if (diffHours < 24) return `${diffHours}h ago`
-  return date.toLocaleDateString()
+  if (diffMins < 1) return 'Now'
+  if (diffMins < 60) return `${diffMins}m`
+  if (diffHours < 24) return `${diffHours}h`
+  return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+}
+
+function groupByDate(activities: ActivityItem[]) {
+  const groups: { [key: string]: ActivityItem[] } = {}
+  
+  activities.forEach(activity => {
+    const date = new Date(activity.timestamp)
+    const today = new Date()
+    const yesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+    
+    let key: string
+    if (date.toDateString() === today.toDateString()) {
+      key = 'Today'
+    } else if (date.toDateString() === yesterday.toDateString()) {
+      key = 'Yesterday'
+    } else {
+      key = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })
+    }
+    
+    if (!groups[key]) groups[key] = []
+    groups[key].push(activity)
+  })
+  
+  return groups
 }
 
 export default function ActivityTimeline() {
-  const activities = getRecentActivities()
+  const [activities, setActivities] = useState<ActivityItem[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    fetchActivities()
+    const interval = setInterval(fetchActivities, 10000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const fetchActivities = async () => {
+    try {
+      const res = await fetch('/api/activity?limit=50')
+      if (res.ok) {
+        const data = await res.json()
+        setActivities(data.activities || [])
+      }
+    } catch (error) {
+      console.error('Failed to fetch activities:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const groupedActivities = groupByDate(activities)
+
+  if (loading) {
+    return (
+      <div className="bg-[#111113] border border-white/[0.06] rounded-2xl p-5 h-full">
+        <div className="flex items-center justify-center py-16">
+          <Loader2 className="h-5 w-5 animate-spin text-white/30" />
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="space-y-4">
-      {activities.map((activity, index) => (
-        <div key={activity.id} className="flex gap-3">
-          {/* Icon */}
-          <div className="relative flex flex-col items-center">
-            <div className={`w-6 h-6 rounded-full ${getActivityColor(activity.type)} flex items-center justify-center text-white`}>
-              {getActivityIcon(activity.type)}
-            </div>
-            {index < activities.length - 1 && (
-              <div className="w-px h-full bg-border absolute top-6" />
-            )}
-          </div>
-          
-          {/* Content */}
-          <div className="flex-1 pb-4">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-medium">{activity.title}</p>
-              <span className="text-xs text-muted-foreground flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {formatTimestamp(activity.timestamp)}
-              </span>
-            </div>
-            {activity.description && (
-              <p className="text-xs text-muted-foreground mt-0.5">{activity.description}</p>
-            )}
-            <p className="text-xs text-muted-foreground mt-1 capitalize">
-              by {activity.actor}
-            </p>
+    <div className="bg-[#111113] border border-white/[0.06] rounded-2xl h-full flex flex-col overflow-hidden">
+      {/* Header */}
+      <div className="px-5 py-4 border-b border-white/[0.04]">
+        <div className="flex items-center justify-between">
+          <h3 className="text-sm font-semibold text-white">Activity</h3>
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+            <span className="text-[10px] text-white/30 font-medium">Live</span>
           </div>
         </div>
-      ))}
+      </div>
+
+      {activities.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center py-12 px-6">
+          <Activity className="h-8 w-8 text-white/10 mb-3" />
+          <p className="text-white/30 text-sm">No activity yet</p>
+        </div>
+      ) : (
+        <div className="flex-1 overflow-y-auto">
+          {Object.entries(groupedActivities).map(([date, items]) => (
+            <div key={date}>
+              {/* Date header */}
+              <div className="sticky top-0 z-10 px-5 py-2 bg-[#111113]/95 backdrop-blur-sm border-b border-white/[0.03]">
+                <span className="text-[10px] font-semibold text-white/25 uppercase tracking-wider">
+                  {date}
+                </span>
+              </div>
+
+              {/* Items */}
+              <div className="px-5">
+                {items.map((activity, index) => (
+                  <div 
+                    key={activity.id} 
+                    className={`flex gap-3 py-3 ${index !== items.length - 1 ? 'border-b border-white/[0.03]' : ''}`}
+                  >
+                    {/* Icon */}
+                    <div className={`w-6 h-6 rounded-full ${getActivityColor(activity.type)} flex items-center justify-center text-white shrink-0 mt-0.5`}>
+                      {getActivityIcon(activity.type)}
+                    </div>
+                    
+                    {/* Content */}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-[13px] text-white/80 leading-snug">
+                          {activity.title}
+                        </p>
+                        <span className="text-[11px] text-white/20 shrink-0">
+                          {formatTimestamp(activity.timestamp)}
+                        </span>
+                      </div>
+                      
+                      {activity.description && (
+                        <p className="text-[11px] text-white/30 mt-1 line-clamp-1">
+                          {activity.description}
+                        </p>
+                      )}
+                      
+                      <span className={`inline-block text-[10px] mt-1.5 ${
+                        activity.actor === 'jess' 
+                          ? 'text-[#4169E1]/70' 
+                          : 'text-white/20'
+                      }`}>
+                        {activity.actor === 'jess' ? 'Jess' : activity.actor === 'armaan' ? 'You' : 'System'}
+                      </span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
