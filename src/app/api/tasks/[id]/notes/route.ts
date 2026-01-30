@@ -42,8 +42,8 @@ export async function POST(request: NextRequest, { params }: Props) {
       return NextResponse.json({ error: 'Failed to add note' }, { status: 500 })
     }
     
-    // If task is assigned to Jess and the note is from someone else, notify her
-    if (task.assignee === 'jess' && noteAuthor !== 'jess') {
+    // Notify Jess about all notes from Armaan (regardless of task assignment)
+    if (noteAuthor !== 'jess') {
       // Refetch task to get updated state with the new note
       const updatedTask = getTask(id)
       if (updatedTask) {
