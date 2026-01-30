@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 import { getAllTasks } from '@/lib/tasks'
+import { notifyJess, type ProjectNotePayload } from '@/lib/notify-jess'
 
 const NOTES_FILE = path.join(process.cwd(), 'data', 'project-notes.json')
 
@@ -101,6 +102,39 @@ export async function POST(request: NextRequest) {
     notes.unshift(newNote)
     writeNotes(notes)
     
+    // Notify Jess about the project note
+    const projectNames: Record<string, string> = {
+      'debtless': 'Debtless',
+      'life-lab': 'Life Lab',
+      'clover': 'Clover',
+      'content': 'Content',
+      'mission-control': 'Mission Control'
+    }
+    
+    const notificationPayload: ProjectNotePayload = {
+      type: 'project_note',
+      project: projectNames[projectId] || projectId,
+      content: message,
+      timestamp: new Date().toISOString(),
+      noteId: newNote.id
+    }
+    
+    // Fire and forget - don't block the response
+    // Also mark as acknowledged once notification is sent successfully
+    notifyJess(notificationPayload).then(result => {
+      if (result.success) {
+        // Mark note as acknowledged
+        const currentNotes = readNotes()
+        const idx = currentNotes.findIndex(n => n.id === newNote.id)
+        if (idx !== -1) {
+          currentNotes[idx].status = 'acknowledged'
+          writeNotes(currentNotes)
+        }
+      }
+    }).catch(err => {
+      console.error('Failed to notify Jess about project note:', err)
+    })
+    
     // Also log to activity feed
     try {
       const activityFile = path.join(process.cwd(), 'data', 'activity.json')
@@ -127,5 +161,36 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Failed to add project note:', error)
     return NextResponse.json({ error: 'Failed to add note' }, { status: 500 })
+  }
+}
+
+// PUT - Update a note's status
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { noteId, status } = body
+    
+    if (!noteId || !status) {
+      return NextResponse.json({ error: 'noteId and status required' }, { status: 400 })
+    }
+    
+    if (!['pending', 'acknowledged', 'completed'].includes(status)) {
+      return NextResponse.json({ error: 'Invalid status' }, { status: 400 })
+    }
+    
+    const notes = readNotes()
+    const noteIndex = notes.findIndex(n => n.id === noteId)
+    
+    if (noteIndex === -1) {
+      return NextResponse.json({ error: 'Note not found' }, { status: 404 })
+    }
+    
+    notes[noteIndex].status = status
+    writeNotes(notes)
+    
+    return NextResponse.json({ success: true, note: notes[noteIndex] })
+  } catch (error) {
+    console.error('Failed to update note:', error)
+    return NextResponse.json({ error: 'Failed to update note' }, { status: 500 })
   }
 }

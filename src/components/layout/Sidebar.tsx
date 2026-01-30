@@ -9,7 +9,8 @@ import {
   CheckSquare,
   BookOpen,
   Timer,
-  Command
+  Command,
+  Mic
 } from 'lucide-react'
 
 const navigation = [
@@ -18,6 +19,7 @@ const navigation = [
   { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, shortcut: '3' },
   { name: 'Journal', href: '/dashboard/journal', icon: BookOpen, shortcut: '4' },
   { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '5' },
+  { name: 'Lectures', href: '/dashboard/lectures', icon: Mic, shortcut: '6' },
 ]
 
 export default function Sidebar() {

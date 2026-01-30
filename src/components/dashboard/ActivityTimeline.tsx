@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FileText, Check, Pill, MessageCircle, Loader2, Activity, Zap, Timer, Layout } from 'lucide-react'
+import { FileText, Check, Pill, MessageCircle, Loader2, Activity, Zap, Timer, Layout, ChevronDown, ChevronUp } from 'lucide-react'
 
 interface ActivityItem {
   id: string
@@ -98,6 +98,20 @@ function groupByDate(activities: ActivityItem[]) {
 export default function ActivityTimeline() {
   const [activities, setActivities] = useState<ActivityItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [expandedItems, setExpandedItems] = useState<Set<string>>(new Set())
+  const [filter, setFilter] = useState<'all' | 'jess'>('all')
+
+  const toggleExpanded = (id: string) => {
+    setExpandedItems(prev => {
+      const next = new Set(prev)
+      if (next.has(id)) {
+        next.delete(id)
+      } else {
+        next.add(id)
+      }
+      return next
+    })
+  }
 
   useEffect(() => {
     fetchActivities()
@@ -119,7 +133,12 @@ export default function ActivityTimeline() {
     }
   }
 
-  const groupedActivities = groupByDate(activities)
+  // Filter activities based on selected filter
+  const filteredActivities = filter === 'jess' 
+    ? activities.filter(a => a.actor === 'jess')
+    : activities
+  
+  const groupedActivities = groupByDate(filteredActivities)
 
   if (loading) {
     return (
@@ -132,14 +151,38 @@ export default function ActivityTimeline() {
   }
 
   return (
-    <div className="bg-[#111113] border border-white/[0.06] rounded-2xl h-full flex flex-col overflow-hidden">
+    <div className="bg-[#111113] border border-white/[0.06] rounded-2xl h-full max-h-full flex flex-col overflow-hidden">
       {/* Header */}
       <div className="px-5 py-4 border-b border-white/[0.04]">
         <div className="flex items-center justify-between">
           <h3 className="text-sm font-semibold text-white">Activity</h3>
-          <div className="flex items-center gap-1.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-            <span className="text-[10px] text-white/30 font-medium">Live</span>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center bg-white/5 rounded-lg p-0.5">
+              <button
+                onClick={() => setFilter('all')}
+                className={`px-2 py-1 text-[10px] font-medium rounded-md transition-colors ${
+                  filter === 'all' 
+                    ? 'bg-white/10 text-white' 
+                    : 'text-white/40 hover:text-white/60'
+                }`}
+              >
+                All
+              </button>
+              <button
+                onClick={() => setFilter('jess')}
+                className={`px-2 py-1 text-[10px] font-medium rounded-md transition-colors ${
+                  filter === 'jess' 
+                    ? 'bg-[#4169E1]/20 text-[#4169E1]' 
+                    : 'text-white/40 hover:text-white/60'
+                }`}
+              >
+                Jess
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[10px] text-white/30 font-medium">Live</span>
+            </div>
           </div>
         </div>
       </div>
@@ -184,9 +227,24 @@ export default function ActivityTimeline() {
                       </div>
                       
                       {activity.description && (
-                        <p className="text-[11px] text-white/30 mt-1 line-clamp-1">
-                          {activity.description}
-                        </p>
+                        <div className="mt-1 flex items-start gap-1">
+                          <button
+                            onClick={() => toggleExpanded(activity.id)}
+                            className="text-white/40 hover:text-white/60 transition-colors shrink-0 mt-0.5"
+                          >
+                            {expandedItems.has(activity.id) ? (
+                              <ChevronUp className="h-3 w-3" />
+                            ) : (
+                              <ChevronDown className="h-3 w-3" />
+                            )}
+                          </button>
+                          <p 
+                            className={`text-[11px] text-white/30 cursor-pointer ${expandedItems.has(activity.id) ? '' : 'line-clamp-1'}`}
+                            onClick={() => toggleExpanded(activity.id)}
+                          >
+                            {activity.description}
+                          </p>
+                        </div>
                       )}
                       
                       <span className={`inline-block text-[10px] mt-1.5 ${
