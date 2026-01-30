@@ -16,7 +16,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import RecordingModal from "@/components/lectures/RecordingModal";
+import RecordingWidget from "@/components/lectures/RecordingWidget";
 import LectureChat from "@/components/lectures/LectureChat";
 
 interface Course {
@@ -247,7 +247,7 @@ export default function LecturesPage() {
         />
       </div>
 
-      <RecordingModal
+      <RecordingWidget
         open={isRecording}
         onOpenChange={setIsRecording}
         courses={courses}
