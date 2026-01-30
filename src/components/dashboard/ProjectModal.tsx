@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { X, Send, CheckSquare, Clock, MessageCircle, Loader2 } from 'lucide-react'
+import { X, Send, CheckSquare, Clock, MessageCircle, Loader2, Check } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 interface Task {
@@ -60,25 +60,39 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
   const sendToJess = async () => {
     if (!message.trim()) return
     
+    // Optimistic UI - show tick immediately
+    const optimisticNote: Note = {
+      id: `temp-${Date.now()}`,
+      message: message.trim(),
+      timestamp: new Date().toISOString(),
+      type: 'delegation',
+      status: 'sent' // Show as sent immediately
+    }
+    
+    setNotes([optimisticNote, ...notes])
+    setMessage('')
     setSending(true)
+    
     try {
       const res = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           projectId: project.id,
-          message: message.trim(),
+          message: optimisticNote.message,
           type: 'delegation'
         })
       })
       
       if (res.ok) {
         const data = await res.json()
-        setNotes([data.note, ...notes])
-        setMessage('')
+        // Replace optimistic note with real one
+        setNotes(prev => prev.map(n => n.id === optimisticNote.id ? data.note : n))
       }
     } catch (error) {
       console.error('Failed to send message:', error)
+      // Remove optimistic note on error
+      setNotes(prev => prev.filter(n => n.id !== optimisticNote.id))
     } finally {
       setSending(false)
     }
@@ -177,25 +191,44 @@ export default function ProjectModal({ project, onClose }: ProjectModalProps) {
                   <MessageCircle className="h-4 w-4" />
                   Notes to Jess
                 </h3>
-                {notes.length > 0 && (
-                  <div className="space-y-2 mb-4">
-                    {notes.slice(0, 5).map(note => (
-                      <div key={note.id} className="p-3 rounded-lg bg-[#4169E1]/10 border border-[#4169E1]/20">
-                        <p className="text-sm text-white">{note.message}</p>
-                        <div className="flex items-center gap-2 mt-2">
-                          <span className="text-xs text-white/40">{formatTime(note.timestamp)}</span>
-                          <span className={`text-xs px-2 py-0.5 rounded-full ${
-                            note.status === 'completed' ? 'bg-emerald-500/20 text-emerald-500' :
-                            note.status === 'acknowledged' ? 'bg-blue-500/20 text-blue-500' :
-                            'bg-amber-500/20 text-amber-500'
-                          }`}>
-                            {note.status}
-                          </span>
+                {(() => {
+                  // Filter out notes acknowledged more than 5 minutes ago
+                  const fiveMinutesAgo = Date.now() - (5 * 60 * 1000)
+                  const visibleNotes = notes.filter(note => {
+                    if (note.status === 'acknowledged') {
+                      const noteTime = new Date(note.timestamp).getTime()
+                      return noteTime > fiveMinutesAgo
+                    }
+                    return true // Show pending, sent, and completed notes
+                  })
+                  
+                  return visibleNotes.length > 0 && (
+                    <div className="space-y-2 mb-4">
+                      {visibleNotes.slice(0, 5).map(note => (
+                        <div key={note.id} className="p-3 rounded-lg bg-[#4169E1]/10 border border-[#4169E1]/20">
+                          <p className="text-sm text-white">{note.message}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <span className="text-xs text-white/40">{formatTime(note.timestamp)}</span>
+                            {(note.status === 'sent' || note.status === 'acknowledged') ? (
+                              <span className="flex items-center gap-1 text-xs text-emerald-500">
+                                <Check className="h-3 w-3" />
+                                Sent
+                              </span>
+                            ) : note.status === 'completed' ? (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-500">
+                                completed
+                              </span>
+                            ) : (
+                              <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-500">
+                                {note.status}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
+                      ))}
+                    </div>
+                  )
+                })()}
                 
                 {/* Message Input */}
                 <div className="flex gap-2">
