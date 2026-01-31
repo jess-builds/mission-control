@@ -14,7 +14,8 @@ const WORKSPACE_FILES = [
   'AGENTS.md',
   'TOOLS.md',
   'IDENTITY.md',
-  'HEARTBEAT.md'
+  'HEARTBEAT.md',
+  'PREFERENCES.md'
 ]
 
 export interface Document {

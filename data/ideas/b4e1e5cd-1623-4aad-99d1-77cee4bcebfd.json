@@ -1,0 +1,19 @@
+{
+  "id": "b4e1e5cd-1623-4aad-99d1-77cee4bcebfd",
+  "title": "Lecture Summary Cards",
+  "thumbnail": "🎴",
+  "summary": "Generate study cards with key concepts, definitions, and quiz questions after each lecture recording",
+  "status": "new",
+  "source": "journal",
+  "createdAt": "2026-01-31T04:16:04.236Z",
+  "updatedAt": "2026-01-31T04:16:04.236Z",
+  "why": "Students need quick review materials. Currently transcripts are raw text with no structure for studying. Summary cards would extract the actionable knowledge.",
+  "flow": "After recording completes → AI processes transcript → generates card with: main concepts, definitions, key quotes, 3-5 quiz questions. Card appears in recording detail view.",
+  "implementation": "Add post-processing step after transcription. Use Claude to extract structured data. Store as JSON alongside transcript. New UI component for card display.",
+  "ux": "User finishes recording → sees \"Generating study card...\" → card appears with tabs: Concepts, Definitions, Quiz. Can export as flashcards or PDF.",
+  "tags": [
+    "lecture-recorder",
+    "studying",
+    "ai"
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "id": "77cf181a-83f5-4cbb-acfe-2dcb49a0b290",
+  "title": "Cross-Lecture Search",
+  "thumbnail": "🔍",
+  "summary": "Search across all lecture transcripts to find where specific topics were discussed",
+  "status": "new",
+  "source": "journal",
+  "createdAt": "2026-01-31T04:16:04.253Z",
+  "updatedAt": "2026-01-31T04:16:04.253Z",
+  "why": "When studying for exams, need to find everywhere a concept was mentioned across multiple lectures. Currently would have to manually search each transcript.",
+  "flow": "Global search bar → type topic → see results from all lectures with timestamps and snippets → click to jump to that point in any recording.",
+  "implementation": "Build search index of all transcripts. Could use vector embeddings for semantic search or simple full-text for v1. Results grouped by lecture with timestamp links.",
+  "ux": "Search box in lecture dashboard header. As you type, dropdown shows matching results across all courses/lectures. Click result → opens that recording at the relevant timestamp.",
+  "tags": [
+    "lecture-recorder",
+    "search",
+    "studying"
+  ]
+}

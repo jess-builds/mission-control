@@ -5,8 +5,7 @@ tags:
   - personal-brand
   - strategy
 createdAt: '2026-01-30'
-updatedAt: '2026-01-30'
-source: Caleb Ralston - "How to Start a Personal Brand" Course
+updatedAt: '2026-01-31'
 ---
 
 # Personal Brand Workbook

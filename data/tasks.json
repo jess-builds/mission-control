@@ -24,7 +24,7 @@
       "id": "2",
       "title": "Build Mission Control MVP",
       "description": "Create the Next.js app with all core features",
-      "status": "in-progress",
+      "status": "done",
       "priority": "high",
       "assignee": "jess",
       "tags": [
@@ -36,9 +36,16 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": [],
+      "notes": [
+        {
+          "id": "note-1769836842298-xe4pul56h",
+          "author": "jess",
+          "content": "## Implementation Complete — Jan 30, 2026\n\n### Core Features Shipped\n\n**Task Management**\n- Full CRUD with status workflow (backlog → todo → in-progress → blocked → done)\n- Assignee tracking (armaan/jess)\n- Tags, due dates, priority levels\n- Parent/child task relationships\n- Notes per task with timestamps\n\n**Lecture Recorder V2**\n- Real-time transcription using Whisper API\n- Handles 3+ hour lectures via server-side chunking (10-min segments)\n- Floating draggable recording widget\n- Dual-pane document view for recordings\n- Multi-select batch delete\n- Course organization\n\n**Idea Bank**\n- Grid view with emoji thumbnails\n- 4-section detail view: Why, Flow Fit, Implementation, UX\n- Status tracking: new → exploring → planned → building → completed → archived\n- Source tracking (journal/nightly/manual)\n- Sidebar shortcut ⌘5\n\n**Journal System**\n- Daily journal entries with structured sections\n- Topics/tags\n- Automated via 10:30pm cron\n- Ideas auto-saved to Idea Bank\n\n**@jess Integration**\n- Lecture Chat with AI assistance\n- Routed through Clawdbot sessions_send\n- Responses delivered to Telegram\n\n**Meds Tracking**\n- Confirm endpoint for daily tracking\n- Synced with Clawdbot meds-tracker.json\n\n**Dashboard**\n- Clean, minimal (no widgets per preference)\n- Quick navigation sidebar\n- Keyboard shortcuts\n\n### Tech Stack\n- Next.js 14 (App Router)\n- TypeScript\n- Tailwind CSS\n- File-based data storage (JSON)\n- PM2 for process management\n\n### Repo\n- GitHub: jess-builds/mission-control\n- Directory: /home/ubuntu/mission-control\n- Running on main branch",
+          "timestamp": "2026-01-31T05:05:32.776Z"
+        }
+      ],
       "createdAt": "2026-01-29T05:55:00Z",
-      "updatedAt": "2026-01-29T07:13:35.134Z"
+      "updatedAt": "2026-01-31T05:05:32.776Z"
     },
     {
       "id": "3",
@@ -195,9 +202,9 @@
     },
     {
       "id": "f6c913e4-6b6d-4605-95ba-c4c3c3cd6011",
-      "title": "Follow up with Vaishnavi on PDF progress",
-      "description": "From journal: 2026-01-29",
-      "status": "todo",
+      "title": "Vaishnavi PDF Redesign",
+      "description": "NotebookLM powerpoints being redesigned with editable elements",
+      "status": "in-progress",
       "priority": "normal",
       "assignee": "armaan",
       "tags": [
@@ -211,20 +218,14 @@
       "referenceDocuments": [],
       "notes": [
         {
-          "id": "note-071ab127-23d1-4e8e-9ee5-769d846bf527",
+          "id": "note-1769836842298-bfhmmnkme",
           "author": "armaan",
-          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
-          "timestamp": "2026-01-30T03:10:09.527Z"
-        },
-        {
-          "id": "note-b734f9b3-ee5d-4e55-92ae-5efaa6748dd9",
-          "author": "armaan",
-          "content": "spoke to vaish, she sent me a draft, had some formatting issues. I told here to use Gamma AI if shes trying to generate a powerpoint (that we can later turn to pdf) and have set up a meeting for tomorrow",
-          "timestamp": "2026-01-30T03:14:42.313Z"
+          "content": "## Update — Jan 30, 2026\n\nMeeting with Vaishnavi today. Used NotebookLM to generate powerpoints — they looked sick but exported as PDF with no editable elements.\n\n**Current status:** Vaishnavi is splicing them together and redesigning to make them editable.\n\n**Next step:** Update Matt once redesign is complete.",
+          "timestamp": "2026-01-31T05:05:32.793Z"
         }
       ],
       "createdAt": "2026-01-29T15:04:24.911Z",
-      "updatedAt": "2026-01-30T03:16:18.570Z"
+      "updatedAt": "2026-01-31T05:05:32.793Z"
     },
     {
       "id": "e355e0f5-c777-4841-ab35-e71deb875aad",
@@ -260,9 +261,44 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": "Completed - Idea Bank page built with thumbnail grid, detail views, full CRUD API",
+      "notes": [
+        {
+          "id": "note-1769836842298-f7wxgqnp3",
+          "author": "jess",
+          "content": "Completed - Idea Bank page built with thumbnail grid, detail views, full CRUD API",
+          "timestamp": "2026-01-30T23:13:14.782Z"
+        }
+      ],
       "createdAt": "2026-01-30T23:09:45.387Z",
       "updatedAt": "2026-01-30T23:13:14.782Z"
+    },
+    {
+      "id": "c15bbbce-6246-44db-8fcc-63c0268fe368",
+      "title": "Update Matt on Vaishnavi PDF progress",
+      "description": "Send Matt an update on the NotebookLM powerpoint project",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "Clover Labs"
+      ],
+      "dueDate": "2026-01-31",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-1769836842298-y42io0mmz",
+          "author": "armaan",
+          "content": "## Sample Message for Matt\n\nHey Matt! Quick update on the PDF project:\n\nHad a call with Vaishnavi today — we used NotebookLM to generate some powerpoint decks and they came out looking really solid. Only hiccup is NotebookLM exports as non-editable PDFs, so Vaishnavi is splicing them together and redesigning with editable elements.\n\nShould have something polished to show you soon. Will keep you posted!\n\n---\n\n*Adjust tone/details as needed*",
+          "timestamp": "2026-01-31T05:05:45.164Z"
+        }
+      ],
+      "createdAt": "2026-01-31T05:05:32.810Z",
+      "updatedAt": "2026-01-31T05:05:45.164Z"
     }
   ]
 }
