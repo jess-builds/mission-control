@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react'
 import { Pill, Check, AlertTriangle, Calendar, History } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
+// Get today's date in EST/EDT (client-side)
+function getTodayEST(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto' })
+}
+
 interface MedStatus {
   taken: boolean
   confirmedAt?: string
@@ -21,7 +26,7 @@ export default function MedicationTracker() {
   const [loading, setLoading] = useState(true)
   const [showHistory, setShowHistory] = useState(false)
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getTodayEST()
 
   useEffect(() => {
     fetchStatus()
@@ -87,7 +92,7 @@ export default function MedicationTracker() {
     for (let i = 29; i >= 0; i--) {
       const date = new Date()
       date.setDate(date.getDate() - i)
-      const dateStr = date.toISOString().split('T')[0]
+      const dateStr = date.toLocaleDateString('en-CA', { timeZone: 'America/Toronto' })
       const entry = history.find(e => e.date === dateStr)
       days.push({
         date: dateStr,

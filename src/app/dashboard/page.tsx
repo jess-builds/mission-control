@@ -3,6 +3,7 @@ import { Badge } from '@/components/ui/badge'
 import { getAllTasks } from '@/lib/tasks'
 import Link from 'next/link'
 import { CheckSquare, TrendingUp, Sparkles, Zap } from 'lucide-react'
+import { getCurrentHourEST } from '@/lib/timezone'
 
 // Dashboard widgets
 import MedicationTracker from '@/components/dashboard/MedicationTracker'
@@ -12,12 +13,11 @@ import ProjectCards from '@/components/dashboard/ProjectCards'
 import ActivityTimeline from '@/components/dashboard/ActivityTimeline'
 
 function getGreeting(): string {
-  const hour = new Date().getUTCHours()
-  const estHour = (hour - 5 + 24) % 24
+  const hour = getCurrentHourEST()
   
-  if (estHour >= 5 && estHour < 12) return 'Good morning'
-  if (estHour >= 12 && estHour < 17) return 'Good afternoon'
-  if (estHour >= 17 && estHour < 21) return 'Good evening'
+  if (hour >= 5 && hour < 12) return 'Good morning'
+  if (hour >= 12 && hour < 17) return 'Good afternoon'
+  if (hour >= 17 && hour < 21) return 'Good evening'
   return 'Burning the midnight oil'
 }
 

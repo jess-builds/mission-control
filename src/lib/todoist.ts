@@ -5,6 +5,8 @@
  * Get yours at: https://todoist.com/help/articles/find-your-api-token
  */
 
+import { getTodayEST } from '@/lib/timezone'
+
 const TODOIST_API = 'https://api.todoist.com/rest/v2'
 
 function getToken(): string | null {
@@ -153,7 +155,7 @@ export async function getDailyReviewTasks(): Promise<{
   due: TodoistTask[]
   overdue: TodoistTask[]
 }> {
-  const today = new Date().toISOString().split('T')[0]
+  const today = getTodayEST()
   const tasks = await getTasksDueToday()
   
   return {
@@ -174,7 +176,7 @@ export async function rescheduleTask(id: string, newDate: string): Promise<Todoi
  */
 export async function addProgressNote(id: string, note: string): Promise<TodoistTask> {
   const task = await getTask(id)
-  const timestamp = new Date().toISOString().split('T')[0]
+  const timestamp = getTodayEST()
   const newDescription = `[${timestamp}] ${note}\n\n${task.description || ''}`
   return updateTask(id, { description: newDescription.trim() })
 }

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import fs from 'fs'
+import { getTodayEST } from '@/lib/timezone'
 
 const TRACKER_FILE = '/home/ubuntu/clawd/memory/meds-tracker.json'
 
@@ -13,7 +14,7 @@ function getTracker() {
 export async function GET() {
   try {
     const tracker = getTracker()
-    const today = new Date().toISOString().split('T')[0]
+    const today = getTodayEST()
     const todayStatus = tracker.log[today] || { taken: false, confirmed: false }
     
     return NextResponse.json({

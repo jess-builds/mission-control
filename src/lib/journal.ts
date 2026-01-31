@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import { getTodayEST } from '@/lib/timezone'
 
 // Use Jess's daily notes as the journal
 const JOURNAL_DIR = '/home/ubuntu/clawd/memory'
@@ -108,7 +109,7 @@ export function saveJournalEntry(
 }
 
 export function getTodayDate(): string {
-  return new Date().toISOString().split('T')[0]
+  return getTodayEST()
 }
 
 export function getRecentEntries(limit: number = 7): JournalMeta[] {

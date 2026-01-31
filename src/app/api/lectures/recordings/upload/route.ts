@@ -3,6 +3,7 @@ import { writeFile, mkdir, readFile } from 'fs/promises';
 import { existsSync } from 'fs';
 import path from 'path';
 import crypto from 'crypto';
+import { getTodayEST } from '@/lib/timezone';
 
 const DATA_DIR = path.join(process.cwd(), 'data', 'lectures');
 
@@ -11,7 +12,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get('audio') as File;
     const courseId = formData.get('courseId') as string;
-    const date = formData.get('date') as string || new Date().toISOString().split('T')[0];
+    const date = formData.get('date') as string || getTodayEST();
     
     if (!file || !courseId) {
       return NextResponse.json(

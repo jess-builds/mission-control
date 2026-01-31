@@ -299,6 +299,98 @@
       ],
       "createdAt": "2026-01-31T05:05:32.810Z",
       "updatedAt": "2026-01-31T05:05:45.164Z"
+    },
+    {
+      "id": "186f7d47-712c-436a-baf0-e3bb253e39ec",
+      "title": "Draft ANTH-106 Ethnographic Journal Week 4",
+      "description": "Create draft for Wednesday post about urban design and mental health in Brampton. Armaan will rewrite in his voice.",
+      "status": "done",
+      "priority": "high",
+      "assignee": "armaan",
+      "tags": [
+        "SCAD",
+        "ANTH-106"
+      ],
+      "dueDate": "2026-02-04",
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "author": "jess",
+          "content": "Draft complete at memory/school/anth-106-week4-draft.md\n\n~400 word post connecting Brampton suburban sprawl to Restorative Cities concepts. Focuses on:\n- Car dependency and 40-min drives\n- Social isolation from lack of walkable spaces\n- Mental health impacts\n- Specific Brampton examples (Square One, Etobicoke Creek Trail)\n\nReady for you to rewrite in your voice. Due Wednesday 11:59pm EST."
+        }
+      ],
+      "createdAt": "2026-01-31T05:52:45.275Z",
+      "updatedAt": "2026-01-31T05:54:40.834Z"
+    },
+    {
+      "id": "37e08a1c-da7d-401d-b6af-71bff0363aac",
+      "title": "Build workflow automation tools",
+      "description": "Created Mission Control CLI helper (mc command) and daily review script",
+      "status": "done",
+      "priority": "normal",
+      "assignee": "jess",
+      "tags": [
+        "automation",
+        "tools"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "Functional CLI tools for easier workflow",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-31T05:57:50.874Z",
+      "updatedAt": "2026-01-31T05:57:50.874Z"
+    },
+    {
+      "id": "90293d2c-c6f5-4f88-b39f-a564ca41649c",
+      "title": "Test NotebookLM Brand Guide Integration",
+      "description": "Test if NotebookLM can generate properly branded slide decks when given both a brand guide and transcript.\n\n**Test Steps:**\n1. Upload a brand guide to NotebookLM\n2. Upload a transcript\n3. Select both sources\n4. Generate a slide deck\n5. Check if the output follows the brand guidelines (colors, fonts, styling)\n\n**Success Criteria:** Slide deck reflects brand guide styling",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "armaan",
+      "tags": [
+        "clover",
+        "notebooklm",
+        "testing"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-31T17:06:57.598Z",
+      "updatedAt": "2026-01-31T17:06:57.598Z"
+    },
+    {
+      "id": "7fe70e19-546a-44df-8340-07d27ed8babe",
+      "title": "Create PDF SOP",
+      "description": "Create a Standard Operating Procedure document for PDF workflows at Clover.",
+      "status": "todo",
+      "priority": "medium",
+      "assignee": "armaan",
+      "tags": [
+        "clover",
+        "documentation",
+        "sop"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-01-31T17:07:27.240Z",
+      "updatedAt": "2026-01-31T17:07:27.240Z"
     }
   ]
 }

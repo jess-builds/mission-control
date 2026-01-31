@@ -2,6 +2,11 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { Mic, Square, Loader2, X, Minus, GripVertical, AlertCircle } from "lucide-react";
+
+// Get today's date in EST/EDT (client-side)
+function getTodayEST(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto' });
+}
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -284,7 +289,7 @@ export default function RecordingWidget({
       const formData = new FormData();
       formData.append('audio', blob, `lecture_${Date.now()}.webm`);
       formData.append('courseId', selectedCourse);
-      formData.append('date', new Date().toISOString().split('T')[0]);
+      formData.append('date', getTodayEST());
       formData.append('duration', String(recordingTime));
 
       const uploadResponse = await fetch('/api/lectures/recordings/upload', {

@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { getTodayEST, toDateStringEST } from '@/lib/timezone'
 
 const DOCS_DIR = path.join(process.cwd(), 'data', 'documents')
 const WORKSPACE_DIR = '/home/ubuntu/clawd'
@@ -60,8 +61,8 @@ export function getAllDocuments(): DocumentMeta[] {
       slug,
       title: data.title || slug,
       tags: data.tags || [],
-      createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
-      updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || stats.mtime.toISOString().split('T')[0]),
+      createdAt: String(data.createdAt instanceof Date ? toDateStringEST(data.createdAt) : data.createdAt || getTodayEST()),
+      updatedAt: String(data.updatedAt instanceof Date ? toDateStringEST(data.updatedAt) : data.updatedAt || toDateStringEST(stats.mtime)),
       source: 'documents' as const
     }
   })
@@ -79,8 +80,8 @@ export function getAllDocuments(): DocumentMeta[] {
       slug,
       title: `🧠 ${file.replace('.md', '')}`,
       tags: ['Jess', 'Workspace'],
-      createdAt: stats.birthtime.toISOString().split('T')[0],
-      updatedAt: stats.mtime.toISOString().split('T')[0],
+      createdAt: toDateStringEST(stats.birthtime),
+      updatedAt: toDateStringEST(stats.mtime),
       source: 'workspace' as const
     }
   })
@@ -109,8 +110,8 @@ export function getDocument(slug: string): Document | null {
       title: `🧠 ${fileName.replace('.md', '')}`,
       content,
       tags: ['Jess', 'Workspace'],
-      createdAt: stats.birthtime.toISOString().split('T')[0],
-      updatedAt: stats.mtime.toISOString().split('T')[0],
+      createdAt: toDateStringEST(stats.birthtime),
+      updatedAt: toDateStringEST(stats.mtime),
       source: 'workspace'
     }
   }
@@ -130,8 +131,8 @@ export function getDocument(slug: string): Document | null {
       title: `📝 ${fileName.replace('.md', '')}`,
       content,
       tags: ['Jess', 'Memory', 'Daily'],
-      createdAt: stats.birthtime.toISOString().split('T')[0],
-      updatedAt: stats.mtime.toISOString().split('T')[0],
+      createdAt: toDateStringEST(stats.birthtime),
+      updatedAt: toDateStringEST(stats.mtime),
       source: 'workspace-memory'
     }
   }
@@ -151,8 +152,8 @@ export function getDocument(slug: string): Document | null {
     title: data.title || slug,
     content,
     tags: data.tags || [],
-    createdAt: String(data.createdAt instanceof Date ? data.createdAt.toISOString().split('T')[0] : data.createdAt || new Date().toISOString().split('T')[0]),
-    updatedAt: String(data.updatedAt instanceof Date ? data.updatedAt.toISOString().split('T')[0] : data.updatedAt || new Date().toISOString().split('T')[0]),
+    createdAt: String(data.createdAt instanceof Date ? toDateStringEST(data.createdAt) : data.createdAt || getTodayEST()),
+    updatedAt: String(data.updatedAt instanceof Date ? toDateStringEST(data.updatedAt) : data.updatedAt || getTodayEST()),
     source: 'documents'
   }
 }
@@ -178,7 +179,7 @@ export function saveDocument(slug: string, title: string, content: string, tags:
   
   // Regular document with frontmatter
   const existing = getDocument(slug)
-  const now = new Date().toISOString().split('T')[0]
+  const now = getTodayEST()
   
   const frontmatter = {
     title,

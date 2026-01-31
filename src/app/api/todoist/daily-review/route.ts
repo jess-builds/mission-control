@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
 import * as todoist from '@/lib/todoist'
 import { getAllTasks } from '@/lib/tasks'
+import { getTodayEST } from '@/lib/timezone'
 
 export async function GET() {
   try {
     const configured = await todoist.isConfigured()
     
     // Get Mission Control tasks due today
-    const today = new Date().toISOString().split('T')[0]
+    const today = getTodayEST()
     const mcTasks = getAllTasks().filter(t => 
       t.dueDate === today && t.status !== 'done'
     )

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import fs from 'fs'
+import { getTodayEST } from '@/lib/timezone'
 
 const TRACKER_FILE = '/home/ubuntu/clawd/memory/meds-tracker.json'
 
@@ -17,7 +18,7 @@ function saveTracker(tracker: Record<string, unknown>) {
 export async function POST(request: NextRequest) {
   try {
     const { date } = await request.json()
-    const today = date || new Date().toISOString().split('T')[0]
+    const today = date || getTodayEST()
     
     const tracker = getTracker()
     tracker.log[today] = {

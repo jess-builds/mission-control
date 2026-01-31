@@ -15,6 +15,11 @@ import {
   Loader2
 } from 'lucide-react'
 
+// Get today's date in EST/EDT (client-side)
+function getTodayEST(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto' })
+}
+
 interface Task {
   id: string
   title: string
@@ -72,7 +77,7 @@ export default function CommandSearch() {
       { type: 'action', id: 'journal', label: 'Go to Journal', icon: <BookOpen className="h-4 w-4" />, action: () => router.push('/dashboard/journal') },
       { type: 'action', id: 'new-doc', label: 'Create New Document', icon: <Plus className="h-4 w-4" />, action: () => router.push('/dashboard/documents/new') },
       { type: 'action', id: 'new-task', label: 'Create New Task', icon: <Plus className="h-4 w-4" />, action: () => router.push('/dashboard/tasks?new=true') },
-      { type: 'action', id: 'today-journal', label: "Today's Journal", icon: <Calendar className="h-4 w-4" />, action: () => router.push(`/dashboard/journal/${new Date().toISOString().split('T')[0]}`) },
+      { type: 'action', id: 'today-journal', label: "Today's Journal", icon: <Calendar className="h-4 w-4" />, action: () => router.push(`/dashboard/journal/${getTodayEST()}`) },
     )
   }
 
@@ -145,7 +150,7 @@ export default function CommandSearch() {
       // ⌘+J - Today's journal
       if (e.key === 'j' && (e.metaKey || e.ctrlKey)) {
         e.preventDefault()
-        const today = new Date().toISOString().split('T')[0]
+        const today = getTodayEST()
         router.push(`/dashboard/journal/${today}`)
       }
       // ⌘+1-4 - Navigation

@@ -3,6 +3,18 @@
 import { useState, useEffect } from 'react'
 import { GraduationCap, Calendar, AlertTriangle, BookOpen, Palette, Loader2 } from 'lucide-react'
 
+// Get today's date in EST/EDT (client-side)
+function getTodayEST(): string {
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Toronto' })
+}
+
+// Get tomorrow's date in EST/EDT (client-side)
+function getTomorrowEST(): string {
+  const tomorrow = new Date()
+  tomorrow.setDate(tomorrow.getDate() + 1)
+  return tomorrow.toLocaleDateString('en-CA', { timeZone: 'America/Toronto' })
+}
+
 interface Deadline {
   id: string
   title: string
@@ -35,7 +47,7 @@ export default function SchoolDeadlines() {
     }
   }
 
-  const today = new Date().toISOString().split('T')[0]
+  const today = getTodayEST()
 
   const isOverdue = (date: string) => date < today
   const isDueToday = (date: string) => date === today
@@ -49,7 +61,7 @@ export default function SchoolDeadlines() {
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr + 'T00:00:00')
     if (isDueToday(dateStr)) return 'Today'
-    if (dateStr === new Date(Date.now() + 86400000).toISOString().split('T')[0]) return 'Tomorrow'
+    if (dateStr === getTomorrowEST()) return 'Tomorrow'
     return date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
   }
 
