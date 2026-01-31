@@ -115,7 +115,7 @@ function generateBasicNotes(transcript: string): string {
   const sentences = transcript.split(/[.!?]+/).filter(s => s.trim().length > 10);
   
   let notes = '# Lecture Notes\n\n';
-  notes += `*Generated on ${new Date().toLocaleDateString()}*\n\n`;
+  notes += `*Generated on ${new Date().toLocaleDateString('en-US', { timeZone: 'America/Toronto', month: 'long', day: 'numeric', year: 'numeric' })}*\n\n`;
   notes += '---\n\n';
   
   // Group into sections of ~5 sentences
