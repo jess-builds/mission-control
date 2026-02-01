@@ -131,9 +131,16 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": [],
+      "notes": [
+        {
+          "id": "note-a3e8ddfe-634f-4885-979a-d1cf9747579b",
+          "author": "armaan",
+          "content": "testing",
+          "timestamp": "2026-02-01T18:43:06.490Z"
+        }
+      ],
       "createdAt": "2026-01-29T23:20:00Z",
-      "updatedAt": "2026-01-29T23:20:00Z"
+      "updatedAt": "2026-02-01T18:43:19.335Z"
     },
     {
       "id": "7",
@@ -391,6 +398,50 @@
       "notes": [],
       "createdAt": "2026-01-31T17:07:27.240Z",
       "updatedAt": "2026-01-31T17:07:27.240Z"
+    },
+    {
+      "id": "bad99466-b893-4dd0-8195-44ac90381aae",
+      "title": "Nightly Self-Improvement Session",
+      "description": "Research and install useful Clawdbot skills, improve workflows, commit untracked files",
+      "status": "done",
+      "priority": 3,
+      "assignee": "jess",
+      "tags": [],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "content": "Created daily-check.js script - comprehensive status overview tool that checks meds, tasks, emails, git status, school deadlines, and recent activity",
+          "timestamp": "2026-02-01T04:03:00Z"
+        }
+      ],
+      "createdAt": "2026-02-01T04:02:22.062Z",
+      "updatedAt": "2026-02-01T04:04:27.789Z"
+    },
+    {
+      "id": "9d27ed03-a782-465f-9639-27709620bb98",
+      "title": "Sync learnings file to Mission Control documents",
+      "description": "Add a sync mechanism so skills/self-improving-agent/.learnings/*.md files are viewable in Mission Control documents section. Could be a cron job that copies/updates, or a symlink, or MC reads directly from skills folder.",
+      "status": "todo",
+      "priority": 3,
+      "assignee": "jess",
+      "tags": [
+        "mission-control",
+        "self-improvement"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-01T20:30:18.898Z",
+      "updatedAt": "2026-02-01T20:30:18.898Z"
     }
   ]
 }

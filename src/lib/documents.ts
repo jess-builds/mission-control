@@ -6,6 +6,7 @@ import { getTodayEST, toDateStringEST } from '@/lib/timezone'
 const DOCS_DIR = path.join(process.cwd(), 'data', 'documents')
 const WORKSPACE_DIR = '/home/ubuntu/clawd'
 const WORKSPACE_MEMORY_DIR = '/home/ubuntu/clawd/memory'
+const LEARNINGS_DIR = '/home/ubuntu/clawd/skills/self-improving-agent/.learnings'
 
 // Files from workspace to include
 const WORKSPACE_FILES = [
@@ -19,6 +20,13 @@ const WORKSPACE_FILES = [
   'PREFERENCES.md'
 ]
 
+// Learnings files to include
+const LEARNINGS_FILES = [
+  'LEARNINGS.md',
+  'ERRORS.md',
+  'FEATURE_REQUESTS.md'
+]
+
 export interface Document {
   slug: string
   title: string
@@ -26,7 +34,7 @@ export interface Document {
   tags: string[]
   createdAt: string
   updatedAt: string
-  source?: 'documents' | 'workspace' | 'workspace-memory'
+  source?: 'documents' | 'workspace' | 'workspace-memory' | 'learnings'
 }
 
 export interface DocumentMeta {
@@ -35,7 +43,7 @@ export interface DocumentMeta {
   tags: string[]
   createdAt: string
   updatedAt: string
-  source?: 'documents' | 'workspace' | 'workspace-memory'
+  source?: 'documents' | 'workspace' | 'workspace-memory' | 'learnings'
 }
 
 function ensureDir(dir: string) {
@@ -88,7 +96,26 @@ export function getAllDocuments(): DocumentMeta[] {
   
   // Memory files now live in Journal section, not Documents
   
-  return [...regularDocs, ...workspaceDocs]
+  // Learnings files (self-improvement)
+  const learningsDocs = LEARNINGS_FILES.filter(file => {
+    const filePath = path.join(LEARNINGS_DIR, file)
+    return fs.existsSync(filePath)
+  }).map(file => {
+    const filePath = path.join(LEARNINGS_DIR, file)
+    const stats = fs.statSync(filePath)
+    const slug = `learnings-${file.replace('.md', '').toLowerCase()}`
+    
+    return {
+      slug,
+      title: `📚 ${file.replace('.md', '').replace(/_/g, ' ')}`,
+      tags: ['Jess', 'Learnings', 'Self-Improvement'],
+      createdAt: toDateStringEST(stats.birthtime),
+      updatedAt: toDateStringEST(stats.mtime),
+      source: 'learnings' as const
+    }
+  })
+  
+  return [...regularDocs, ...workspaceDocs, ...learningsDocs]
     .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
 }
 
@@ -134,6 +161,27 @@ export function getDocument(slug: string): Document | null {
       createdAt: toDateStringEST(stats.birthtime),
       updatedAt: toDateStringEST(stats.mtime),
       source: 'workspace-memory'
+    }
+  }
+  
+  // Check if it's a learnings file
+  if (slug.startsWith('learnings-')) {
+    const fileName = slug.replace('learnings-', '').toUpperCase().replace(/ /g, '_') + '.md'
+    const filePath = path.join(LEARNINGS_DIR, fileName)
+    
+    if (!fs.existsSync(filePath)) return null
+    
+    const content = fs.readFileSync(filePath, 'utf-8')
+    const stats = fs.statSync(filePath)
+    
+    return {
+      slug,
+      title: `📚 ${fileName.replace('.md', '').replace(/_/g, ' ')}`,
+      content,
+      tags: ['Jess', 'Learnings', 'Self-Improvement'],
+      createdAt: toDateStringEST(stats.birthtime),
+      updatedAt: toDateStringEST(stats.mtime),
+      source: 'learnings'
     }
   }
   

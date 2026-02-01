@@ -1,6 +1,14 @@
 {
   "activities": [
     {
+      "id": "1769970647667-tu9mrjk6n",
+      "type": "medication_taken",
+      "title": "Thyroid medication taken",
+      "description": "Daily hypothyroidism medication confirmed",
+      "timestamp": "2026-02-01T18:30:47.667Z",
+      "actor": "armaan"
+    },
+    {
       "id": "1769743319970-j993o8hxm",
       "type": "project_note",
       "title": "Note for debtless",
