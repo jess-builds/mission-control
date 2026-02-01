@@ -426,7 +426,7 @@
       "id": "9d27ed03-a782-465f-9639-27709620bb98",
       "title": "Sync learnings file to Mission Control documents",
       "description": "Add a sync mechanism so skills/self-improving-agent/.learnings/*.md files are viewable in Mission Control documents section. Could be a cron job that copies/updates, or a symlink, or MC reads directly from skills folder.",
-      "status": "todo",
+      "status": "done",
       "priority": 3,
       "assignee": "jess",
       "tags": [
@@ -439,9 +439,14 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": [],
+      "notes": [
+        {
+          "content": "Added learnings source type to documents.ts. Now reads from skills/self-improving-agent/.learnings/ folder. Branch: feature/learnings-documents. Build passed, MC restarted, verified working.",
+          "timestamp": "2026-02-01T20:35:00Z"
+        }
+      ],
       "createdAt": "2026-02-01T20:30:18.898Z",
-      "updatedAt": "2026-02-01T20:30:18.898Z"
+      "updatedAt": "2026-02-01T20:33:09.294Z"
     }
   ]
 }

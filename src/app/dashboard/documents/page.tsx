@@ -98,6 +98,7 @@ export default function DocumentsPage() {
 
   // Group documents by source (memory docs now in Journal)
   const workspaceDocs = filteredDocs.filter(d => d.source === 'workspace')
+  const learningsDocs = filteredDocs.filter(d => d.source === 'learnings')
   const regularDocs = filteredDocs.filter(d => d.source === 'documents' || !d.source)
 
   const handleSave = async () => {
@@ -169,6 +170,27 @@ export default function DocumentsPage() {
                     Jess's Brain
                   </div>
                   {workspaceDocs.map(doc => (
+                    <DocListItem
+                      key={doc.slug}
+                      doc={doc}
+                      isSelected={selectedSlug === doc.slug}
+                      onClick={() => {
+                        setSelectedSlug(doc.slug)
+                        setIsEditing(false)
+                      }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {/* Learnings Docs */}
+              {learningsDocs.length > 0 && (
+                <div className="mb-4">
+                  <div className="px-3 py-2 text-xs font-medium text-white/40 uppercase tracking-wider flex items-center gap-2">
+                    <FileText className="h-3 w-3" />
+                    Learnings
+                  </div>
+                  {learningsDocs.map(doc => (
                     <DocListItem
                       key={doc.slug}
                       doc={doc}
