@@ -1,0 +1,20 @@
+{
+  "id": "1eb90e32-11fb-418e-97d3-de24b8e30d16",
+  "title": "Memory-as-a-Service for Clawdbot",
+  "thumbnail": "🧠",
+  "summary": "Package the hybrid mem0+memU implementation as a standalone skill or plugin that others can use. Could be the first premium skill on ClawdHub.",
+  "status": "new",
+  "source": "journal",
+  "createdAt": "2026-02-01T03:31:38.769Z",
+  "updatedAt": "2026-02-01T03:31:38.769Z",
+  "why": "If we build this right, it solves a real pain point for every Clawdbot user. Memory is the #1 requested feature. Being first to market with a quality solution = reputation + potential revenue.",
+  "flow": "Fits perfectly with Clawdbot ecosystem. Users install via clawdhub, configure API keys, and get smart memory. Armaan could even make tutorial content about building it.",
+  "implementation": "Phase 1: Build for ourselves. Phase 2: Abstract away Armaan-specific stuff. Phase 3: Package as skill with install script. Phase 4: Submit to ClawdHub with docs.",
+  "ux": "Install via one command. Auto-configure with existing models. Works transparently — users just notice Clawdbot remembers things better. Maybe a /memory command to inspect what it knows.",
+  "tags": [
+    "memory",
+    "clawdbot",
+    "clawdhub",
+    "product"
+  ]
+}

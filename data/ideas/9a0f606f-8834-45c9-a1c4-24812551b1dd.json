@@ -1,0 +1,19 @@
+{
+  "id": "9a0f606f-8834-45c9-a1c4-24812551b1dd",
+  "title": "Time-Based Light Presets",
+  "thumbnail": "🔆",
+  "summary": "Automate room lighting: bright white during work hours, warm preset after 7pm, dimmed after 10pm. Triggered via cron jobs.",
+  "status": "new",
+  "source": "journal",
+  "createdAt": "2026-02-01T03:31:38.754Z",
+  "updatedAt": "2026-02-01T03:31:38.754Z",
+  "why": "Armaan already has a preferred warm vibe preset. Automating it means he never has to think about it — the room just feels right at the right time.",
+  "flow": "Could integrate with morning brief (bright start) and wind-down routines. Natural extension of existing Tuya integration.",
+  "implementation": "Add 3 cron jobs at 9am (bright), 7pm (cozy), 10pm (dim). Use existing scripts/tuya.js with preset command. Consider sun-based timing via weather API for sunrise/sunset.",
+  "ux": "Zero interaction — it just works. Maybe a quick Telegram notification when mode changes, or silent by default.",
+  "tags": [
+    "automation",
+    "smart-home",
+    "tuya"
+  ]
+}
