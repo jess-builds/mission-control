@@ -5,7 +5,8 @@ import { AgentInstance } from '@/types/council';
 import AgentAvatar from './AgentAvatar';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { Pause, Play, SkipForward, Square, Save } from 'lucide-react';
+import { Pause, Play, SkipForward, Square, Save, Plus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 
 interface CouncilSidebarProps {
@@ -27,6 +28,12 @@ export default function CouncilSidebar({
   onPause,
   onResume,
 }: CouncilSidebarProps) {
+  const router = useRouter();
+
+  const handleNewSession = () => {
+    router.push('/dashboard/council');
+  };
+
   const getAgentStatusIndicator = (agent: AgentInstance) => {
     if (agent.status === 'typing') {
       return <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />;
@@ -91,14 +98,25 @@ export default function CouncilSidebar({
           )}
 
           {status === 'completed' && (
-            <Button
-              variant="default"
-              size="sm"
-              className="w-full"
-            >
-              <Save className="h-4 w-4 mr-2" />
-              Save as Idea
-            </Button>
+            <div className="space-y-2">
+              <Button
+                variant="default"
+                size="sm"
+                className="w-full"
+              >
+                <Save className="h-4 w-4 mr-2" />
+                Save as Idea
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="w-full"
+                onClick={handleNewSession}
+              >
+                <Plus className="h-4 w-4 mr-2" />
+                New Session
+              </Button>
+            </div>
           )}
 
           {(status === 'running' || status === 'paused') && (
