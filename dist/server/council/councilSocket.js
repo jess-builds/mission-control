@@ -108,6 +108,11 @@ class CouncilSocketHandler {
                     // Start state machine
                     session.stateMachine.start();
                     socket.emit('council:started', { sessionId });
+                    // Broadcast running status to all clients in the room
+                    this.io.to(`council:${sessionId}`).emit('council:status', {
+                        sessionId,
+                        status: 'running',
+                    });
                 }
                 catch (error) {
                     socket.emit('council:error', {

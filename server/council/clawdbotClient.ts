@@ -1,4 +1,6 @@
 import axios from 'axios';
+import fs from 'fs/promises';
+import path from 'path';
 
 interface ClawdbotSession {
   sessionKey: string;
@@ -38,8 +40,12 @@ export class ClawdbotClient {
     contextPrompt?: string
   ): Promise<ClawdbotSession> {
     try {
+      // Use persona's built-in contextPrompt, or override with passed contextPrompt
+      const effectiveContext = contextPrompt || persona.contextPrompt;
+      
       const systemPrompt = `You are ${persona.name} in a council discussion.
 
+${effectiveContext ? `Context: ${effectiveContext}\n` : ''}
 Core Identity: ${persona.coreIdentity}
 
 Values:
@@ -50,8 +56,6 @@ What Makes You Uncomfortable: ${persona.discomfort}
 Staying True: ${persona.stayingTrue}
 
 Guidelines: ${persona.responseGuidelines}
-
-${contextPrompt ? `\nContext for this council: ${contextPrompt}` : ''}
 
 IMPORTANT: You are participating in a real-time council discussion. Keep responses focused and concise (2-3 paragraphs max). Engage directly with other agents' points. No preambles or sign-offs.`;
 
@@ -204,18 +208,48 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
   }
 
   /**
-   * Terminate an agent session
+   * Terminate an agent session by deleting its session file
    */
   async terminateSession(sessionKeyOrLabel: string): Promise<void> {
     try {
-      // For now, there's no explicit terminate in the Gateway API
-      // Sessions will timeout after their configured duration
-      console.log(`Session ${sessionKeyOrLabel} will timeout automatically`);
+      // Get the session info to find the sessionId
+      const sessionKey = this.sessionKeys.get(sessionKeyOrLabel) || sessionKeyOrLabel;
+      
+      // Try to get session details from sessions_list to find the sessionId
+      const sessions = await this.listSessions(50);
+      const session = sessions.find((s: any) => 
+        s.key === sessionKey || 
+        s.label === sessionKeyOrLabel ||
+        s.sessionKey === sessionKey
+      );
+      
+      if (session?.sessionId) {
+        // Delete the session file
+        const sessionDir = path.join(
+          process.env.HOME || '/home/ubuntu',
+          '.clawdbot/agents/main/sessions'
+        );
+        const sessionFile = path.join(sessionDir, `${session.sessionId}.jsonl`);
+        const lockFile = path.join(sessionDir, `${session.sessionId}.jsonl.lock`);
+        
+        try {
+          await fs.unlink(sessionFile);
+          console.log(`Deleted session file: ${session.sessionId}`);
+        } catch (e) {
+          // File might not exist, that's ok
+        }
+        
+        try {
+          await fs.unlink(lockFile);
+        } catch (e) {
+          // Lock file might not exist, that's ok
+        }
+      } else {
+        console.log(`Could not find session to terminate: ${sessionKeyOrLabel}`);
+      }
       
       // Clean up our local mapping
-      if (sessionKeyOrLabel.startsWith('council-')) {
-        this.sessionKeys.delete(sessionKeyOrLabel);
-      }
+      this.sessionKeys.delete(sessionKeyOrLabel);
     } catch (error) {
       console.error(`Failed to terminate session ${sessionKeyOrLabel}:`, error);
     }

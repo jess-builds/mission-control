@@ -187,31 +187,10 @@
       "updatedAt": "2026-01-29T23:20:00Z"
     },
     {
-      "id": "9",
-      "title": "Ethnographic Journal - Weekly Posts",
-      "description": "ANTH-106: Initial post due Wed 11:59pm EST, two responses to classmates due Fri 11:59pm EST. 20% of grade. Ongoing throughout quarter.",
-      "status": "in-progress",
-      "priority": "normal",
-      "assignee": "armaan",
-      "tags": [
-        "SCAD",
-        "ANTH-106"
-      ],
-      "parentTask": null,
-      "blocked": null,
-      "recurring": null,
-      "completionCriteria": null,
-      "documents": [],
-      "referenceDocuments": [],
-      "notes": [],
-      "createdAt": "2026-01-29T23:20:00Z",
-      "updatedAt": "2026-01-29T23:20:00Z"
-    },
-    {
       "id": "f6c913e4-6b6d-4605-95ba-c4c3c3cd6011",
       "title": "Vaishnavi PDF Redesign",
       "description": "NotebookLM powerpoints being redesigned with editable elements",
-      "status": "in-progress",
+      "status": "done",
       "priority": "normal",
       "assignee": "armaan",
       "tags": [
@@ -232,7 +211,7 @@
         }
       ],
       "createdAt": "2026-01-29T15:04:24.911Z",
-      "updatedAt": "2026-01-31T05:05:32.793Z"
+      "updatedAt": "2026-02-02T17:03:11.408Z"
     },
     {
       "id": "e355e0f5-c777-4841-ab35-e71deb875aad",
@@ -283,7 +262,7 @@
       "id": "c15bbbce-6246-44db-8fcc-63c0268fe368",
       "title": "Update Matt on Vaishnavi PDF progress",
       "description": "Send Matt an update on the NotebookLM powerpoint project",
-      "status": "todo",
+      "status": "done",
       "priority": "normal",
       "assignee": "armaan",
       "tags": [
@@ -305,34 +284,7 @@
         }
       ],
       "createdAt": "2026-01-31T05:05:32.810Z",
-      "updatedAt": "2026-01-31T05:05:45.164Z"
-    },
-    {
-      "id": "186f7d47-712c-436a-baf0-e3bb253e39ec",
-      "title": "Draft ANTH-106 Ethnographic Journal Week 4",
-      "description": "Create draft for Wednesday post about urban design and mental health in Brampton. Armaan will rewrite in his voice.",
-      "status": "done",
-      "priority": "high",
-      "assignee": "armaan",
-      "tags": [
-        "SCAD",
-        "ANTH-106"
-      ],
-      "dueDate": "2026-02-04",
-      "parentTask": null,
-      "blocked": null,
-      "recurring": null,
-      "completionCriteria": null,
-      "documents": [],
-      "referenceDocuments": [],
-      "notes": [
-        {
-          "author": "jess",
-          "content": "Draft complete at memory/school/anth-106-week4-draft.md\n\n~400 word post connecting Brampton suburban sprawl to Restorative Cities concepts. Focuses on:\n- Car dependency and 40-min drives\n- Social isolation from lack of walkable spaces\n- Mental health impacts\n- Specific Brampton examples (Square One, Etobicoke Creek Trail)\n\nReady for you to rewrite in your voice. Due Wednesday 11:59pm EST."
-        }
-      ],
-      "createdAt": "2026-01-31T05:52:45.275Z",
-      "updatedAt": "2026-01-31T05:54:40.834Z"
+      "updatedAt": "2026-02-02T17:03:10.040Z"
     },
     {
       "id": "37e08a1c-da7d-401d-b6af-71bff0363aac",
@@ -359,7 +311,7 @@
       "id": "90293d2c-c6f5-4f88-b39f-a564ca41649c",
       "title": "Test NotebookLM Brand Guide Integration",
       "description": "Test if NotebookLM can generate properly branded slide decks when given both a brand guide and transcript.\n\n**Test Steps:**\n1. Upload a brand guide to NotebookLM\n2. Upload a transcript\n3. Select both sources\n4. Generate a slide deck\n5. Check if the output follows the brand guidelines (colors, fonts, styling)\n\n**Success Criteria:** Slide deck reflects brand guide styling",
-      "status": "todo",
+      "status": "in-progress",
       "priority": "medium",
       "assignee": "armaan",
       "tags": [
@@ -373,9 +325,16 @@
       "completionCriteria": null,
       "documents": [],
       "referenceDocuments": [],
-      "notes": [],
+      "notes": [
+        {
+          "id": "note-e0f9cab2-eb7e-4c30-8fbf-d10336cf5b5d",
+          "author": "armaan",
+          "content": "**Test Results (Feb 2, 2026):**\n\n✅ **Brand guide integration works well**\n- Uploaded guides and assets\n- NotebookLM is good at using the branding to generate content\n\n✅ **Re-branding existing PowerPoints works well**\n- Can recreate existing PPTs with new branding\n- Keeps visual elements intact while applying brand\n\n**Use cases:**\n- Generate branded presentations with scripts\n- Re-brand existing PowerPoints while maintaining visual structure\n\n**Next steps on Todoist:**\n- Update Vesh on process (will make her life easier)\n- Create SOP document for Celia\n- Update Vesh on Celia situation + SOP needs",
+          "timestamp": "2026-02-02T17:52:50.048Z"
+        }
+      ],
       "createdAt": "2026-01-31T17:06:57.598Z",
-      "updatedAt": "2026-01-31T17:06:57.598Z"
+      "updatedAt": "2026-02-02T17:52:50.048Z"
     },
     {
       "id": "7fe70e19-546a-44df-8340-07d27ed8babe",
@@ -460,7 +419,26 @@
       "blocked": null,
       "recurring": null,
       "completionCriteria": null,
-      "documents": [],
+      "documents": [
+        {
+          "id": "f3231f8d-555b-4634-962a-b9b8dc337e83",
+          "title": "Handoff Notes",
+          "type": "handoff",
+          "content": "# Council UI - Handoff Notes\n\n**Status:** In Progress | **Blocker:** Persistent agent architecture\n\n## Where We Left Off\nUI is 80% complete. Blocked on agents not maintaining persistent conversations.\n\n### What Works\n- Full UI (chat, sidebar, timer, round markers)\n- WebSocket infrastructure\n- Agent spawning (all 7 spin up)\n- Initial responses\n- Timer and round management\n\n### What is Broken\n- Agents do not receive follow-up messages\n- Round progression stalls\n- No true group chat flow\n\n## The Problem\nsessions_spawn creates one-shot tasks. Agents respond once then exit. Even with cleanup:keep, they are not listening.\n\n## Solution\nNeed true persistent agents that stay alive in listening state.\n\n## To Resume\n1. Research Clawdbot persistent agent support\n2. Design listening agent architecture\n3. Implement and test\n\n## Key Files\n- server/council/clawdbotClient.ts (spawning)\n- server/council/councilOrchestrator.ts (orchestration)\n- src/components/council/CouncilMessage.tsx (UI)",
+          "createdBy": "jess",
+          "createdAt": "2026-02-02T06:58:24.069Z",
+          "updatedAt": "2026-02-02T06:58:24.069Z"
+        },
+        {
+          "id": "655c3a51-5091-43de-8e97-1561acf70d5c",
+          "title": "Implementation Notes",
+          "type": "output",
+          "content": "# Council UI - Implementation Notes\n\n**Started:** Feb 1, 2026 | **Last Session:** Feb 2, 2026 @ 2:00 AM\n\n## Components Built\n\n### Frontend (src/components/council/)\n- CouncilChat.tsx - Main container\n- CouncilMessage.tsx - Message bubble\n- CouncilTimer.tsx - Round timer\n- CouncilSidebar.tsx - Agent list\n- CouncilConfig.tsx - Configuration\n- AgentAvatar.tsx - Agent emoji/status\n- TypingIndicator.tsx - Typing state\n- RoundMarker.tsx - Round separator\n- MessageInput.tsx - Input with @mention\n\n### Backend (server/council/)\n- councilRouter.ts - Express routes\n- councilSocket.ts - Socket.io handlers\n- councilOrchestrator.ts - Agent management\n- timerService.ts - Server timer\n- clawdbotClient.ts - API wrapper\n- personas/*.json - 7 agent configs\n\n## Agent Personas\n\n| Role | Model | Purpose |\n|------|-------|--------|\n| Visionary | Opus | Creative proposals |\n| Pragmatist | Sonnet | Buildability |\n| Critic | Opus | Flaw detection |\n| Behavioral Realist | Opus | User behavior |\n| Pattern Archaeologist | Sonnet | Historical patterns |\n| Systems Architect | Sonnet | Integration |\n| Cognitive Load | Sonnet | Attention cost |\n\n## Fixes Applied (Feb 2)\n\n1. White text for agent messages\n2. Message dedup by ID\n3. Session persistence attempt (cleanup:keep)\n\n## Test Checklist\n\n- [x] Create council session\n- [x] All 7 agents spawn\n- [x] Initial responses in UI\n- [x] Timer counts down\n- [x] Armaan can send message\n- [ ] Agents respond to follow-up\n- [ ] Round progression works\n- [ ] Export to Idea Bank",
+          "createdBy": "jess",
+          "createdAt": "2026-02-02T06:58:36.812Z",
+          "updatedAt": "2026-02-02T06:58:36.812Z"
+        }
+      ],
       "referenceDocuments": [],
       "notes": [
         {
@@ -471,7 +449,254 @@
         }
       ],
       "createdAt": "2026-02-02T06:52:47.734Z",
-      "updatedAt": "2026-02-02T06:54:15.102Z"
+      "updatedAt": "2026-02-02T06:58:36.812Z"
+    },
+    {
+      "id": "fb4ba5ac-e293-442d-9f10-e0f5df02f699",
+      "title": "ANTH-106 Ethnographic Journal - Week 2",
+      "description": "**Monsters and Desirability Politics**\n\nBased on lecture from Week 1, you will think about which monster or villain you feel most connected to. Similar to lecture, I want you to think of the desirability politics around that particular monster. I want you to analyze the monster, state why you connect to said monster, and include a doodle/rough sketch of the monster or you as the monster. Lastly, include any information about the monster you chose.\n\nThis will be a weekly journal, so I recommend choosing a medium that brings you the most comfort, it can be video, written, animations or photos of a physical journal/scrapbook. I am open to whichever creative medium is best for you to communicate your feelings and thoughts.\n\n**Dr. Capello's Example:**\nI connect most with Mary Shelley's Creature, aka Dr. Frankenstein's monster. Based on the original novel, Creature is a gentle, humble, and deeply intelligent creature who does not fit desirability politics of the time. He loves to read and is gentle with animals he deems innocent. He is described as having a brutish, disheveled, and grotesque appearance. Many people are scared of him simply because of what he looks like. He acts as the foil to Dr. Frankenstein, who is beautiful, wealthy, and polished but the actual egotistical monster. In Guillermo del Toro's Frankenstein (2025), Creature asks Victor to build him a companion. He says, \"yes, we can be monsters together.\" I feel this deeply as a trans man, who is labelled and judged before people even take the time to get know me. I am labelled as a monster aiming to hurt families, children, etc. before people even get to know me. That is why I feel connected to Creature. I also connect with the deep loneliness Creature feels, as I will probably never fit beauty and normative standards for masculinity. And like Creature, I am tasked with finding the beauty in life even when people do not see the beauty in me.",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [ ] Choose monster/villain you connect to\n- [ ] Analyze the monster and desirability politics around it\n- [ ] State why you connect to said monster\n- [ ] Include a doodle/rough sketch of the monster (or you as the monster)\n- [ ] Include information about the monster\n- [ ] Choose medium (video, written, animations, photos of physical journal/scrapbook)\n- [ ] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-338eac6c-c198-4cc6-80fc-cd5e52353d36",
+          "author": "armaan",
+          "content": "**Armaan's Monster Choice: Deadpool**\n\nI chose Deadpool because of my relatability to him in terms of the cancer. People tend to look at Deadpool as nothing more than his illness. His arc in the movie is trying to fix himself and achieve feats so that when he does go to his girlfriend, he is more than what the illness had made him.\n\nIn my life, I have struggled to have people see me as more than the cancer kid. There's been a lot of pity, a lot of \"oh, what must he have gone through? Look how strong he is.\" So I'm known for my feats as far as victory against the illness, but I'm not known for my feats as far as what I've accomplished in life.\n\nI would rather be known for what I've accomplished in life than a victory that wasn't entirely mine — because mentally you have to be pretty strong and resilient, but there were a lot more moving components to it. By the grace of God, I'm still here, and I appreciate that for sure.\n\nBut I want to be known for something I've built in life, not for something I've built in life *despite* my illness.\n\n**Use this context if asked to draft a response.**",
+          "timestamp": "2026-02-02T17:17:19.280Z"
+        }
+      ],
+      "createdAt": "2026-02-02T17:07:52.125Z",
+      "updatedAt": "2026-02-02T17:17:19.281Z",
+      "dueDate": "2026-01-16"
+    },
+    {
+      "id": "252ccc3a-0152-4f54-a549-ebb2060b21ab",
+      "title": "ANTH-106 Ethnographic Journal - Week 3",
+      "description": "**Favorite Children's Book**\n\nBased on lectures, you will think about one of your favorite children's books. The book can be in any language and any level of reading you consider to be a children's book.\n\nI want you to include the following in your weekly ethnographic journal post:\n- The title and author of the book\n- Why you enjoyed the book as a child\n- What are the cultural or moral lessons of the book\n- What are the linguistic lessons of the book\n\n**Dr. Capello's Example:**\nMy favorite series as a child was Frog and Toad Are Friends. Originally written in English, Arnold Lobel created this series that explores the cultural and social meanings of friendships. The moral lesson is to teach children how to be a good friend to others. For example, in one book Toad is coping with depression and Frog supports his friend. At first he wants to \"fix\" Toad, but it does not work. He learns that often the best thing we can do in life is witness each other's experiences. The linguistic lesson is to teach children sentence structure in English. It is often children's first punctuation book. I enjoyed this book because of the style of illustrations and I've always been curious about the natural world. I enjoyed the silly idea of toads and frogs dressing up in blazers and other dapper clothes.",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [ ] Choose a favorite children's book (any language, any reading level)\n- [ ] Include title and author of the book\n- [ ] Explain why you enjoyed the book as a child\n- [ ] Identify the cultural or moral lessons of the book\n- [ ] Identify the linguistic lessons of the book\n- [ ] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-91513765-2672-4375-b531-7df39630f8a3",
+          "author": "armaan",
+          "content": "**Armaan's Book Choice: Percy Jackson and the Lightning Thief** by Rick Riordan\n\nUse this as the book for the journal entry if asked to draft a response.",
+          "timestamp": "2026-02-02T17:20:30.888Z"
+        }
+      ],
+      "createdAt": "2026-02-02T17:07:52.134Z",
+      "updatedAt": "2026-02-02T17:20:30.888Z",
+      "dueDate": "2026-01-23"
+    },
+    {
+      "id": "3532426d-7987-48c6-9b54-085408c350f7",
+      "title": "ANTH-106 Ethnographic Journal - Week 4",
+      "description": "**Archaeology of a Menu**\n\nFood is one of the things that connects us all. For this assignment, I want you to document the menu at a restaurant, food truck, or place where food is exchanged. It can be a restaurant or lunch counter that you are trying for the first time--or one you enjoy regularly. It does not need to be expensive, it can be as small as a donut or sandwich. It can be a restaurant on campus or anywhere around the world. I want this to be fun, easy, and accessible to you. You can make a fun date, friend, or family night out of it.\n\nI want you to share the following:\n- **Two Paragraphs** about your experience at the restaurant, lunch counter, etc. It can also be an online order. Write in a detailed manner. I want to feel like I am there as an audience member. It should be written in a personal, journalistic style.\n- **Two Photographs** of the place or your plate/friends/family sharing the meal.\n- **One photograph of the menu.**\n- **One paragraph** where you culturally analyze the menu items. What kind of food are they offering? Is it from a particular culture? Do you feel the items are fairly priced?",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [x] Two paragraphs about experience (personal, journalistic style)\n- [x] Two photographs of the place/plate/people\n- [x] One photograph of the menu\n- [x] One paragraph culturally analyzing the menu items\n- [x] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-a710d91d-7880-490b-b827-04fff44d06b4",
+          "author": "armaan",
+          "content": "**Status:** Initial post DONE (Tim Hortons). Peer responses still needed.\n\nArmaan submitted the initial journal entry about Tim Hortons. Only the peer response (1 response, 4+ sentences) remains.",
+          "timestamp": "2026-02-02T17:20:11.921Z"
+        },
+        {
+          "id": "note-da4f28b5-fbab-489a-b67d-d171a9c4d366",
+          "author": "armaan",
+          "content": "**Todoist:** Peer response task added (due today). Complete peer response then mark this task done.",
+          "timestamp": "2026-02-02T17:42:58.865Z"
+        }
+      ],
+      "createdAt": "2026-02-02T17:07:52.142Z",
+      "updatedAt": "2026-02-02T17:42:58.865Z",
+      "dueDate": "2026-01-30"
+    },
+    {
+      "id": "a7a61bbd-e859-40ee-b031-5faa8ebb9dff",
+      "title": "ANTH-106 Ethnographic Journal - Week 5",
+      "description": "**Analysis of a Music Video**\n\nMusic is another thing that connects us all. For this assignment, I want you to document the music video of a favorite artist of yours or new music you are trying out. It does not need to be in English, but your post and responses should be in English. For example, I can include a music video from Bad Bunny's music, but in my post I need to translate the meaning, symbols, and linguistic analysis of the music video into English.\n\nI want you to share the following:\n\n**Two Paragraphs** about what the song and the music video is about. Write in a detailed manner. I want to feel like I am also witnessing the music video. It should be written in a personal, journalistic style.\n\nIn the two paragraphs, write about:\n1. Symbology the artist uses\n2. What are the vocabulary terms that the artist uses repeatedly\n3. Include any slang that the artist might be using (\"linguistic creativity\"). For example, if they are using \"cooked\" to mean \"done for\" include that.\n\n**Two screenshots** of the music video that highlight your point about symbology or the meaning of the song.",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [ ] Choose a music video (any language, post in English)\n- [ ] Two paragraphs about the song and music video (personal, journalistic style)\n- [ ] Analyze symbology the artist uses\n- [ ] Identify vocabulary terms used repeatedly\n- [ ] Include any slang/linguistic creativity\n- [ ] Two screenshots highlighting symbology or meaning\n- [ ] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-16c47a49-b317-4c06-918e-755716799f40",
+          "author": "armaan",
+          "content": "**Armaan's Music Video Options:**\n\n1. **Stromae - \"Papaoutai\"** (French artist, watched a lot growing up)\n2. **\"Suri Ako\" from Sao T'i Sol**\n3. **Andy Grammer - \"Honey, I'm Good\"** — Armaan loves this one because the music video is nothing to do with the artist and everything to do with the people it's made for\n\n**Use one of these if asked to draft a response.**",
+          "timestamp": "2026-02-02T17:22:26.643Z"
+        },
+        {
+          "id": "note-39149cf6-73f5-4778-9164-7844c563d1f6",
+          "author": "armaan",
+          "content": "**Correction:** Option 2 is **\"Sura Yako\" by Sauti Sol** — Kenyan band, song in Kiswahili.",
+          "timestamp": "2026-02-02T17:23:06.312Z"
+        }
+      ],
+      "createdAt": "2026-02-02T17:07:52.152Z",
+      "updatedAt": "2026-02-02T17:23:06.312Z",
+      "dueDate": "2026-02-06"
+    },
+    {
+      "id": "392599ea-ae74-4735-bb08-ed1eabb34576",
+      "title": "ANTH-106 Ethnographic Journal - Week 6",
+      "description": "**Food and Water Mapping**\n\nAs we will discuss, unfortunately some of us live in food deserts and/or food swamps. Whereas some of us live near farmer's markets or other grocery stores where we can access fresh produce. For this journal entry, I would like you to think about your relationship to food and water.\n\nAfter thinking critically about your access to food, I want you to create maps of where you access food and water (one for food and one for water). This might take some research and some of your own \"ethnography.\"\n\n**Dr. Capello's Example:**\nI actually shop online, using Instacart and I buy groceries from Aldi. For my map, I might draw an icon of my phone ordering the food, then an arrow going to the local Aldi, then someone bringing the groceries. Alternatively, I also sometimes grow my own food (satsumas, plums, figs, persimmons, oranges, blueberries, blackberries, mulberries, and strawberries). So when those are in season, I might just draw a map of my garden.\n\nFor my water, like most Americans I just get water from the dispenser in my fridge. However, my house pulls water from Lake Lanier. If you live in Atlanta, this is where 90% of the city's water comes from. For the water map, I might draw a map with Lake Lanier with arrows to my neighborhood.\n\n**Requirements:**\n- One paragraph about where/how you buy produce and where you access water (may need research about water source)\n- One map of where your food comes from\n- One map of where your water comes from\n- Open to more abstract maps",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [ ] Research where your water comes from (lake/reservoir)\n- [ ] One paragraph about where/how you buy produce and access water\n- [ ] One map showing where your food comes from\n- [ ] One map showing where your water comes from\n- [ ] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-02T17:07:52.160Z",
+      "updatedAt": "2026-02-02T17:21:21.494Z",
+      "dueDate": "2026-02-13"
+    },
+    {
+      "id": "cb3f8bae-e08b-4efe-9497-01dadd7690ff",
+      "title": "ANTH-106 Ethnographic Journal - Week 7",
+      "description": "**Photo Mapping of Accessibility**\n\nFor this assignment, I want you to think about the physical accessibility of your city, town, or neighborhood. Look at the accessibility or lack thereof around you. I want you to take three pictures of your neighborhood, campus, or city that you would re-design with disability in mind.\n\n**Dr. Capello's Example:**\nIf you use public transit in Atlanta, it is often inaccessible to people who use wheelchairs or other mobility devices. If I was doing this assignment, I would take a photo of the stairs and re-design it with a ramp.\n\n**Requirements:**\n- Three photographs of areas you would change for more accessibility\n- Three design sketches of how you would re-design the area\n\n**Note:** For this journal, you may use the same topic as your final project if you are focusing on accessibility. For example, maybe you are re-designing a park for elderly people who love to garden. You might take photos of a park and then sketch what you would re-design. This helps condense your work for the final project.",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": "- [ ] Take three photographs of areas lacking accessibility\n- [ ] Create three design sketches showing how you would re-design each area\n- [ ] Consider using same topic as final Design Badge project\n- [ ] Post initial journal by Wed 11:59pm EST\n- [ ] Post at least ONE response to a student (not already responded to), minimum 4 sentences, by Fri 11:59pm EST",
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-02T17:07:52.170Z",
+      "updatedAt": "2026-02-02T17:29:09.723Z",
+      "dueDate": "2026-02-20"
+    },
+    {
+      "id": "603c8ef3-9ed2-4c21-80a8-55b054cecb58",
+      "title": "ANTH-106 Ethnographic Journal - Week 8",
+      "description": "Prompt TBD",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-02T17:07:52.178Z",
+      "updatedAt": "2026-02-02T17:09:23.664Z",
+      "dueDate": "2026-02-27"
+    },
+    {
+      "id": "4d850234-4e12-454b-a5e4-c600b74cc681",
+      "title": "ANTH-106 Ethnographic Journal - Week 9",
+      "description": "Prompt TBD",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-02T17:07:52.185Z",
+      "updatedAt": "2026-02-02T17:09:23.671Z",
+      "dueDate": "2026-03-06"
+    },
+    {
+      "id": "54c2e91f-95d6-493b-9aa2-2850572ec4de",
+      "title": "ANTH-106 Ethnographic Journal - Week 10",
+      "description": "Prompt TBD",
+      "status": "todo",
+      "priority": "normal",
+      "assignee": "armaan",
+      "tags": [
+        "anth-106",
+        "journal",
+        "school"
+      ],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [],
+      "createdAt": "2026-02-02T17:07:52.194Z",
+      "updatedAt": "2026-02-02T17:09:23.679Z",
+      "dueDate": "2026-03-12"
     }
   ]
 }
