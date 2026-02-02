@@ -149,12 +149,12 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
               key={agent.role}
               className="flex items-center gap-2 p-1.5 rounded opacity-50"
             >
-              <div className="text-[19px]">{agent.emoji}</div>
+              <div className="text-[19.5px]">{agent.emoji}</div>
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-medium">
+                <div className="text-[13.5px] font-medium">
                   {agent.name}
                 </div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[10.5px] text-muted-foreground">
                   {agent.model === 'opus' ? 'Opus' : 'Sonnet'}
                 </div>
               </div>
