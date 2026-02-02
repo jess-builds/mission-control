@@ -140,7 +140,7 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
 
       <Separator />
 
-      <div className="flex-1 overflow-y-auto max-h-[88%]">
+      <div className="flex-1 overflow-y-auto max-h-[83%]">
         <h2 className="font-semibold mb-4">AGENTS</h2>
         
         <div className="space-y-2">
