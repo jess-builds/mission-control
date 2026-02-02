@@ -413,34 +413,121 @@ a {
   padding: 0;
 }
 
-/* Custom range slider styles */
-.slider::-webkit-slider-thumb {
+/* Council UI Optimizations - Tighter Spacing */
+.council-container {
+  height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+}
+
+.council-header {
+  padding: 0.5rem 1rem;
+  min-height: 3rem;
+}
+
+.council-chat-content {
+  padding: 0.75rem;
+}
+
+.council-message-input {
+  padding: 0.75rem 1rem;
+}
+
+.council-sidebar {
+  padding: 1rem;
+}
+
+.council-command-center {
+  padding: 1rem;
+  gap: 1rem;
+}
+
+/* Custom range slider styles - Enhanced visual feedback */
+input[type="range"] {
+  -webkit-appearance: none;
   appearance: none;
-  width: 20px;
-  height: 20px;
-  background: rgb(var(--primary));
+  background: transparent;
   cursor: pointer;
-  border-radius: 50%;
-  border: 2px solid rgb(var(--background));
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  height: 8px;
+  border-radius: 4px;
 }
 
-.slider::-moz-range-thumb {
-  width: 20px;
+/* Track styling for Webkit browsers */
+input[type="range"]::-webkit-slider-runnable-track {
+  background: #4B5563;
+  height: 8px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* Thumb styling for Webkit browsers */
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #FFFFFF;
   height: 20px;
-  background: rgb(var(--primary));
-  cursor: pointer;
+  width: 20px;
   border-radius: 50%;
-  border: 2px solid rgb(var(--background));
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+  margin-top: -6px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.slider:disabled::-webkit-slider-thumb {
-  background: rgb(var(--muted-foreground));
-  cursor: not-allowed;
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #F3F4F6;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+  transform: scale(1.1);
 }
 
-.slider:disabled::-moz-range-thumb {
-  background: rgb(var(--muted-foreground));
+/* Track styling for Firefox */
+input[type="range"]::-moz-range-track {
+  background: #4B5563;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+/* Thumb styling for Firefox */
+input[type="range"]::-moz-range-thumb {
+  background: #FFFFFF;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb:hover {
+  background: #F3F4F6;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+  transform: scale(1.1);
+}
+
+/* Disabled slider styles */
+input[type="range"]:disabled {
   cursor: not-allowed;
+  opacity: 0.5;
+}
+
+input[type="range"]:disabled::-webkit-slider-thumb {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+input[type="range"]:disabled::-moz-range-thumb {
+  background: #9CA3AF;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Green fill effect using CSS custom properties */
+.slider-filled {
+  background: linear-gradient(to right, 
+    #10B981 0%, 
+    #10B981 var(--fill-percent, 50%), 
+    #4B5563 var(--fill-percent, 50%), 
+    #4B5563 100%);
 }

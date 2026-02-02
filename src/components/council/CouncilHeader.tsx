@@ -21,31 +21,31 @@ export default function CouncilHeader({
 }: CouncilHeaderProps) {
   return (
     <div className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-4">
+      <div className="flex items-center justify-between px-4 py-2">
+        <div className="flex items-center gap-3">
           <Link
             href="/dashboard/ideas"
-            className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-3 w-3" />
             Back to Ideas
           </Link>
 
-          <div className="h-5 w-px bg-border" />
+          <div className="h-4 w-px bg-border" />
 
-          <h1 className="text-lg font-semibold">COUNCIL</h1>
+          <h1 className="text-base font-semibold">COUNCIL</h1>
 
           {timerState && (
             <>
-              <div className="h-5 w-px bg-border" />
-              <div className="text-sm font-medium">
+              <div className="h-4 w-px bg-border" />
+              <div className="text-xs font-medium">
                 Round {timerState.currentRound + 1}: {timerState.roundName}
               </div>
             </>
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {status === 'running' && (
             <CouncilTimer
               timerState={timerState}
@@ -55,13 +55,13 @@ export default function CouncilHeader({
           )}
 
           {status === 'completed' && (
-            <div className="text-sm font-medium text-green-500">
+            <div className="text-xs font-medium text-green-500">
               ✓ Completed
             </div>
           )}
 
           {status === 'configuring' && (
-            <div className="text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground">
               Configuring...
             </div>
           )}

@@ -48,17 +48,20 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
     });
   };
 
+  const getRoundFillPercent = () => ((roundDuration - 1) / 9) * 100;
+  const getNumberFillPercent = () => ((numberOfRounds - 1) / 9) * 100;
+
   return (
-    <div className="w-80 border-l bg-muted/10 p-6 flex flex-col gap-6">
+    <div className="w-80 border-l bg-muted/10 council-command-center flex flex-col">
       <div>
-        <h2 className="font-semibold text-lg mb-4">SETTINGS</h2>
-        <Separator className="mb-6" />
+        <h2 className="font-semibold text-base mb-2">SETTINGS</h2>
+        <Separator className="mb-4" />
         
-        <div className="space-y-6">
-          <div className="space-y-3">
+        <div className="space-y-4">
+          <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="round-duration">Round Duration</Label>
-              <span className="text-sm text-muted-foreground">{roundDuration} min</span>
+              <Label htmlFor="round-duration" className="text-sm">Round Duration</Label>
+              <span className="text-xs text-muted-foreground">{roundDuration} min</span>
             </div>
             <input
               id="round-duration"
@@ -68,19 +71,17 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
               value={roundDuration}
               onChange={(e) => setRoundDuration(Number(e.target.value))}
               disabled={freeForAll || isStarting}
-              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+              className={`w-full slider-filled ${freeForAll || isStarting ? 'opacity-50' : ''}`}
               style={{
-                background: freeForAll 
-                  ? 'rgb(var(--muted))' 
-                  : `linear-gradient(to right, rgb(var(--primary)) 0%, rgb(var(--primary)) ${(roundDuration - 1) * 11}%, rgb(var(--muted)) ${(roundDuration - 1) * 11}%, rgb(var(--muted)) 100%)`
-              }}
+                '--fill-percent': freeForAll ? '0%' : `${getRoundFillPercent()}%`
+              } as React.CSSProperties}
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2">
             <div className="flex justify-between items-center">
-              <Label htmlFor="number-rounds">Number of Rounds</Label>
-              <span className="text-sm text-muted-foreground">{numberOfRounds}</span>
+              <Label htmlFor="number-rounds" className="text-sm">Number of Rounds</Label>
+              <span className="text-xs text-muted-foreground">{numberOfRounds}</span>
             </div>
             <input
               id="number-rounds"
@@ -90,16 +91,14 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
               value={numberOfRounds}
               onChange={(e) => setNumberOfRounds(Number(e.target.value))}
               disabled={freeForAll || isStarting}
-              className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
+              className={`w-full slider-filled ${freeForAll || isStarting ? 'opacity-50' : ''}`}
               style={{
-                background: freeForAll 
-                  ? 'rgb(var(--muted))' 
-                  : `linear-gradient(to right, rgb(var(--primary)) 0%, rgb(var(--primary)) ${(numberOfRounds - 1) * 11}%, rgb(var(--muted)) ${(numberOfRounds - 1) * 11}%, rgb(var(--muted)) 100%)`
-              }}
+                '--fill-percent': freeForAll ? '0%' : `${getNumberFillPercent()}%`
+              } as React.CSSProperties}
             />
           </div>
 
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <input
               id="free-for-all"
               type="checkbox"
@@ -113,52 +112,52 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
             </Label>
           </div>
 
-          <div className="space-y-3">
-            <Label htmlFor="context">Context (optional)</Label>
+          <div className="space-y-2">
+            <Label htmlFor="context" className="text-sm">Context (optional)</Label>
             <Textarea
               id="context"
               placeholder="What problem are we solving?"
               value={contextPrompt}
               onChange={(e) => setContextPrompt(e.target.value)}
-              rows={4}
+              rows={3}
               disabled={isStarting}
               className="resize-none text-sm"
             />
           </div>
 
           <Button
-            size="lg"
+            size="default"
             className="w-full"
             onClick={handleStart}
             disabled={isStarting}
           >
-            <Rocket className="h-5 w-5 mr-2" />
+            <Rocket className="h-4 w-4 mr-2" />
             {isStarting ? 'Starting...' : 'Start Council'}
           </Button>
         </div>
       </div>
 
-      <Separator />
+      <Separator className="my-4" />
 
       <div className="flex-1 overflow-y-auto">
-        <h2 className="font-semibold mb-4">AGENTS</h2>
+        <h2 className="font-semibold text-base mb-3">AGENTS</h2>
         
-        <div className="space-y-2">
+        <div className="space-y-1">
           {mockAgents.map((agent) => (
             <div
               key={agent.role}
-              className="flex items-center gap-3 p-2 rounded opacity-50"
+              className="flex items-center gap-2 p-1.5 rounded opacity-50"
             >
-              <div className="text-2xl">{agent.emoji}</div>
+              <div className="text-lg">{agent.emoji}</div>
               <div className="flex-1 min-w-0">
-                <div className="text-sm font-medium">
+                <div className="text-xs font-medium">
                   {agent.name}
                 </div>
                 <div className="text-xs text-muted-foreground">
                   {agent.model === 'opus' ? 'Opus' : 'Sonnet'}
                 </div>
               </div>
-              <div className="w-2 h-2 rounded-full bg-muted-foreground" />
+              <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />
             </div>
           ))}
         </div>
