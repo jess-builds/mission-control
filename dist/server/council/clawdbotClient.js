@@ -6,10 +6,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ClawdbotClient = void 0;
 const axios_1 = __importDefault(require("axios"));
 class ClawdbotClient {
-    constructor(baseUrl, apiKey) {
-        this.sessionKeys = new Map(); // label -> sessionKey mapping
+    constructor(baseUrl, apiKey, councilId) {
+        this.sessionKeys = new Map(); // role -> sessionKey mapping
         this.baseUrl = baseUrl || process.env.CLAWDBOT_GATEWAY_URL || 'http://localhost:18789';
         this.apiKey = apiKey || process.env.CLAWDBOT_GATEWAY_TOKEN || '';
+        this.councilId = councilId || `council_${Date.now()}`;
         if (!this.apiKey) {
             throw new Error('CLAWDBOT_GATEWAY_TOKEN is required');
         }
@@ -36,7 +37,7 @@ Guidelines: ${persona.responseGuidelines}
 ${contextPrompt ? `\nContext for this council: ${contextPrompt}` : ''}
 
 IMPORTANT: You are participating in a real-time council discussion. Keep responses focused and concise (2-3 paragraphs max). Engage directly with other agents' points. No preambles or sign-offs.`;
-            const label = `council-${agentRole}`;
+            const label = `${this.councilId}-${agentRole}`;
             const modelMap = {
                 'opus': 'anthropic/claude-opus-4-20250514',
                 'sonnet': 'anthropic/claude-sonnet-4-20250514'
@@ -63,8 +64,8 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
             if (!sessionKey) {
                 throw new Error('No sessionKey returned from spawn');
             }
-            // Store the mapping for later use
-            this.sessionKeys.set(label, sessionKey);
+            // Store the mapping by role for later use
+            this.sessionKeys.set(agentRole, sessionKey);
             return {
                 sessionKey,
                 status: 'active',
@@ -79,16 +80,15 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
     /**
      * Send a message to an agent session
      */
-    async sendMessage(sessionKeyOrLabel, message) {
+    async sendMessage(sessionKeyOrRole, message) {
         var _a, _b, _c, _d;
         try {
-            // Determine if we're using a label or sessionKey
-            const label = sessionKeyOrLabel.startsWith('council-') ? sessionKeyOrLabel : undefined;
-            const sessionKey = label ? this.sessionKeys.get(label) : sessionKeyOrLabel;
+            // Always use sessionKey for reliability (labels can have duplicates from old sessions)
+            const sessionKey = this.sessionKeys.get(sessionKeyOrRole) || sessionKeyOrRole;
             const response = await axios_1.default.post(`${this.baseUrl}/tools/invoke`, {
                 tool: 'sessions_send',
                 args: {
-                    ...(label ? { label } : { sessionKey }),
+                    sessionKey: sessionKey,
                     message: message,
                     timeoutSeconds: 60
                 }
@@ -106,18 +106,14 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
             }
             const reply = (_b = (_a = response.data.result) === null || _a === void 0 ? void 0 : _a.details) === null || _b === void 0 ? void 0 : _b.reply;
             const returnedSessionKey = (_d = (_c = response.data.result) === null || _c === void 0 ? void 0 : _c.details) === null || _d === void 0 ? void 0 : _d.sessionKey;
-            // Update our mapping if we got a sessionKey back
-            if (label && returnedSessionKey) {
-                this.sessionKeys.set(label, returnedSessionKey);
-            }
             return {
                 success: true,
                 reply,
-                sessionKey: returnedSessionKey
+                sessionKey: returnedSessionKey || sessionKey
             };
         }
         catch (error) {
-            console.error(`Failed to send message to ${sessionKeyOrLabel}:`, error);
+            console.error(`Failed to send message to ${sessionKeyOrRole}:`, error);
             return {
                 success: false,
                 error: error instanceof Error ? error.message : 'Unknown error'

@@ -16,7 +16,7 @@ class CouncilOrchestrator extends events_1.EventEmitter {
         this.currentRound = 0;
         this.isActive = false;
         this.sessionId = sessionId;
-        this.clawdbotClient = new clawdbotClient_1.default(clawdbotUrl);
+        this.clawdbotClient = new clawdbotClient_1.default(clawdbotUrl, undefined, sessionId);
     }
     /**
      * Initialize all agents
@@ -143,7 +143,7 @@ class CouncilOrchestrator extends events_1.EventEmitter {
             // Update agent status
             this.updateAgentStatus(agent.role, 'typing');
             // Send message and get response directly
-            const result = await this.clawdbotClient.sendMessage(agent.sessionKey, message);
+            const result = await this.clawdbotClient.sendMessage(agent.role, message);
             if (result.success && result.reply) {
                 // Create agent message
                 const agentMessage = {

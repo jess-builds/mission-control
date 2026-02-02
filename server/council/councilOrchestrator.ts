@@ -33,7 +33,7 @@ export class CouncilOrchestrator extends EventEmitter {
   constructor(sessionId: string, clawdbotUrl?: string) {
     super();
     this.sessionId = sessionId;
-    this.clawdbotClient = new ClawdbotClient(clawdbotUrl);
+    this.clawdbotClient = new ClawdbotClient(clawdbotUrl, undefined, sessionId);
   }
 
   /**
@@ -192,7 +192,7 @@ export class CouncilOrchestrator extends EventEmitter {
       this.updateAgentStatus(agent.role, 'typing');
 
       // Send message and get response directly
-      const result = await this.clawdbotClient.sendMessage(agent.sessionKey, message);
+      const result = await this.clawdbotClient.sendMessage(agent.role, message);
 
       if (result.success && result.reply) {
         // Create agent message

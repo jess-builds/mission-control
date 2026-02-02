@@ -1,0 +1,18 @@
+{
+  "id": "fb86778c-2f71-4bfa-a2b1-7745789e5671",
+  "title": "Council Discussion",
+  "thumbnail": "💡",
+  "summary": "Ideas explored but no clear winner emerged",
+  "status": "new",
+  "source": "council-session-council_1770010744639_yqmrjwwji",
+  "createdAt": "2026-02-02T05:42:32.549Z",
+  "updatedAt": "2026-02-02T05:42:32.549Z",
+  "why": "Enable new workflows and reduce friction in daily tasks.",
+  "flow": "Context Decay Detector** - Automatically identifies when project documentation, README files, and setup instructions have rotted and become unusable.\nDecision Archaeology Tool** - Extracts and surfaces the *why* behind code decisions, architectural choices, and abandoned experiments from commit messages, PR discussions, and issue threads.\nWorkflow Friction Logger** - Passively tracks where developers hit repeated manual steps, context switches, and \"why isn't this automated?\" moments during their actual work.",
+  "implementation": "",
+  "ux": "isn't starting new work - it's rebuilding context after interruptions.",
+  "tags": [
+    "council-generated",
+    "auto-exported"
+  ]
+}

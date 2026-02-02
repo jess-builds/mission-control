@@ -16,11 +16,13 @@ interface SendMessageResponse {
 export class ClawdbotClient {
   private baseUrl: string;
   private apiKey: string;
-  private sessionKeys: Map<string, string> = new Map(); // label -> sessionKey mapping
+  private sessionKeys: Map<string, string> = new Map(); // role -> sessionKey mapping
+  private councilId: string;
 
-  constructor(baseUrl?: string, apiKey?: string) {
+  constructor(baseUrl?: string, apiKey?: string, councilId?: string) {
     this.baseUrl = baseUrl || process.env.CLAWDBOT_GATEWAY_URL || 'http://localhost:18789';
     this.apiKey = apiKey || process.env.CLAWDBOT_GATEWAY_TOKEN || '';
+    this.councilId = councilId || `council_${Date.now()}`;
     
     if (!this.apiKey) {
       throw new Error('CLAWDBOT_GATEWAY_TOKEN is required');
@@ -53,7 +55,7 @@ ${contextPrompt ? `\nContext for this council: ${contextPrompt}` : ''}
 
 IMPORTANT: You are participating in a real-time council discussion. Keep responses focused and concise (2-3 paragraphs max). Engage directly with other agents' points. No preambles or sign-offs.`;
 
-      const label = `council-${agentRole}`;
+      const label = `${this.councilId}-${agentRole}`;
       const modelMap: { [key: string]: string } = {
         'opus': 'anthropic/claude-opus-4-20250514',
         'sonnet': 'anthropic/claude-sonnet-4-20250514'
@@ -89,8 +91,8 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
         throw new Error('No sessionKey returned from spawn');
       }
 
-      // Store the mapping for later use
-      this.sessionKeys.set(label, sessionKey);
+      // Store the mapping by role for later use
+      this.sessionKeys.set(agentRole, sessionKey);
 
       return {
         sessionKey,
@@ -107,20 +109,19 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
    * Send a message to an agent session
    */
   async sendMessage(
-    sessionKeyOrLabel: string,
+    sessionKeyOrRole: string,
     message: string
   ): Promise<SendMessageResponse> {
     try {
-      // Determine if we're using a label or sessionKey
-      const label = sessionKeyOrLabel.startsWith('council-') ? sessionKeyOrLabel : undefined;
-      const sessionKey = label ? this.sessionKeys.get(label) : sessionKeyOrLabel;
+      // Always use sessionKey for reliability (labels can have duplicates from old sessions)
+      const sessionKey = this.sessionKeys.get(sessionKeyOrRole) || sessionKeyOrRole;
 
       const response = await axios.post(
         `${this.baseUrl}/tools/invoke`,
         {
           tool: 'sessions_send',
           args: {
-            ...(label ? { label } : { sessionKey }),
+            sessionKey: sessionKey,
             message: message,
             timeoutSeconds: 60
           }
@@ -143,18 +144,13 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
       const reply = response.data.result?.details?.reply;
       const returnedSessionKey = response.data.result?.details?.sessionKey;
 
-      // Update our mapping if we got a sessionKey back
-      if (label && returnedSessionKey) {
-        this.sessionKeys.set(label, returnedSessionKey);
-      }
-
       return {
         success: true,
         reply,
-        sessionKey: returnedSessionKey
+        sessionKey: returnedSessionKey || sessionKey
       };
     } catch (error) {
-      console.error(`Failed to send message to ${sessionKeyOrLabel}:`, error);
+      console.error(`Failed to send message to ${sessionKeyOrRole}:`, error);
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Unknown error'
