@@ -143,22 +143,22 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
       <div className="flex-1 overflow-y-auto max-h-[68%]">
         <h2 className="font-semibold text-sm mb-3">AGENTS</h2>
         
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           {mockAgents.map((agent) => (
             <div
               key={agent.role}
-              className="flex items-center gap-2 p-1.5 rounded opacity-50"
+              className="flex items-center gap-2.5 p-1.5 rounded opacity-50"
             >
-              <div className="text-lg">{agent.emoji}</div>
+              <div className="text-xl">{agent.emoji}</div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-medium">
+                <div className="text-sm font-medium">
                   {agent.name}
                 </div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[11px] text-muted-foreground">
                   {agent.model === 'opus' ? 'Opus' : 'Sonnet'}
                 </div>
               </div>
-              <div className="w-1.5 h-1.5 rounded-full bg-muted-foreground" />
+              <div className="w-2 h-2 rounded-full bg-muted-foreground" />
             </div>
           ))}
         </div>
