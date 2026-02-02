@@ -44,34 +44,30 @@ export default function CouncilChat({ sessionId, isEmptyState = false, isStartin
   // Show empty state if no session ID
   if (isEmptyState && !sessionId) {
     return (
-      <div className="flex council-container">
+      <div className="flex h-full">
         <div className="flex-1 flex flex-col">
-          <div className="council-header">
-            <CouncilHeader
-              timerState={null}
-              status={'configuring'}
-              onPause={() => {}}
-              onResume={() => {}}
-            />
-          </div>
+          <CouncilHeader
+            timerState={null}
+            status={'configuring'}
+            onPause={() => {}}
+            onResume={() => {}}
+          />
 
           <div className="flex-1 flex items-center justify-center">
             <div className="text-center">
-              <Rocket className="h-12 w-12 text-muted-foreground mb-3 mx-auto" />
-              <p className="text-lg font-semibold mb-2">Click Start to begin your council</p>
-              <p className="text-sm text-muted-foreground">
+              <Rocket className="h-16 w-16 text-muted-foreground mb-4 mx-auto" />
+              <p className="text-xl font-semibold mb-2">Click Start to begin your council</p>
+              <p className="text-muted-foreground">
                 {isStarting ? 'Starting council session...' : 'Configure your settings and hit Start Council'}
               </p>
             </div>
           </div>
 
-          <div className="council-message-input">
-            <MessageInput
-              onSend={() => {}}
-              disabled={true}
-              agents={[]}
-            />
-          </div>
+          <MessageInput
+            onSend={() => {}}
+            disabled={true}
+            agents={[]}
+          />
         </div>
       </div>
     );
@@ -103,19 +99,17 @@ export default function CouncilChat({ sessionId, isEmptyState = false, isStartin
   let lastRound = -1;
 
   return (
-    <div className="flex council-container bg-background">
+    <div className="flex h-screen bg-background">
       <div className="flex-1 flex flex-col">
-        <div className="council-header">
-          <CouncilHeader
-            timerState={timerState}
-            status={status}
-            onPause={pauseCouncil}
-            onResume={resumeCouncil}
-          />
-        </div>
+        <CouncilHeader
+          timerState={timerState}
+          status={status}
+          onPause={pauseCouncil}
+          onResume={resumeCouncil}
+        />
 
         <ScrollArea className="flex-1" ref={scrollRef}>
-          <div className="max-w-4xl mx-auto council-chat-content">
+          <div className="max-w-4xl mx-auto p-4">
             {messages.map((message, index) => {
               const showRoundMarker = message.round > lastRound;
               if (showRoundMarker) {
@@ -144,26 +138,22 @@ export default function CouncilChat({ sessionId, isEmptyState = false, isStartin
           </div>
         </ScrollArea>
 
-        <div className="council-message-input">
-          <MessageInput
-            onSend={sendMessage}
-            disabled={status !== 'running'}
-            agents={agents}
-          />
-        </div>
-      </div>
-
-      <div className="council-sidebar">
-        <CouncilSidebar
+        <MessageInput
+          onSend={sendMessage}
+          disabled={status !== 'running'}
           agents={agents}
-          status={status}
-          onAdvanceRound={advanceRound}
-          onEndSession={endCouncil}
-          timerPaused={timerState?.paused || false}
-          onPause={pauseCouncil}
-          onResume={resumeCouncil}
         />
       </div>
+
+      <CouncilSidebar
+        agents={agents}
+        status={status}
+        onAdvanceRound={advanceRound}
+        onEndSession={endCouncil}
+        timerPaused={timerState?.paused || false}
+        onPause={pauseCouncil}
+        onResume={resumeCouncil}
+      />
     </div>
   );
 }
