@@ -1,0 +1,20 @@
+{
+  "id": "c4b9608e-31e9-42c5-a89c-61b3e9d59308",
+  "title": "Ship Log",
+  "thumbnail": "🚀",
+  "summary": "Log what you ship, generate posts, build your public changelog. Turn daily work into build-in-public content automatically.",
+  "status": "new",
+  "source": "council",
+  "createdAt": "2026-02-02T02:45:29.637Z",
+  "updatedAt": "2026-02-02T02:45:29.637Z",
+  "why": "Armaan wants to build in public but struggles with consistency. The friction is not the work — it is turning work into content. Ship Log captures what he ships daily and instantly generates shareable posts. Over time, it becomes a living portfolio of everything he has built.",
+  "flow": "Already building things daily. This fits naturally at the end of a work session — log what you shipped, get a ready-to-post update. No extra effort, just capture what already happened.",
+  "implementation": "Next.js + Tailwind + localStorage (or SQLite). Claude API for post generation. MVP: input form, AI-generated tweet + LinkedIn versions, copy buttons, local persistence, history list. Future: git integration, shipping streaks, direct posting, public changelog export.",
+  "ux": "Open Ship Log → type what you shipped → click generate → get tweet + LinkedIn post → copy and post. Under 30 seconds. History view shows everything you have shipped over time.",
+  "tags": [
+    "content",
+    "build-in-public",
+    "automation",
+    "council-generated"
+  ]
+}

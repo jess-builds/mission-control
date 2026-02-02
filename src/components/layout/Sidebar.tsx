@@ -11,7 +11,8 @@ import {
   Timer,
   Command,
   Mic,
-  Lightbulb
+  Lightbulb,
+  Users
 } from 'lucide-react'
 
 const navigation = [
@@ -20,8 +21,9 @@ const navigation = [
   { name: 'Tasks', href: '/dashboard/tasks', icon: CheckSquare, shortcut: '3' },
   { name: 'Journal', href: '/dashboard/journal', icon: BookOpen, shortcut: '4' },
   { name: 'Idea Bank', href: '/dashboard/ideas', icon: Lightbulb, shortcut: '5' },
-  { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '6' },
-  { name: 'Lectures', href: '/dashboard/lectures', icon: Mic, shortcut: '7' },
+  { name: 'Council', href: '/dashboard/council', icon: Users, shortcut: '6' },
+  { name: 'Timer', href: '/dashboard/timer', icon: Timer, shortcut: '7' },
+  { name: 'Lectures', href: '/dashboard/lectures', icon: Mic, shortcut: '8' },
 ]
 
 export default function Sidebar() {

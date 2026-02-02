@@ -1,0 +1,22 @@
+{
+  "id": "055fc9d3-6e97-44a2-a82e-ecd9173cfda3",
+  "title": "Ghost Content Engine v2",
+  "thumbnail": "👻",
+  "summary": "Background service that monitors Mission Control tasks and commits, transforms interesting work into build-in-public content automatically. Zero-touch by default.",
+  "status": "new",
+  "source": "council-v2",
+  "createdAt": "2026-02-02T03:32:23.589Z",
+  "updatedAt": "2026-02-02T03:32:23.589Z",
+  "why": "Armaan wants to build in public but struggles with consistency. The friction is not creating content — it is turning existing work INTO content. Ghost Content removes that friction entirely by running passively on work he already does.",
+  "flow": "Zero behavior change required. Keep using Mission Control (which he already does). Ghost Content monitors task completions and commits in background. When interesting work happens, AI generates a post. Drafts accumulate. Optional weekly review. Auto-publish when trust is earned.",
+  "implementation": "Mission Control background service (not new app). Hooks into MC task API + git commits. AI transformation layer with quality bar — only genuinely interesting work becomes content. Drafts-first architecture, auto-publish ready. Optional weekly review queue.",
+  "ux": "Armaan does nothing. Works normally. Drafts appear in a queue he can check weekly (or ignore). When ready, flips switch to auto-publish. His build-in-public presence grows passively.",
+  "tags": [
+    "content",
+    "build-in-public",
+    "automation",
+    "zero-touch",
+    "council-v2-generated",
+    "mission-control-integration"
+  ]
+}

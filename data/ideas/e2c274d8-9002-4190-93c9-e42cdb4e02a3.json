@@ -1,0 +1,21 @@
+{
+  "id": "e2c274d8-9002-4190-93c9-e42cdb4e02a3",
+  "title": "Context Resurrection",
+  "thumbnail": "💡",
+  "summary": "When Armaan mentions a dormant project, Jess automatically surfaces where he left off. The graveyard becomes a parking lot.",
+  "status": "new",
+  "source": "council-v2",
+  "createdAt": "2026-02-02T03:57:23.115Z",
+  "updatedAt": "2026-02-02T03:58:08.456Z",
+  "why": "The mental cost of re-entry exceeds the perceived value. Every dormant project has an invisible wall made of forgotten context. This dissolves that wall. Transforms relationship to unfinished work — projects become resumable instead of dead.",
+  "flow": "1. Armaan mentions stale project in conversation\n2. Jess detects dormancy + intent\n3. Jess runs: node scripts/context.js <project-name>\n4. Script queries MC tasks + memory files\n5. Returns plain text dump\n6. Jess synthesizes into coherent summary\n7. Delivers via Telegram",
+  "implementation": "**MVP Spec (buildable in <2 hours):**\n\n**Trigger:** Jess calls script manually when detecting dormant project mentions\n\n**Data Sources (v1):**\n- Mission Control API — tasks matching project name (title, notes, tags)\n- Memory files — grep memory/ for project mentions\n\n**Output Format:**\n```\nPROJECT: <name>\nLAST MC ACTIVITY: <date>\n\nTASKS:\n- [status] Task title (updated: date)\n  Notes: ...\n\nMEMORY MENTIONS:\n- memory/2025-01-15.md: \"Started working on X...\"\n```\n\n**Explicitly OUT (v1):**\n- Git integration\n- Calendar integration\n- Auto-triggering/keyword detection\n- Staleness scoring\n- Any UI beyond CLI\n- Proactive notifications\n\n**Build estimate:** 50-100 lines, one script",
+  "ux": "**Core Principles (must preserve):**\n\n1. **Reactive, not commanded** — If he has to remember to type /resurrect, we failed. Jess detects dormancy + intent. No new habit required.\n\n2. **Synthesis, not links** — Not \"here is your notes file.\" The transformation is: \"Last touched 3 weeks ago. You were implementing calendar sync. Task MC-47 still in-progress. Last commit said WIP: auth flow broken. You were blocked on refresh token handling.\"\n\n3. **Zero maintenance** — He never feeds this system. It feeds on existing data. The moment it requires tending, it dies.",
+  "tags": [
+    "automation",
+    "cognitive-load",
+    "jess-capability",
+    "council-recommended"
+  ],
+  "priority": "high"
+}
