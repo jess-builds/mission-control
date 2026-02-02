@@ -17,20 +17,22 @@ interface Idea {
   tags: string[]
 }
 
-const statusColors: Record<Idea['status'], { bg: string; text: string; border: string }> = {
+const statusColors: Record<string, { bg: string; text: string; border: string }> = {
   new: { bg: 'bg-blue-500/10', text: 'text-blue-400', border: 'border-blue-500/20' },
   exploring: { bg: 'bg-purple-500/10', text: 'text-purple-400', border: 'border-purple-500/20' },
   planned: { bg: 'bg-amber-500/10', text: 'text-amber-400', border: 'border-amber-500/20' },
   building: { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
+  'in-progress': { bg: 'bg-green-500/10', text: 'text-green-400', border: 'border-green-500/20' },
   completed: { bg: 'bg-emerald-500/10', text: 'text-emerald-400', border: 'border-emerald-500/20' },
   archived: { bg: 'bg-gray-500/10', text: 'text-gray-400', border: 'border-gray-500/20' },
 }
 
-const statusLabels: Record<Idea['status'], string> = {
+const statusLabels: Record<string, string> = {
   new: '✨ New',
   exploring: '🔍 Exploring',
   planned: '📋 Planned',
   building: '🚧 Building',
+  'in-progress': '🚧 In Progress',
   completed: '✅ Completed',
   archived: '📦 Archived',
 }
