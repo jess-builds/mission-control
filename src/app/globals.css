@@ -412,3 +412,35 @@ a {
   background: transparent;
   padding: 0;
 }
+
+/* Custom range slider styles */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: rgb(var(--primary));
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--background));
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: rgb(var(--primary));
+  cursor: pointer;
+  border-radius: 50%;
+  border: 2px solid rgb(var(--background));
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.slider:disabled::-webkit-slider-thumb {
+  background: rgb(var(--muted-foreground));
+  cursor: not-allowed;
+}
+
+.slider:disabled::-moz-range-thumb {
+  background: rgb(var(--muted-foreground));
+  cursor: not-allowed;
+}

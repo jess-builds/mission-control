@@ -1,14 +1,16 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useCouncilSocket } from '@/hooks/useCouncilSocket';
-import CouncilConfig from '@/components/council/CouncilConfig';
+import CouncilChat from '@/components/council/CouncilChat';
+import CouncilCommandCenter from '@/components/council/CouncilCommandCenter';
 import { useRouter } from 'next/navigation';
 import { Round } from '@/types/council';
 
 export default function CouncilPage() {
   const router = useRouter();
   const { createCouncil, sessionId } = useCouncilSocket();
+  const [isStarting, setIsStarting] = useState(false);
 
   React.useEffect(() => {
     if (sessionId) {
@@ -17,17 +19,31 @@ export default function CouncilPage() {
     }
   }, [sessionId, router]);
 
-  const handleStart = (config: {
+  const handleStart = async (config: {
     template?: 'standard' | 'quick' | 'freeForAll';
     customRounds?: Round[];
     contextPrompt?: string;
+    roundDuration?: number;
+    numberOfRounds?: number;
+    freeForAll?: boolean;
   }) => {
+    setIsStarting(true);
     createCouncil(config);
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <CouncilConfig onStart={handleStart} />
+    <div className="flex h-screen bg-background">
+      <div className="flex-1 flex flex-col">
+        <CouncilChat 
+          sessionId="" 
+          isEmptyState={true}
+          isStarting={isStarting}
+        />
+      </div>
+      <CouncilCommandCenter 
+        onStart={handleStart} 
+        isStarting={isStarting}
+      />
     </div>
   );
 }

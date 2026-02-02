@@ -9,12 +9,15 @@ import MessageInput from './MessageInput';
 import RoundMarker from './RoundMarker';
 import TypingIndicator from './TypingIndicator';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { Rocket } from 'lucide-react';
 
 interface CouncilChatProps {
   sessionId: string;
+  isEmptyState?: boolean;
+  isStarting?: boolean;
 }
 
-export default function CouncilChat({ sessionId }: CouncilChatProps) {
+export default function CouncilChat({ sessionId, isEmptyState = false, isStarting = false }: CouncilChatProps) {
   const {
     messages,
     agents,
@@ -38,7 +41,39 @@ export default function CouncilChat({ sessionId }: CouncilChatProps) {
     }
   }, [messages]);
 
-  if (loading) {
+  // Show empty state if no session ID
+  if (isEmptyState && !sessionId) {
+    return (
+      <div className="flex h-full">
+        <div className="flex-1 flex flex-col">
+          <CouncilHeader
+            timerState={null}
+            status={'configuring'}
+            onPause={() => {}}
+            onResume={() => {}}
+          />
+
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center">
+              <Rocket className="h-16 w-16 text-muted-foreground mb-4 mx-auto" />
+              <p className="text-xl font-semibold mb-2">Click Start to begin your council</p>
+              <p className="text-muted-foreground">
+                {isStarting ? 'Starting council session...' : 'Configure your settings and hit Start Council'}
+              </p>
+            </div>
+          </div>
+
+          <MessageInput
+            onSend={() => {}}
+            disabled={true}
+            agents={[]}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  if (loading && sessionId) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">

@@ -22,5 +22,5 @@ export default function CouncilSessionPage() {
     }
   }, [sessionId, startCouncil]);
 
-  return <CouncilChat sessionId={sessionId} />;
+  return <CouncilChat sessionId={sessionId} isEmptyState={false} />;
 }
