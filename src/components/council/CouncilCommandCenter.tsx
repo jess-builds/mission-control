@@ -71,8 +71,8 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
               className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
               style={{
                 background: freeForAll 
-                  ? 'rgb(var(--muted))' 
-                  : `linear-gradient(to right, rgb(var(--primary)) 0%, rgb(var(--primary)) ${(roundDuration - 1) * 11}%, rgb(var(--muted)) ${(roundDuration - 1) * 11}%, rgb(var(--muted)) 100%)`
+                  ? '#374151' 
+                  : `linear-gradient(to right, #10B981 0%, #10B981 ${(roundDuration - 1) * 11.1}%, #374151 ${(roundDuration - 1) * 11.1}%, #374151 100%)`
               }}
             />
           </div>
@@ -93,8 +93,8 @@ export default function CouncilCommandCenter({ onStart, isStarting }: CouncilCom
               className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer slider"
               style={{
                 background: freeForAll 
-                  ? 'rgb(var(--muted))' 
-                  : `linear-gradient(to right, rgb(var(--primary)) 0%, rgb(var(--primary)) ${(numberOfRounds - 1) * 11}%, rgb(var(--muted)) ${(numberOfRounds - 1) * 11}%, rgb(var(--muted)) 100%)`
+                  ? '#374151' 
+                  : `linear-gradient(to right, #10B981 0%, #10B981 ${(numberOfRounds - 1) * 11.1}%, #374151 ${(numberOfRounds - 1) * 11.1}%, #374151 100%)`
               }}
             />
           </div>
