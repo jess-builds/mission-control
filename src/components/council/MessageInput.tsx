@@ -93,7 +93,7 @@ export default function MessageInput({ onSend, disabled, agents }: MessageInputP
     : [];
 
   return (
-    <div className="border-t p-2">
+    <div className="border-t px-4 py-1">
       <div className="relative max-w-4xl mx-auto">
         {showMentions && filteredAgents.length > 0 && (
           <div className="absolute bottom-full left-0 mb-2 w-64 bg-popover border rounded-md shadow-lg py-1">
@@ -125,7 +125,7 @@ export default function MessageInput({ onSend, disabled, agents }: MessageInputP
               onKeyDown={handleKeyDown}
               disabled={disabled}
               placeholder={disabled ? "Council not active" : "Type a message..."}
-              className="w-full px-4 py-2 pr-10 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
+              className="w-full px-4 py-1.5 pr-10 border rounded-md bg-background focus:outline-none focus:ring-2 focus:ring-primary disabled:opacity-50"
             />
             <button
               onClick={() => {
