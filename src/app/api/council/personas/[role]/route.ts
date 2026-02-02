@@ -4,13 +4,14 @@ import path from 'path';
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { role: string } }
+  { params }: { params: Promise<{ role: string }> }
 ) {
   try {
+    const { role } = await params;
     const personaPath = path.join(
       process.cwd(), 
       'server/council/personas', 
-      `${params.role}.json`
+      `${role}.json`
     );
     const content = await fs.readFile(personaPath, 'utf-8');
     return NextResponse.json(JSON.parse(content));
@@ -24,14 +25,15 @@ export async function GET(
 
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { role: string } }
+  { params }: { params: Promise<{ role: string }> }
 ) {
   try {
+    const { role } = await params;
     const body = await req.json();
     const personaPath = path.join(
       process.cwd(), 
       'server/council/personas', 
-      `${params.role}.json`
+      `${role}.json`
     );
     
     // Validate the persona data
