@@ -32,7 +32,7 @@ export default function CouncilPage() {
   };
 
   return (
-    <div className="flex h-[92vh] bg-background">
+    <div className="flex h-[90vh] bg-background">
       <div className="flex-1 flex flex-col">
         <CouncilChat 
           sessionId="" 
