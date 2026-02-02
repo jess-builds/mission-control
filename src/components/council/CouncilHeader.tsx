@@ -62,7 +62,7 @@ export default function CouncilHeader({
 
           {status === 'configuring' && (
             <div className="text-sm text-muted-foreground">
-              Configuring...
+              Ready
             </div>
           )}
         </div>
