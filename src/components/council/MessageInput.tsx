@@ -93,7 +93,7 @@ export default function MessageInput({ onSend, disabled, agents }: MessageInputP
     : [];
 
   return (
-    <div className="border-t p-4">
+    <div className="border-t p-2">
       <div className="relative max-w-4xl mx-auto">
         {showMentions && filteredAgents.length > 0 && (
           <div className="absolute bottom-full left-0 mb-2 w-64 bg-popover border rounded-md shadow-lg py-1">
