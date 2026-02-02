@@ -4,6 +4,7 @@ exports.CouncilSocketHandler = void 0;
 const councilOrchestrator_1 = require("./councilOrchestrator");
 const councilStateMachine_1 = require("./councilStateMachine");
 const timerService_1 = require("./timerService");
+const ideaExporter_1 = require("./ideaExporter");
 class CouncilSocketHandler {
     constructor(io) {
         this.sessions = new Map();
@@ -213,11 +214,45 @@ class CouncilSocketHandler {
                 totalRounds: data.totalRounds,
             });
         });
-        stateMachine.on('councilComplete', () => {
+        stateMachine.on('councilComplete', async () => {
             this.io.to(`council:${sessionId}`).emit('council:status', {
                 sessionId,
                 status: 'completed',
             });
+            // Auto-export to Idea Bank
+            try {
+                const session = this.sessions.get(sessionId);
+                if (session) {
+                    const exporter = new ideaExporter_1.IdeaExporter();
+                    const messages = session.orchestrator.getMessages();
+                    const roundNames = session.config.rounds.map(r => r.name);
+                    const result = await exporter.exportSession(messages, sessionId, roundNames);
+                    if (result.success) {
+                        // Update session output
+                        session.output = {
+                            ideaId: result.ideaId,
+                            summary: 'Idea exported to bank',
+                            winningProposal: ''
+                        };
+                        // Emit success event
+                        this.io.to(`council:${sessionId}`).emit('council:idea-exported', {
+                            sessionId,
+                            ideaId: result.ideaId,
+                            message: '✅ Idea saved to bank'
+                        });
+                    }
+                    else {
+                        console.error('Failed to export council idea:', result.error);
+                        this.io.to(`council:${sessionId}`).emit('council:idea-export-failed', {
+                            sessionId,
+                            error: result.error
+                        });
+                    }
+                }
+            }
+            catch (error) {
+                console.error('Error exporting council idea:', error);
+            }
         });
     }
     setupTimerEvents(sessionId, timer, stateMachine) {
@@ -241,7 +276,8 @@ class CouncilSocketHandler {
             // Auto-advance to next round
             const hasNext = stateMachine.nextRound();
             if (!hasNext) {
-                // Council complete
+                // Council complete - the stateMachine.complete() will trigger
+                // the councilComplete event which handles the export
                 stateMachine.complete();
             }
         });

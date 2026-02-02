@@ -2,6 +2,7 @@ import { Server, Socket } from 'socket.io';
 import { CouncilOrchestrator, CouncilMessage } from './councilOrchestrator';
 import { CouncilStateMachine, CouncilConfig, ROUND_TEMPLATES } from './councilStateMachine';
 import { TimerService, TimerState } from './timerService';
+import { IdeaExporter } from './ideaExporter';
 
 interface CouncilSession {
   id: string;
@@ -273,11 +274,47 @@ export class CouncilSocketHandler {
       });
     });
 
-    stateMachine.on('councilComplete', () => {
+    stateMachine.on('councilComplete', async () => {
       this.io.to(`council:${sessionId}`).emit('council:status', {
         sessionId,
         status: 'completed',
       });
+
+      // Auto-export to Idea Bank
+      try {
+        const session = this.sessions.get(sessionId);
+        if (session) {
+          const exporter = new IdeaExporter();
+          const messages = session.orchestrator.getMessages();
+          const roundNames = session.config.rounds.map(r => r.name);
+          
+          const result = await exporter.exportSession(messages, sessionId, roundNames);
+          
+          if (result.success) {
+            // Update session output
+            session.output = {
+              ideaId: result.ideaId,
+              summary: 'Idea exported to bank',
+              winningProposal: ''
+            };
+            
+            // Emit success event
+            this.io.to(`council:${sessionId}`).emit('council:idea-exported', {
+              sessionId,
+              ideaId: result.ideaId,
+              message: '✅ Idea saved to bank'
+            });
+          } else {
+            console.error('Failed to export council idea:', result.error);
+            this.io.to(`council:${sessionId}`).emit('council:idea-export-failed', {
+              sessionId,
+              error: result.error
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Error exporting council idea:', error);
+      }
     });
   }
 
@@ -308,7 +345,8 @@ export class CouncilSocketHandler {
       // Auto-advance to next round
       const hasNext = stateMachine.nextRound();
       if (!hasNext) {
-        // Council complete
+        // Council complete - the stateMachine.complete() will trigger
+        // the councilComplete event which handles the export
         stateMachine.complete();
       }
     });

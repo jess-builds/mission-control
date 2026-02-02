@@ -142,28 +142,26 @@ class CouncilOrchestrator extends events_1.EventEmitter {
         try {
             // Update agent status
             this.updateAgentStatus(agent.role, 'typing');
-            // Send message
-            await this.clawdbotClient.sendMessage(agent.sessionKey, message);
-            // Get response (with timeout)
-            const response = await this.clawdbotClient.getResponse(agent.sessionKey, undefined, agent.model === 'opus' ? 20000 : 10000 // Different timeouts for models
-            );
-            if (response) {
+            // Send message and get response directly
+            const result = await this.clawdbotClient.sendMessage(agent.sessionKey, message);
+            if (result.success && result.reply) {
                 // Create agent message
                 const agentMessage = {
                     id: this.generateMessageId(),
                     timestamp: new Date(),
                     author: agent.role,
-                    content: response,
+                    content: result.reply,
                     round: this.currentRound,
                 };
                 this.messages.push(agentMessage);
                 this.updateAgentStatus(agent.role, 'idle');
-                // Emit message event
+                // Emit message event for Socket.io broadcast
                 this.emit('message', agentMessage);
                 // Broadcast this message to other agents (context accumulation)
                 await this.broadcastToOthers(agent.role, agentMessage);
             }
             else {
+                console.error(`Failed to get response from ${agent.role}:`, result.error);
                 this.updateAgentStatus(agent.role, 'idle');
             }
         }
