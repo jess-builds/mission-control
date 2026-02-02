@@ -12,7 +12,7 @@ const app = next({ dev, hostname, port });
 const handle = app.getRequestHandler();
 
 // Import council socket handler
-const { CouncilSocketHandler } = require('./dist/server/council/councilSocket');
+const { CouncilSocketHandler } = require('./dist/server/council/councilSocket.js');
 
 app.prepare().then(() => {
   const server = createServer(async (req, res) => {
