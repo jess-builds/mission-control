@@ -72,7 +72,7 @@ export class CouncilSocketService {
    * Send a message (as Armaan)
    */
   sendMessage(sessionId: string, content: string): void {
-    this.socket?.emit('council:message', { sessionId, content });
+    this.socket?.emit('council:send_message', { sessionId, content });
   }
 
   /**
@@ -107,7 +107,7 @@ export class CouncilSocketService {
    * Request list of all sessions
    */
   requestSessionList(): void {
-    this.socket?.emit('council:list');
+    this.socket?.emit('council:list_sessions');
   }
 
   /**
@@ -147,7 +147,8 @@ export class CouncilSocketService {
 
     if (event) {
       this.listeners.delete(event);
-      this.socket.removeAllListeners(event);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      this.socket.removeAllListeners(event as any);
     } else {
       this.listeners.clear();
       this.socket.removeAllListeners();

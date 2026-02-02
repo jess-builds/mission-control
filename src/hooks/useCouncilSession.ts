@@ -33,7 +33,13 @@ export function useCouncilSession(sessionId: string | null) {
 
     const handleMessage = (data: { sessionId: string; message: CouncilMessage }) => {
       if (data.sessionId === sessionId) {
-        setMessages(prev => [...prev, data.message]);
+        setMessages(prev => {
+          // Dedupe: check if message already exists
+          if (prev.some(m => m.id === data.message.id)) {
+            return prev;
+          }
+          return [...prev, data.message];
+        });
       }
     };
 

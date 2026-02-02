@@ -85,12 +85,12 @@ export interface CouncilSocketEvents {
     contextPrompt?: string;
   }) => void;
   'council:start': (sessionId: string) => void;
-  'council:message': (data: { sessionId: string; content: string }) => void;
+  'council:send_message': (data: { sessionId: string; content: string }) => void;
   'council:pause': (sessionId: string) => void;
   'council:resume': (sessionId: string) => void;
   'council:advance': (sessionId: string) => void;
   'council:end': (sessionId: string) => void;
-  'council:list': () => void;
+  'council:list_sessions': () => void;
 
   // Server to client
   'council:state': (state: CouncilSession) => void;
@@ -108,5 +108,5 @@ export interface CouncilSocketEvents {
   'council:timer': (data: { sessionId: string; timerState: TimerState }) => void;
   'council:status': (data: { sessionId: string; status: string }) => void;
   'council:error': (data: { error: string; details?: string }) => void;
-  'council:list': (sessions: any[]) => void;
+  'council:sessions_list': (sessions: any[]) => void;
 }

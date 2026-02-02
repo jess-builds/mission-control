@@ -117,7 +117,7 @@ class CouncilSocketHandler {
                 }
             });
             // Send message (Armaan)
-            socket.on('council:message', async (data) => {
+            socket.on('council:send_message', async (data) => {
                 const session = this.sessions.get(data.sessionId);
                 if (!session) {
                     socket.emit('council:error', { error: 'Session not found' });
@@ -165,7 +165,7 @@ class CouncilSocketHandler {
                 await session.orchestrator.terminate();
             });
             // Get session list
-            socket.on('council:list', () => {
+            socket.on('council:list_sessions', () => {
                 const sessionList = Array.from(this.sessions.entries()).map(([id, session]) => ({
                     id,
                     status: session.stateMachine.getStatus(),
@@ -173,7 +173,7 @@ class CouncilSocketHandler {
                     currentRound: session.stateMachine.getCurrentRoundIndex(),
                     totalRounds: session.stateMachine.getTotalRounds(),
                 }));
-                socket.emit('council:list', sessionList);
+                socket.emit('council:sessions_list', sessionList);
             });
             socket.on('disconnect', () => {
                 console.log(`Council client disconnected: ${socket.id}`);

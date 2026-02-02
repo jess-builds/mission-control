@@ -94,6 +94,8 @@ export class CouncilOrchestrator extends EventEmitter {
 
   /**
    * Broadcast a round prompt to all agents
+   * For round 0 (Pitch), sends only to Visionary first, waits for response,
+   * then broadcasts Visionary's ideas to everyone else
    */
   async broadcastRoundPrompt(round: number, prompt: string): Promise<void> {
     this.currentRound = round;
@@ -111,12 +113,40 @@ export class CouncilOrchestrator extends EventEmitter {
     this.messages.push(systemMessage);
     this.emit('message', systemMessage);
 
-    // Send prompt to all agents
-    const sendPromises = Array.from(this.agents.values()).map(agent =>
-      this.sendToAgent(agent, prompt)
-    );
+    // Round 0 (Pitch): Only send to Visionary first
+    if (round === 0) {
+      const visionary = this.agents.get('visionary');
+      if (visionary) {
+        // Send to Visionary and wait for response
+        await this.sendToAgent(visionary, prompt);
+        
+        // Get Visionary's response (last message from visionary)
+        const visionaryResponse = this.messages
+          .filter(m => m.author === 'visionary' && m.round === 0)
+          .pop();
+        
+        if (visionaryResponse) {
+          // Now broadcast Visionary's ideas to all OTHER agents
+          const contextMessage = `The Visionary has proposed:\n\n${visionaryResponse.content}\n\nRespond with your perspective on these ideas.`;
+          
+          const otherAgents = Array.from(this.agents.values())
+            .filter(agent => agent.role !== 'visionary');
+          
+          const sendPromises = otherAgents.map(agent =>
+            this.sendToAgent(agent, contextMessage)
+          );
+          
+          await Promise.all(sendPromises);
+        }
+      }
+    } else {
+      // Other rounds: Send prompt to all agents
+      const sendPromises = Array.from(this.agents.values()).map(agent =>
+        this.sendToAgent(agent, prompt)
+      );
 
-    await Promise.all(sendPromises);
+      await Promise.all(sendPromises);
+    }
   }
 
   /**

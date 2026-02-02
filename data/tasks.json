@@ -447,6 +447,31 @@
       ],
       "createdAt": "2026-02-01T20:30:18.898Z",
       "updatedAt": "2026-02-01T20:33:09.294Z"
+    },
+    {
+      "id": "2a452a63-ebd9-436f-9d79-83e836f89f84",
+      "title": "Council UI - Multi-Agent Deliberation System",
+      "description": "Build a real-time multi-agent council interface where 7 specialized AI agents deliberate on ideas like a WhatsApp group chat",
+      "status": "in-progress",
+      "priority": "high",
+      "assignee": "jess",
+      "tags": [],
+      "parentTask": null,
+      "blocked": null,
+      "recurring": null,
+      "completionCriteria": null,
+      "documents": [],
+      "referenceDocuments": [],
+      "notes": [
+        {
+          "id": "note-045f207a-7f40-4d99-9847-11c402343dda",
+          "author": "armaan",
+          "content": "**Feb 2, 2026 @ 2:00 AM** — Session paused. UI 80% complete, blocked on persistent agent architecture. See documents: council-ui-handoff, council-ui-implementation. Key insight: sessions_spawn is one-shot, need true persistent agents for WhatsApp-style group chat flow.",
+          "timestamp": "2026-02-02T06:54:15.102Z"
+        }
+      ],
+      "createdAt": "2026-02-02T06:52:47.734Z",
+      "updatedAt": "2026-02-02T06:54:15.102Z"
     }
   ]
 }

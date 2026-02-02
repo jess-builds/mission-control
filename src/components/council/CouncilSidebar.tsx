@@ -31,9 +31,10 @@ export default function CouncilSidebar({
     if (agent.status === 'typing') {
       return <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />;
     }
-    if (agent.status === 'active') {
+    if (agent.status === 'idle') {
       return <div className="w-2 h-2 rounded-full bg-green-500" />;
     }
+    // 'waiting' status
     return <div className="w-2 h-2 rounded-full bg-muted-foreground" />;
   };
 

@@ -48,7 +48,8 @@ IMPORTANT: You are participating in a real-time council discussion. Keep respons
                     task: systemPrompt,
                     label: label,
                     model: modelMap[persona.model] || modelMap['sonnet'],
-                    timeoutSeconds: 1800
+                    timeoutSeconds: 1800,
+                    cleanup: 'keep' // Keep session alive for ongoing conversation
                 }
             }, {
                 headers: {

@@ -74,7 +74,7 @@ export default function CouncilMessage({ message, agent }: CouncilMessageProps) 
               'rounded-lg px-4 py-2 prose prose-sm max-w-none',
               isArmaan
                 ? 'bg-primary text-primary-foreground prose-invert'
-                : 'bg-muted'
+                : 'bg-muted text-foreground prose-invert'
             )}
           >
             {message.replyTo && (

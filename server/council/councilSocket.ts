@@ -152,7 +152,7 @@ export class CouncilSocketHandler {
       });
 
       // Send message (Armaan)
-      socket.on('council:message', async (data: {
+      socket.on('council:send_message', async (data: {
         sessionId: string;
         content: string;
       }) => {
@@ -211,7 +211,7 @@ export class CouncilSocketHandler {
       });
 
       // Get session list
-      socket.on('council:list', () => {
+      socket.on('council:list_sessions', () => {
         const sessionList = Array.from(this.sessions.entries()).map(([id, session]) => ({
           id,
           status: session.stateMachine.getStatus(),
@@ -220,7 +220,7 @@ export class CouncilSocketHandler {
           totalRounds: session.stateMachine.getTotalRounds(),
         }));
 
-        socket.emit('council:list', sessionList);
+        socket.emit('council:sessions_list', sessionList);
       });
 
       socket.on('disconnect', () => {
